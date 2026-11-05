@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 
 const storageKey = "blue-ripple-theme-v1";
-type Theme = "ripple" | "acu";
+type Theme = "ripple" | "acu" | "theme1";
+
+function isTheme(value: string | null): value is Theme {
+  return value === "ripple" || value === "acu" || value === "theme1";
+}
 
 function readTheme(): Theme {
   try {
-    return localStorage.getItem(storageKey) === "acu" ? "acu" : "ripple";
+    const saved = localStorage.getItem(storageKey);
+    return isTheme(saved) ? saved : "ripple";
   } catch {
     return "ripple";
   }
@@ -35,7 +40,8 @@ export function ThemePicker() {
         aria-label="Website theme"
         value={theme}
         onChange={(event) => {
-          const next = event.target.value === "acu" ? "acu" : "ripple";
+          const selected = event.target.value;
+          const next = isTheme(selected) ? selected : "ripple";
           document.body.dataset.theme = next;
           setTheme(next);
           try {
@@ -47,6 +53,7 @@ export function ThemePicker() {
       >
         <option value="ripple">Blue Ripple</option>
         <option value="acu">Austin Christian</option>
+        <option value="theme1">Theme 1</option>
       </select>
     </label>
   );

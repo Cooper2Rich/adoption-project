@@ -8,6 +8,8 @@ The three How it works cards use real stock photography. Hover a card or focus i
 
 Use **Theme → Austin Christian** in the top banner for an ivory, navy and bronze theme sampled from [Austin Christian University's website](https://www.austinchristianuniversity.org/) on October 27, 2026. It applies to public pages, Creator, Campaign Owner and Admin workspaces, including profiles, financial panels and dialogs. The choice persists in this browser and syncs across open tabs; **Blue Ripple** restores the original dark palette. Core colors are ivory `#FAF9F2`, navy `#1F303E` and bronze `#976230`, with navy `#2A4A5A` / `#1A252E`, bronze `#B57A4A` / `#7A4F26`, and cream `#F0EFE0` supporting shades. The Blue Ripple logo and ad media retain their original colors.
 
+**Theme 1** applies the supplied palette across the interface: Space Cadet `#25344F`, Slate Gray `#617891`, Coffee `#6F4D38`, Caput Mortuum `#632024`, Tan `#D5B893`, and White `#FFFFFF`. The palette is used for shared page surfaces, navigation, controls, text and accents; post artwork does not need to follow the sample's category assignments.
+
 [**johns demo link**](https://cooper2rich.github.io/slander/demo-shared-with-john/)
 
 John's demo is a frozen copy of main at `47c3b75`. Changes to main or other branches do not update it.

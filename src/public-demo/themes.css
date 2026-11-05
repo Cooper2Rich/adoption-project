@@ -35,6 +35,112 @@ body.public-demo[data-theme="acu"] {
   --illustration-accent: #e1cbb5;
   --illustration-ink: #faf9f2;
 }
+
+/* Theme 1 uses the supplied navy, slate, coffee, burgundy, tan and white. */
+body.public-demo[data-theme="theme1"] {
+  color-scheme: light;
+  --brand-blue: #25344f;
+  --brand-light: #617891;
+  --brand-mid: #6f4d38;
+  --brand-deep: #632024;
+  --ink: #25344f;
+  --muted: #4d5c70;
+  --line: #d5b893;
+  --night: #ffffff;
+  --surface: #ffffff;
+  --raised: #f3ece3;
+  --accent: #d5b893;
+  --accent-strong: #c5a47e;
+  --amber: #6f4d38;
+  --theme-text: #25344f;
+  --theme-muted: #4d5c70;
+  --theme-link: #632024;
+  --theme-line: #d5b893;
+  --theme-canvas: #ffffff;
+  --theme-surface: #ffffff;
+  --theme-raised: #f3ece3;
+  --theme-accent: #d5b893;
+  --theme-warning-text: #632024;
+  --theme-warning-surface: #f3ece3;
+  --theme-success-text: #25344f;
+  --theme-success-surface: #f3ece3;
+  --illustration-canvas: #25344f;
+  --illustration-shape: #617891;
+  --illustration-line: #d5b893;
+  --illustration-accent: #6f4d38;
+  --illustration-ink: #ffffff;
+}
+html:has(body.public-demo[data-theme="theme1"]) {
+  background: #ffffff;
+}
+.public-demo[data-theme="theme1"]
+  :is(
+    .workspace-rail,
+    .sidebar,
+    .public-mobile-nav,
+    .role-mobile-nav,
+    .public-mobile-context
+  ) {
+  --theme-raised: #d5b893;
+  background: #f3ece3;
+  color: #25344f;
+  border-color: #d5b893;
+}
+.public-demo[data-theme="theme1"]
+  :is(.sidebar, .public-mobile-context)
+  .nav-item.active,
+.public-demo[data-theme="theme1"]
+  :is(.sidebar, .public-mobile-context)
+  .nav-item.active:hover,
+.public-demo[data-theme="theme1"] .rail-item.selected > span {
+  background: #25344f;
+  color: #ffffff;
+}
+.public-demo[data-theme="theme1"] .sidebar .brand,
+.public-demo[data-theme="theme1"] .rail-brand {
+  background: #25344f;
+  border-radius: 8px;
+}
+.public-demo[data-theme="theme1"] .sidebar .brand {
+  padding: 8px;
+}
+.public-demo[data-theme="theme1"]
+  :is(.button.primary, .button.secondary, .skip-link) {
+  background: #25344f;
+  border-color: #25344f;
+  color: #ffffff;
+}
+.public-demo[data-theme="theme1"]
+  :is(.button.primary, .button.secondary):hover {
+  background: #6f4d38;
+  border-color: #6f4d38;
+}
+.public-demo[data-theme="theme1"] :is(.button.ghost, .text-button) {
+  color: #632024;
+}
+.public-demo[data-theme="theme1"]
+  :is(.hero-feature, .ad-play, .inline-play, .ad-duration) {
+  --ink: #ffffff;
+  color: #ffffff;
+}
+.public-demo[data-theme="theme1"] .public-access-note .live-dot {
+  background: #6f4d38;
+}
+.public-demo[data-theme="theme1"] :is(input, textarea)::placeholder {
+  color: #4d5c70;
+}
+.public-demo[data-theme="theme1"]
+  :is(.button, a, select, input, textarea):focus-visible {
+  outline: 2px solid #632024;
+  outline-offset: 3px;
+}
+.public-demo[data-theme="theme1"] .modal::backdrop {
+  background: #25344fbf;
+}
+.public-demo[data-theme="theme1"] .theme-picker select {
+  color-scheme: light;
+}
+
 html:has(body.public-demo[data-theme="acu"]) {
   background: #faf9f2;
 }
