@@ -1,6 +1,6 @@
 # adoption.is — Stories for good
 
-The `adoption-is` branch rebrands the existing demo as **adoption.is**. The supplied palette is Space Cadet `#25344F`, Slate Gray `#617891`, Coffee `#6F4D38`, Caput Mortuum `#632024`, Tan `#D5B893`, and White `#FFFFFF`. Light is the default; choose **Profile → Appearance → Color theme** or the demo header's **Theme** control to switch to Dark. Changes apply immediately, synchronize across tabs, and persist on this browser independently of earlier brands. No profile save is required.
+The live demo on `main` is **adoption.is**. The supplied palette is Space Cadet `#25344F`, Slate Gray `#617891`, Coffee `#6F4D38`, Caput Mortuum `#632024`, Tan `#D5B893`, and White `#FFFFFF`. Light is the default; choose **Profile → Appearance → Color theme** or the demo header's **Theme** control to switch to Dark. Changes apply immediately, synchronize across tabs, and persist on this browser independently of earlier brands. No profile save is required.
 
 Run `npm run dev:adoption` and open **http://localhost:5173/public-demo.html**. This browser-local demo includes the public pages and Creator, Campaign Owner and Admin workspaces, with no real payments. Stop it with Ctrl+C. The original API-backed workspace remains available through `npm run dev` at port 3000.
 
@@ -8,19 +8,18 @@ The logo and PNG favicon use the actual embracing-person A artwork extracted fro
 
 ## Existing demo behavior
 
-The separately published adoption.is branch demo is at **https://cooper2rich.github.io/adoption-project/adoption-is/**. Pushes to `adoption-is` build and validate this preview through `.github/workflows/adoption-is-demo.yml`. It updates only the `adoption-is/` directory in the generated `gh-pages` archive; the main source branch and existing root demo are preserved. The workflows share a deployment concurrency group so their archive updates cannot race. `PUBLIC_DEMO_BASE_PATH` overrides the build's asset base for this nested preview; ordinary builds keep their existing default.
+The live adoption.is demo is at **https://cooper2rich.github.io/adoption-project/** and updates from `main` through `.github/workflows/public-demo.yml`. The optional branch preview remains at **https://cooper2rich.github.io/adoption-project/adoption-is/** and updates from `adoption-is` through `.github/workflows/adoption-is-demo.yml`. The workflows share a deployment concurrency group so their archive updates cannot race. `PUBLIC_DEMO_BASE_PATH` sets the asset base for each published location.
 
 The secondary sidebar's header close control appears only while that sidebar is open. When closed, open it by selecting a main navigation tab.
 
 The three How it works cards use real stock photography. Hover a card or focus its link to gently pan from a close crop to a wider view inside the same fixed frame; moving away restores the crop. Touch devices and reduced-motion preferences show the wide view without animation. The Our Why visual populates Creators, Causes and Community photos along its arrows on a timer once the card is fully in view, over a landscape backdrop. Photo sources are credited in [the demo guide](docs/DEMO.md#how-it-works-photography).
 
-[**Open the public interactive demo →**](https://cooper2rich.github.io/slander/)
+[**Open the public interactive demo →**](https://cooper2rich.github.io/adoption-project/)
 
-The original theme comparisons are superseded by the adoption.is light and dark themes on this branch.
 
-[**johns demo link**](https://cooper2rich.github.io/slander/demo-shared-with-john/)
+[**John's demo link**](https://cooper2rich.github.io/adoption-project/)
 
-John's demo is a frozen copy of main at `47c3b75`. Changes to main or other branches do not update it.
+John's link opens the same live adoption.is demo and stays current with deployments from `main`.
 
 No installation or sign-in required. The public demo opens to a **adoption.is home page** with placeholder mission and vision statements and ways to participate. It features current weekly campaign leaders and the last completed week’s campaign winners, using the same scoring and saved results as the Leaderboard. Videos start muted when at least half visible, repeat the first five seconds, and pause offscreen or in a hidden tab. **Pause previews** stops automatic playback; reduced-motion preferences are respected. Press Play for a full video with sound.
 

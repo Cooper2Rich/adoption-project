@@ -44,6 +44,10 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Verify home photos, Our Why population and hover playback across every ad view
         run: npx playwright test --config playwright.public.config.ts tests/public-browser/home-photos.spec.ts tests/public-browser/home-why.spec.ts tests/public-browser/girl-hover.spec.ts
+      - name: Build for the published repository path
+        run: npm run build:public
+        env:
+          PUBLIC_DEMO_BASE_PATH: /${{ github.event.repository.name }}/
       - name: Check out retained public assets
         uses: actions/checkout@v7
         with:
