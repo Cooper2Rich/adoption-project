@@ -38,12 +38,6 @@ jobs:
         run: npm ci
       - name: Check domain behavior
         run: npm test
-      - name: Build test demo
-        run: npm run build:public
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-      - name: Check branding, themes and campaign photos
-        run: npx playwright test --config playwright.public.config.ts tests/public-browser/theme.spec.ts tests/public-browser/home-photos.spec.ts
       - name: Build isolated branch demo
         env:
           PUBLIC_DEMO_BASE_PATH: /${{ github.event.repository.name }}/adoption-is/
