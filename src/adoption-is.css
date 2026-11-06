@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;650;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import "./density.css";
 
 body[data-theme],
 body.public-demo[data-theme] {
@@ -217,8 +218,8 @@ body.public-demo .public-notice .theme-picker select {
 }
 
 .public-demo .ripple-mission #vision-title {
-  margin: 28px 0 12px;
-  font-size: 26px;
+  margin: 18px 0 10px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.7px;
 }
