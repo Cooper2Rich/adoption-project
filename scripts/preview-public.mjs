@@ -19,9 +19,9 @@ createServer((req, res) => {
   );
   const target = resolve(
     root,
-    path.replace(/^\/slander\//, "") || "index.html",
+    path.replace(/^\/adoption-project\//, "") || "index.html",
   );
-  if (!path.startsWith("/slander/") || !target.startsWith(root + sep)) {
+  if (!path.startsWith("/adoption-project/") || !target.startsWith(root + sep)) {
     res.writeHead(404).end();
     return;
   }
@@ -58,5 +58,5 @@ createServer((req, res) => {
     res.writeHead(404).end();
   }
 }).listen(3200, "127.0.0.1", () =>
-  console.log("Public preview: http://127.0.0.1:3200/slander/"),
+  console.log("Public preview: http://127.0.0.1:3200/adoption-project/"),
 );

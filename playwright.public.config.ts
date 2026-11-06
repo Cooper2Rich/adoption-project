@@ -7,7 +7,7 @@ export default defineConfig({
   workers: 1,
   reporter: "list",
   use: {
-    baseURL: liveBaseURL || "http://127.0.0.1:3200/slander/",
+    baseURL: liveBaseURL || "http://127.0.0.1:3200/adoption-project/",
     trace: "retain-on-failure",
     actionTimeout: 10000,
   },
@@ -15,7 +15,7 @@ export default defineConfig({
     ? undefined
     : {
         command: "node scripts/preview-public.mjs",
-        url: "http://127.0.0.1:3200/slander/",
+        url: "http://127.0.0.1:3200/adoption-project/",
         reuseExistingServer: false,
       },
   projects: [

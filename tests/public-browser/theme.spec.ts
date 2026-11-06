@@ -19,7 +19,7 @@ test("adoption.is branding and themes follow every workspace", async ({
   );
   await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
     "href",
-    /adoption-is-favicon\.png/,
+    /kindred-reach-favicon\.png/,
   );
   const mark = page.locator(".adoption-logo:visible .adoption-mark").first();
   await expect(mark).toHaveAttribute("src", /brand\/adoption-is-mark\.png$/);

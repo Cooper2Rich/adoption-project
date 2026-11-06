@@ -24,7 +24,7 @@ test("earlier campaign-preview consent, creative and gift survive the full-site 
             creator: "Alex River · fictional",
             caption: "A fictional river story.",
             format: "photo",
-            media: "/slander/images/forest.jpg",
+            media: "/adoption-project/images/forest.jpg",
             mediaType: "image",
             revision: 1,
             createdAt: at,
