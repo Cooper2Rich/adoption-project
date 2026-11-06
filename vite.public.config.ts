@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/slander/",
+  base: process.env.PUBLIC_DEMO_BASE_PATH || "/slander/",
   resolve: {
     alias: {
       "./media-samples.js": fileURLToPath(

@@ -1,0 +1,80 @@
+name: Publish adoption.is branch demo
+
+on:
+  push:
+    branches: [adoption-is]
+  workflow_dispatch:
+
+concurrency:
+  group: public-demo-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/adoption-is'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: adoption-is-preview
+      url: ${{ steps.deployment.outputs.page_url }}adoption-is/
+    steps:
+      - name: Check out branch source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Check domain behavior
+        run: npm test
+      - name: Build test demo
+        run: npm run build:public
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Check branding, themes and campaign photos
+        run: npx playwright test --config playwright.public.config.ts tests/public-browser/theme.spec.ts tests/public-browser/home-photos.spec.ts
+      - name: Build isolated branch demo
+        env:
+          PUBLIC_DEMO_BASE_PATH: /${{ github.event.repository.name }}/adoption-is/
+        run: npm run build:public
+      - name: Record published source
+        run: node --input-type=module -e "import { writeFileSync } from 'node:fs'; writeFileSync('public-site/preview-build.json', JSON.stringify({ branch:'adoption-is', commit:process.env.GITHUB_SHA }));"
+      - name: Check out existing published site
+        uses: actions/checkout@v7
+        with:
+          ref: gh-pages
+          path: pages-archive
+          fetch-depth: 0
+      - name: Update only the adoption.is demo directory
+        run: |
+          mkdir -p pages-archive/adoption-is
+          cp -R public-site/. pages-archive/adoption-is/
+          git -C pages-archive diff --exit-code -- index.html
+          git -C pages-archive config user.name 'github-actions[bot]'
+          git -C pages-archive config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C pages-archive add -- adoption-is
+          if ! git -C pages-archive diff --cached --quiet; then
+            git -C pages-archive commit -m "Publish adoption-is ${GITHUB_SHA}"
+            git -C pages-archive push origin HEAD:gh-pages
+          fi
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+      - name: Upload existing site with isolated demo
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: pages-archive
+          include-hidden-files: true
+      - name: Publish GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
