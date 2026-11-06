@@ -44,7 +44,10 @@ async function scrollOnce(page: Page, placement: Placement) {
     const cardTop = top + scrollY;
     const target = {
       full: cardTop - (innerHeight - height) / 2,
-      half: cardTop - innerHeight + height / 2,
+      half:
+        cardTop - innerHeight + height / 2 < 0
+          ? cardTop + height / 2
+          : cardTop - innerHeight + height / 2,
       "cut-top": cardTop + height * 0.4,
       above: cardTop + height + 60,
       below: cardTop - innerHeight - 60,

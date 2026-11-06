@@ -105,7 +105,24 @@ body .modal {
 }
 
 body .role-profile-page {
-  max-width: 960px;
+  container: profile-layout / inline-size;
+}
+
+body .main-content,
+body.public-demo .ripple-public .discovery-content,
+body
+  :is(
+    .marketplace-page,
+    .role-profile-page,
+    .ad-platform-page,
+    .giving-layout,
+    .statement-panel
+  ),
+body.public-demo :is(.brm-about, .viewer-form, .giving-history) {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 body .role-profile-summary {
@@ -197,6 +214,9 @@ body.public-demo .hero-actions .button {
 }
 
 body.public-demo .hero-feature {
+  width: 100%;
+  height: clamp(240px, 24vw, 340px);
+  aspect-ratio: auto;
   max-height: 340px;
   border-radius: 16px;
 }
@@ -232,7 +252,8 @@ body.public-demo .brm-about p {
 }
 
 body.public-demo .mission-visual {
-  max-width: 310px;
+  width: 100%;
+  max-width: 420px;
 }
 
 body.public-demo .how-steps {
@@ -348,6 +369,122 @@ body.public-demo .support-row {
   }
 }
 
+@container profile-layout (min-width: 900px) {
+  body .role-profile-form {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    grid-template-areas:
+      "appearance appearance"
+      "details account"
+      "details notifications"
+      "actions actions";
+    align-items: start;
+  }
+
+  body .role-profile-panel[aria-labelledby="appearance"] {
+    grid-area: appearance;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  body
+    .role-profile-panel[aria-labelledby="appearance"]
+    .role-profile-section-heading {
+    margin-bottom: 0;
+  }
+
+  body .profile-theme-picker {
+    flex: 0 0 240px;
+    margin: 0;
+  }
+
+  body .role-profile-panel[aria-labelledby="role-details"] {
+    grid-area: details;
+  }
+
+  body .role-profile-panel[aria-labelledby="account-settings"] {
+    grid-area: account;
+  }
+
+  body .role-profile-panel[aria-labelledby="notifications"] {
+    grid-area: notifications;
+  }
+
+  body .role-profile-actions {
+    grid-area: actions;
+  }
+}
+
+@media (min-width: 1000px) {
+  body.public-demo .brm-about {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 40px;
+  }
+
+  body.public-demo .brm-about :is(#about-community, #about-demo) {
+    grid-column: 1 / -1;
+  }
+
+  body.public-demo .about-why {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 24px;
+    padding-block: 20px;
+  }
+
+  body.public-demo .about-demo {
+    margin-top: 0;
+  }
+
+  body.public-demo .viewer-form form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px;
+    align-items: start;
+  }
+
+  body.public-demo .viewer-form form > :not(label) {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  body .project-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+@media (min-width: 1800px) {
+  body.public-demo .public-home {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+
+  body.public-demo .public-home > :not(.home-showcase) {
+    grid-column: 1 / -1;
+  }
+
+  body.public-demo .ripple-public .ad-grid,
+  body.public-demo .ripple-public.secondary-open .ad-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px 18px;
+  }
+}
+
+@container creator-cards (min-width: 1280px) {
+  body.public-demo .creator-ads .ad-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  body.public-demo .ripple-public .public-home .ad-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 760px) {
   body {
     --density-gap: 12px;
@@ -377,6 +514,8 @@ body.public-demo .support-row {
   }
 
   body.public-demo .hero-feature {
+    height: auto;
+    aspect-ratio: 16 / 9;
     max-height: 300px;
   }
 

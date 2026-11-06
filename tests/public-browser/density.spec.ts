@@ -12,6 +12,84 @@ async function expectNormalZoom(page: Page) {
 }
 
 for (const theme of ["light", "dark"]) {
+  test(`${theme} wide layouts use available space without enlarging controls`, async ({
+    page,
+  }, info) => {
+    test.skip(info.project.name !== "desktop", "Wide-screen regression");
+    for (const width of [1440, 1920, 2560]) {
+      await page.setViewportSize({ width, height: 1050 });
+      await page.goto("./");
+      await page.getByLabel("Website theme").selectOption(theme);
+      const content = await page.locator(".discovery-content").boundingBox();
+      const hero = await page.locator(".hero-feature").boundingBox();
+      expect(content!.width).toBeGreaterThan(width - 400);
+      expect(hero!.width).toBeGreaterThan(content!.width * 0.4);
+      expect(hero!.height).toBeLessThanOrEqual(340);
+      const showcases = page.locator(".home-showcase");
+      const firstShowcase = await showcases.first().boundingBox();
+      const lastCard = await showcases
+        .first()
+        .locator(".ad-card")
+        .last()
+        .boundingBox();
+      expect(
+        Math.abs(
+          lastCard!.x +
+            lastCard!.width -
+            firstShowcase!.x -
+            firstShowcase!.width,
+        ),
+      ).toBeLessThan(2);
+      if (width >= 1800) {
+        const secondShowcase = await showcases.nth(1).boundingBox();
+        expect(Math.abs(firstShowcase!.y - secondShowcase!.y)).toBeLessThan(2);
+      }
+      await expectNormalZoom(page);
+      await page.screenshot({
+        path: `test-results/full-width-home-${theme}-${width}.png`,
+        fullPage: true,
+      });
+      await page.goto("./#/explore");
+      if (width >= 1920) {
+        expect(
+          await page
+            .locator(".ad-grid")
+            .evaluate(
+              (grid) =>
+                getComputedStyle(grid).gridTemplateColumns.split(" ").length,
+            ),
+        ).toBeGreaterThan(5);
+      }
+      await expectNormalZoom(page);
+      await page.goto("./#/about");
+      const about = await page.locator(".brm-about").boundingBox();
+      expect(about!.width).toBeGreaterThan(content!.width - 60);
+      await expectNormalZoom(page);
+      await page.goto("./#/viewer");
+      const viewer = await page.locator(".viewer-form").boundingBox();
+      expect(viewer!.width).toBeGreaterThan(content!.width - 60);
+      await expectNormalZoom(page);
+      await selectCreator(page);
+      await page.goto("./#/profile");
+      const profile = await page.locator(".role-profile-page").boundingBox();
+      const details = await page
+        .locator('[aria-labelledby="role-details"]')
+        .boundingBox();
+      const account = await page
+        .locator('[aria-labelledby="account-settings"]')
+        .boundingBox();
+      expect(profile!.width).toBeGreaterThan(width - 400);
+      expect(Math.abs(details!.y - account!.y)).toBeLessThan(2);
+      expect(account!.x).toBeGreaterThan(details!.x + details!.width);
+      await expectNormalZoom(page);
+      await page.screenshot({
+        path: `test-results/full-width-${theme}-${width}.png`,
+        fullPage: true,
+      });
+      await page.getByLabel("Demo role").selectOption("public");
+    }
+  });
+
   test(`${theme} public pages are compact at normal zoom`, async ({
     page,
   }, info) => {
