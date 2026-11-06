@@ -19,7 +19,25 @@ test("adoption.is branding and themes follow every workspace", async ({
   );
   await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
     "href",
-    /adoption-is-favicon\.svg/,
+    /adoption-is-favicon\.png/,
+  );
+  const mark = page.locator(".adoption-logo:visible .adoption-mark").first();
+  await expect(mark).toHaveAttribute("src", /brand\/adoption-is-mark\.png$/);
+  await expect(mark).toBeVisible();
+  await expect
+    .poll(() => mark.evaluate((image: HTMLImageElement) => image.naturalWidth))
+    .toBe(324);
+  await expect(page.locator("#home-title")).toHaveCSS(
+    "text-transform",
+    "uppercase",
+  );
+  await expect(page.locator(".hero-actions .button.primary")).toHaveCSS(
+    "background-color",
+    "rgb(111, 77, 56)",
+  );
+  await expect(page.locator(".hero-actions .button.primary")).toHaveCSS(
+    "color",
+    "rgb(255, 255, 255)",
   );
   for (const route of ["/", "/about", "/explore", "/leaderboard", "/viewer"]) {
     await page.goto(`./#${route}`);

@@ -4,7 +4,7 @@ The `adoption-is` branch rebrands the existing demo as **adoption.is**. The supp
 
 Run `npm run dev:adoption` and open **http://localhost:5173/public-demo.html**. This browser-local demo includes the public pages and Creator, Campaign Owner and Admin workspaces, with no real payments. Stop it with Ctrl+C. The original API-backed workspace remains available through `npm run dev` at port 3000.
 
-The current branding uses a text wordmark and `public/brand/adoption-is-favicon.svg`. The Canva viewer did not expose readable design content during implementation; exact Canva typography, logo artwork, and copy remain unverified. Existing mission and vision placeholders are retained rather than inventing approved brand copy.
+The logo and PNG favicon use the actual embracing-person A artwork extracted from the supplied campaign-overview screenshot, preserving its white disk and tan rim. Condensed uppercase headlines (Anton), spaced monospace labels, tan dividers, and colored story cards visually match the supplied slideshow references; the original Canva font metadata is not confirmed. Existing campaign photos and video remain intact. Mission and vision placeholders are retained rather than inventing approved brand copy.
 
 ## Existing demo behavior
 

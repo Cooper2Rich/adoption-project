@@ -24,7 +24,14 @@ export function Logo({ small = false }: { small?: boolean }) {
       role="img"
       aria-label={APP_NAME}
     >
-      <span className="adoption-wordmark">{small ? "a.is" : APP_NAME}</span>
+      <img
+        className="adoption-mark"
+        src={demoAsset("brand/adoption-is-mark.png")}
+        width={44}
+        height={44}
+        alt=""
+      />
+      {!small && <span className="adoption-wordmark">{APP_NAME}</span>}
     </span>
   );
 }
