@@ -9,8 +9,10 @@ import {
   type RoleProfile,
 } from "../role-profile";
 import "./profile.css";
+import { useTheme } from "../theme";
 
 export function ProfilePage() {
+  const { theme, setTheme } = useTheme();
   const { role, identity, access } = useWorkspace();
   const { profile, save } = useRoleProfile(access, identity);
   const [draft, setDraft] = useState(profile);
@@ -76,6 +78,31 @@ export function ProfilePage() {
         <span className="role-profile-local">Browser-local demo profile</span>
       </section>
       <form onSubmit={submit} className="role-profile-form">
+        <section className="role-profile-panel" aria-labelledby="appearance">
+          <div className="role-profile-section-heading">
+            <Settings2 size={20} />
+            <div>
+              <h2 id="appearance">Appearance</h2>
+              <p>
+                Choose your adoption.is theme. Changes apply immediately and
+                stay on this browser.
+              </p>
+            </div>
+          </div>
+          <div className="profile-theme-picker">
+            <label htmlFor="color-theme">Color theme</label>
+            <select
+              id="color-theme"
+              value={theme}
+              onChange={(event) =>
+                setTheme(event.target.value === "dark" ? "dark" : "light")
+              }
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+        </section>
         <section className="role-profile-panel" aria-labelledby="role-details">
           <div className="role-profile-section-heading">
             <UserRound size={20} />

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { WorkspaceContext } from "../context";
 import { mediaResponse } from "../api";
-import { APP_NAME, demoAsset, PUBLIC_DEMO } from "../runtime";
+import { APP_NAME, demoAsset } from "../runtime";
 import { useAdPreview } from "./useAdPreview";
 import {
   ArrowUpRight,
@@ -18,39 +18,13 @@ import {
 import type { PostStatus, Post } from "../types";
 
 export function Logo({ small = false }: { small?: boolean }) {
-  if (PUBLIC_DEMO)
-    return (
-      <span
-        className={`logo ripple-logo ${small ? "small" : ""}`}
-        role="img"
-        aria-label={APP_NAME}
-      >
-        <img
-          className="ripple-mark"
-          src={demoAsset("brand/blue-ripple-mark.png")}
-          alt=""
-          width="512"
-          height="512"
-        />
-        {!small && (
-          <img
-            className="ripple-wordmark"
-            src={demoAsset("brand/blue-ripple-wordmark.png")}
-            alt=""
-            width="960"
-            height="117"
-          />
-        )}
-      </span>
-    );
   return (
-    <span className={`logo ${small ? "small" : ""}`}>
-      <span className="logo-mark">✳</span>
-      {!small && (
-        <>
-          slander<span className="logo-dot">.</span>
-        </>
-      )}
+    <span
+      className={`logo adoption-logo ${small ? "small" : ""}`}
+      role="img"
+      aria-label={APP_NAME}
+    >
+      <span className="adoption-wordmark">{small ? "a.is" : APP_NAME}</span>
     </span>
   );
 }

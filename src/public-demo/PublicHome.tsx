@@ -77,11 +77,11 @@ export function PublicHome({
       <section className="ripple-hero" aria-labelledby="home-title">
         <div className="hero-copy">
           <span className="home-eyebrow">
-            <span className="live-dot" /> SMALL STORIES. BIG RIPPLES.
+            <span className="live-dot" /> ADOPTION.IS · STORIES FOR GOOD
           </span>
           <h1 id="home-title">
-            A good story.
-            <br />A greater <em>impact.</em>
+            Stories travel <br />
+            further <em> together.</em>
           </h1>
           <p>
             Discover the creativity behind a cause. Help the stories that move
@@ -89,7 +89,7 @@ export function PublicHome({
           </p>
           <div className="hero-actions">
             <Link className="button primary" to="/explore">
-              Find your ripple <ArrowUpRight size={17} />
+              Find your cause <ArrowUpRight size={17} />
             </Link>
             <Link className="hero-how-link" to="/?section=how-it-works">
               How it works <ArrowDown size={15} />
@@ -106,7 +106,9 @@ export function PublicHome({
             <div className="hero-placeholder" />
           )}
           <div className="hero-feature-top">
-            <span className="feature-label">THE RIPPLE STARTS HERE</span>
+            <span className="feature-label">
+              A LITTLE CONNECTION. A GREATER REACH.
+            </span>
             <AudioLines size={20} />
           </div>
           <div className="hero-feature-copy">
@@ -131,19 +133,15 @@ export function PublicHome({
           <MissionVisual />
         </div>
         <div>
-          <h2 id="mission-title">
-            Good causes deserve
-            <br />a bigger audience.
-          </h2>
+          <h2 id="mission-title">Our mission.</h2>
           <p>
-            There are stories worth telling and people ready to care. Blue
-            Ripple Media brings creators, causes, and communities together to
-            close that distance.
+            [Mission statement placeholder — share adoption.is’s purpose, who
+            we serve, and how we make a difference.]
           </p>
+          <h3 id="vision-title">Our vision.</h3>
           <p>
-            Creators make the ads. Campaigns give them a purpose. You help the
-            ones you believe in go further. A small act of support can start
-            something much bigger.
+            [Vision statement placeholder — describe the future adoption.is is
+            working toward and the lasting impact we hope to create.]
           </p>
           <Link to="/explore" className="home-section-link">
             Meet the stories <ArrowUpRight size={17} />
@@ -158,7 +156,7 @@ export function PublicHome({
       >
         <div className="home-section-heading">
           <div>
-            <span className="home-eyebrow">YOUR FIRST RIPPLE</span>
+            <span className="home-eyebrow">YOUR REACH STARTS HERE</span>
             <h2 id="how-title">From a story to something more.</h2>
             <p>Three simple ways to be part of it.</p>
           </div>
@@ -210,7 +208,8 @@ export function PublicHome({
 
       <div className="home-intro-strip">
         <span>
-          <AudioLines size={16} /> Watch a story. Feel something. Make a ripple.
+          <AudioLines size={16} /> Watch a story. Find a connection. Extend its
+          reach.
         </span>
         <div className="preview-tools">
           <span>Muted previews · Play for sound</span>

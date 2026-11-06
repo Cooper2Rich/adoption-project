@@ -1,0 +1,228 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;650;700;800&display=swap");
+
+body[data-theme],
+body.public-demo[data-theme] {
+  font-family: "Archivo", sans-serif;
+  --brand-blue: #25344f;
+  --brand-light: #617891;
+  --brand-mid: #617891;
+  --brand-deep: #632024;
+  --ink: #25344f;
+  --muted: #52657b;
+  --line: #ded4c8;
+  --lime: #d5b893;
+  --green: #6f4d38;
+  --night: #f6f3ed;
+  --surface: #ffffff;
+  --raised: #eee8df;
+  --accent: #eee8df;
+  --accent-strong: #d5b893;
+  --amber: #6f4d38;
+  --theme-text: var(--ink);
+  --theme-muted: var(--muted);
+  --theme-link: #6f4d38;
+  --theme-line: var(--line);
+  --theme-canvas: var(--night);
+  --theme-surface: var(--surface);
+  --theme-raised: var(--raised);
+  --theme-accent: var(--accent);
+  --theme-warning-text: #632024;
+  --theme-warning-surface: #f5e8e8;
+  --theme-success-text: #25344f;
+  --theme-success-surface: #eee8df;
+  --illustration-canvas: #25344f;
+  --illustration-shape: #617891;
+  --illustration-line: #617891;
+  --illustration-accent: #d5b893;
+  --illustration-ink: #ffffff;
+  color: var(--ink);
+  background: var(--night);
+  color-scheme: light;
+}
+
+body[data-theme="dark"],
+body.public-demo[data-theme="dark"] {
+  --brand-blue: #b7c6d6;
+  --brand-light: #b7c6d6;
+  --brand-deep: #25344f;
+  --ink: #ffffff;
+  --muted: #b7c6d6;
+  --line: #425169;
+  --night: #131b2b;
+  --surface: #1b2638;
+  --raised: #25344f;
+  --accent: #2e3c53;
+  --accent-strong: #617891;
+  --amber: #d5b893;
+  --theme-link: #d5b893;
+  --theme-warning-text: #f1bfc1;
+  --theme-warning-surface: #632024;
+  --theme-success-text: #ffffff;
+  --theme-success-surface: #25344f;
+  color-scheme: dark;
+}
+
+html:has(body[data-theme]) {
+  background: #f6f3ed;
+}
+
+html:has(body[data-theme="dark"]) {
+  background: #131b2b;
+}
+
+.adoption-logo,
+.public-demo .adoption-logo {
+  display: inline-flex;
+  align-items: center;
+  font-family: "Archivo", sans-serif;
+  color: var(--ink);
+  letter-spacing: -1px;
+  background: transparent;
+  padding: 0;
+}
+
+.adoption-wordmark {
+  font-size: 26px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.adoption-logo.small .adoption-wordmark {
+  font-size: 20px;
+  letter-spacing: -1px;
+}
+
+body :is(.button.primary, .skip-link) {
+  background: #6f4d38;
+  border-color: #6f4d38;
+  color: #ffffff;
+}
+
+body .button.primary:hover:not(:disabled) {
+  background: #632024;
+  border-color: #632024;
+}
+
+body .button.secondary {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+body :is(button, a, select, input, textarea):focus-visible {
+  outline: 2px solid var(--theme-link);
+  outline-offset: 3px;
+}
+
+body :is(input, textarea)::placeholder {
+  color: var(--muted);
+}
+
+body .public-notice {
+  background: #25344f;
+  color: #ffffff;
+}
+
+body.public-demo .public-notice .theme-picker select {
+  background: #25344f;
+  color: #ffffff;
+  border-color: #617891;
+  color-scheme: dark;
+}
+
+.profile-theme-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  max-width: 320px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profile-theme-picker select {
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 44px;
+  width: 100%;
+}
+
+.public-demo .hero-copy h1,
+.public-demo .home-section-heading h2,
+.public-demo .about-intro h1 {
+  font-family: "Archivo", sans-serif;
+}
+
+.public-demo .ripple-mission #vision-title {
+  margin: 28px 0 12px;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+}
+
+.public-demo[data-theme="light"]
+  :is(.hero-feature, .ad-play, .inline-play, .ad-duration) {
+  --ink: #ffffff;
+  color: #ffffff;
+}
+
+body:not(.public-demo)
+  :is(
+    .sidebar,
+    .topbar,
+    .modal,
+    .post-card,
+    .stats-row,
+    .panel,
+    .search-box,
+    .role-switch
+  ) {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+body:not(.public-demo)
+  :is(
+    input,
+    select,
+    textarea,
+    .workspace-identity,
+    .sidebar-note,
+    .nav-item.active,
+    .nav-item:hover
+  ) {
+  background: var(--raised);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+body:not(.public-demo)
+  :is(
+    .page-heading h1,
+    .breadcrumb strong,
+    .sidebar-user strong,
+    .nav-item,
+    .logo
+  ) {
+  color: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .public-demo .public-breadcrumb {
+    min-width: 0;
+  }
+  .public-demo .public-breadcrumb strong {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .adoption-header-brand {
+    flex-shrink: 0;
+  }
+  .adoption-wordmark {
+    font-size: 22px;
+  }
+}

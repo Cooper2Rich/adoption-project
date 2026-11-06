@@ -90,7 +90,7 @@ test("Our Why uses loaded photos over a landscape backdrop in both themes", asyn
     "Community",
   ]);
   await expect(visual.locator(".mission-arrow")).toHaveCount(2);
-  for (const theme of ["ripple", "acu"]) {
+  for (const theme of ["dark", "light"]) {
     await page.getByLabel("Website theme").selectOption(theme);
     await place(page, "full");
     await expect(visual).toHaveAttribute("data-complete", "");

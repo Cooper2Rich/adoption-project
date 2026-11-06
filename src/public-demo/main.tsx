@@ -3,13 +3,15 @@ import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import { Waves } from "lucide-react";
 import PublicApp from "./PublicApp";
-import { initializeTheme, ThemePicker } from "./ThemePicker";
+import { ThemePicker } from "./ThemePicker";
+import { initializeTheme } from "../theme";
 import "../styles.css";
 import "./styles.css";
 import "./night-theme.css";
 import "./refinements.css";
 import "./ripple-ui.css";
 import "./themes.css";
+import "../adoption-is.css";
 
 document.body.classList.add("public-demo");
 initializeTheme();
@@ -27,8 +29,8 @@ createRoot(document.getElementById("root")!).render(
             Public demo · fictional data · no real payments
           </span>
         </span>
-        <a href="https://github.com/Cooper2Rich/slander/tree/main">
-          Source & local version ↗
+        <a href="https://github.com/Cooper2Rich/slander">
+          Project repository ↗
         </a>
         <ThemePicker />
       </div>

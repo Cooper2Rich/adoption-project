@@ -29,7 +29,7 @@ if (process.argv.includes("--dev")) {
 }
 const port = Number(process.env.PORT || 3000);
 server.listen(port, "127.0.0.1", () =>
-  console.log(`Slander is running at http://localhost:${port}`),
+  console.log(`adoption.is is running at http://localhost:${port}`),
 );
 for (const signal of ["SIGINT", "SIGTERM"])
   process.on(signal, () =>

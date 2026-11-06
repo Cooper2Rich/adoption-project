@@ -113,7 +113,14 @@ for (const scenario of cases) {
       name: "Main navigation",
       exact: true,
     });
-    await expect(secondary.getByRole("link")).toHaveCount(4);
+    await expect(secondary.getByRole("link")).toHaveCount(5);
+    await secondary
+      .getByRole("link", { name: "Appearance", exact: true })
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Appearance", exact: true }),
+    ).toBeInViewport();
+    await openWorkspaceMenu(page);
     await secondary
       .getByRole("link", { name: "Account settings", exact: true })
       .click();

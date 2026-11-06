@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import {
   ArrowUpRight,
-  Compass,
   Heart,
   Menu,
   PanelLeftClose,
@@ -178,7 +177,7 @@ export default function PublicApp() {
   }, [publicRoute, location.pathname]);
   useEffect(() => {
     if (publicRoute)
-      document.title = `${location.pathname === "/" ? "Stories that make a difference" : location.pathname === "/about" ? "About BRM" : location.pathname === "/leaderboard" ? "Leaderboard" : location.pathname === "/viewer" ? "Viewer account" : "Discover stories"} · ${APP_NAME}`;
+      document.title = `${location.pathname === "/" ? "Stories that make a difference" : location.pathname === "/about" ? "About adoption.is" : location.pathname === "/leaderboard" ? "Leaderboard" : location.pathname === "/viewer" ? "Viewer account" : "Discover stories"} · ${APP_NAME}`;
   }, [publicRoute, location.pathname]);
   const navigation: NavigationControls = {
     ...layout,
@@ -277,14 +276,20 @@ export default function PublicApp() {
             )}
           </div>
           <div className="public-breadcrumb">
-            <Compass size={17} />
+            <Link
+              to="/"
+              className="adoption-header-brand"
+              aria-label="adoption.is home"
+            >
+              <Logo small />
+            </Link>
             <span>Community</span>
             <span>/</span>
             <strong>
               {location.pathname === "/"
-                ? "Welcome to Blue Ripple"
+                ? "Welcome to adoption.is"
                 : location.pathname === "/about"
-                  ? "About BRM"
+                  ? "About adoption.is"
                   : location.pathname === "/leaderboard"
                     ? "Leaderboard"
                     : location.pathname === "/viewer"

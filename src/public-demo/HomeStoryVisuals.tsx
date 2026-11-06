@@ -135,7 +135,7 @@ export function MissionVisual() {
             </Fragment>
           ))}
         </div>
-        <p className="mission-tagline">ONE STORY. MANY RIPPLES.</p>
+        <p className="mission-tagline">ONE STORY. GREATER REACH.</p>
       </div>
       <figcaption>
         Creativity connects us. Support carries it further.

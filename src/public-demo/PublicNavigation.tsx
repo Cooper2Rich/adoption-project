@@ -123,7 +123,7 @@ function ContextMenu({ campaigns, categories }: NavigationProps) {
         <>
           <ContextLink
             to="/about"
-            label="Why BRM"
+            label="Why adoption.is"
             icon={Heart}
             selected={!section}
           />
@@ -308,7 +308,7 @@ export function PublicLinks({
       />
       <ContextLink
         to="/about"
-        label="About BRM"
+        label="About adoption.is"
         navigation={navigation}
         icon={Info}
         selected={area === "about"}
@@ -369,12 +369,12 @@ export function PublicNavigation(props: NavigationProps) {
       hidden={props.hidden}
       className="sidebar public-sidebar"
     >
-      <Link to="/" className="brand" aria-label="Blue Ripple Media home">
+      <Link to="/" className="brand" aria-label="adoption.is home">
         <Logo />
       </Link>
       <div className="public-space-title">
         <span>{title}</span>
-        <span className="context-space-label">BLUE RIPPLE</span>
+        <span className="context-space-label">ADOPTION.IS</span>
       </div>
       <ContextMenu {...props} />
       <div className="sidebar-bottom">

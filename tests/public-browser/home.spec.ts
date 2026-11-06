@@ -8,7 +8,7 @@ test("guest home explains the mission, shows weekly campaign leaders and links t
   await page.clock.install({ time: new Date("2026-10-27T18:00:00Z") });
   await page.goto("./");
   await expect(
-    page.getByRole("heading", { name: "A good story. A greater impact." }),
+    page.getByRole("heading", { name: "Stories travel further together." }),
   ).toBeVisible();
   const current = page.getByRole("region", { name: "This week’s leaders" });
   const past = page.getByRole("region", { name: "Last week’s top performers" });

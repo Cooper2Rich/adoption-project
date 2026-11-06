@@ -453,8 +453,8 @@ export function AdPlatformsPage({
               <p>
                 A live setup will authorize each advertiser account, verify
                 access and available budget, map the campaign’s creatives, and
-                use a server to apply and reconcile spending. BRM eligibility
-                does not replace platform ad review.
+                use a server to apply and reconcile spending. adoption.is
+                eligibility does not replace platform ad review.
               </p>
               <div>
                 <a
@@ -530,7 +530,8 @@ function ConnectionDialog({
       >
         <p>
           Explore account selection with fictional USD accounts. This does not
-          sign in to {platformNames[provider]} or grant BRM advertising access.
+          sign in to {platformNames[provider]} or grant adoption.is
+          advertising access.
         </p>
         <label>
           {platformNames[provider]} demo ad account

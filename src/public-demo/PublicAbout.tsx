@@ -6,7 +6,7 @@ export function PublicAbout() {
     <article className="brm-about">
       <header className="about-intro">
         <span className="home-eyebrow">
-          <Waves size={16} /> ABOUT BLUE RIPPLE MEDIA
+          <Waves size={16} /> ABOUT ADOPTION.IS
         </span>
         <h1>
           Good causes deserve
@@ -17,22 +17,15 @@ export function PublicAbout() {
           A good story can move someone. A community can help it move further.
         </p>
         <div className="about-why">
-          <span className="home-eyebrow">WHY BRM EXISTS</span>
+          <span className="home-eyebrow">OUR MISSION & VISION</span>
           <div>
             <p>
-              Meaningful work can go unseen. Causes need people to understand
-              their mission, creators need a purpose for their creativity, and
-              people who care need a way to take part.
+              [Mission statement placeholder — share adoption.is’s purpose,
+              who we serve, and how we make a difference.]
             </p>
             <p>
-              Blue Ripple Media brings those people together. We believe
-              attention can become a starting point for good: a story sparks
-              interest, someone shares or supports it, and the ripple grows.
-            </p>
-            <p>
-              Our mission is to help stories about good causes find the audience
-              they deserve—and give the people behind them a way to build
-              something together.
+              [Vision statement placeholder — describe the future adoption.is
+              is working toward and the lasting impact we hope to create.]
             </p>
           </div>
         </div>
@@ -42,7 +35,7 @@ export function PublicAbout() {
         className="about-section"
         aria-labelledby="about-how-title"
       >
-        <span className="home-eyebrow">THE RIPPLE EFFECT</span>
+        <span className="home-eyebrow">THE POWER OF REACH</span>
         <h2 id="about-how-title">It starts with a story.</h2>
         <ol className="about-steps">
           <li>

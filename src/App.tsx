@@ -334,6 +334,11 @@ export default function App({
   if (PUBLIC_DEMO && activeRoleTab.key === "profile")
     secondaryNav.push(
       {
+        to: "/profile?section=appearance",
+        label: "Appearance",
+        icon: Settings2,
+      },
+      {
         to: "/profile?section=role-details",
         label: profileRoles[role].details,
         icon: UserRound,

@@ -40,7 +40,7 @@ export function WorkspaceRail({
         {
           to: "/about",
           label: "About",
-          name: "About BRM",
+          name: "About adoption.is",
           area: "about",
           Icon: Info,
         },
@@ -62,7 +62,7 @@ export function WorkspaceRail({
       <Link
         to={role ? roleTabs[role][0].to : "/"}
         className="rail-brand"
-        aria-label={role ? "Workspace home" : "Blue Ripple home"}
+        aria-label={role ? "Workspace home" : "adoption.is home"}
       >
         <Logo small />
       </Link>

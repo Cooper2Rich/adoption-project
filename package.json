@@ -7,7 +7,9 @@
     "node": ">=24.0.0"
   },
   "scripts": {
+    "dev:adoption": "vite --config vite.public.config.ts --mode public --base / --host 127.0.0.1 --port 5173 --strictPort",
     "dev": "node server/index.js --dev",
+    "dev:kindred": "vite --config vite.public.config.ts --mode public --base / --host 127.0.0.1 --port 5173 --strictPort",
     "build": "tsc -b && vite build",
     "build:public": "tsc -b && node scripts/build-public.mjs",
     "stage:public": "node scripts/stage-public.mjs",

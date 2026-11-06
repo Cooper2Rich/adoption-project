@@ -13,7 +13,7 @@ test("how-to cards use loaded local photos in both themes without overflow", asy
   const photos = page.locator(".how-step-visual img");
   await expect(photos).toHaveCount(3);
   await expect(page.locator(".how-step-visual svg")).toHaveCount(0);
-  for (const theme of ["ripple", "acu"]) {
+  for (const theme of ["dark", "light"]) {
     await page.getByLabel("Website theme").selectOption(theme);
     for (const photo of await photos.all()) {
       await photo.scrollIntoViewIfNeeded();

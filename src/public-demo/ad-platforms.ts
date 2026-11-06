@@ -62,7 +62,7 @@ export function demoAdAccounts(
     {
       key: "sandbox",
       id: `demo-${platform}-brm-sandbox`,
-      name: "BRM sandbox · Demo ad account (USD)",
+      name: "adoption.is sandbox · Demo ad account (USD)",
     },
   ];
 }

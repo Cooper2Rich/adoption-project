@@ -96,16 +96,16 @@ test("public About tab explains BRM's purpose and has its own section navigation
         : "Workspace shortcuts",
     exact: true,
   });
-  await primary.getByRole("link", { name: "About BRM", exact: true }).click();
+  await primary.getByRole("link", { name: "About adoption.is", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Good causes deserve to be heard." }),
   ).toBeVisible();
-  await expect(page.locator(".about-why")).toContainText("WHY BRM EXISTS");
+  await expect(page.locator(".about-why")).toContainText("OUR MISSION & VISION");
   await expect(page.locator(".about-why")).toContainText(
-    "Blue Ripple Media brings those people together",
+    "[Mission statement placeholder",
   );
   await expect(
-    primary.getByRole("link", { name: "About BRM", exact: true }),
+    primary.getByRole("link", { name: "About adoption.is", exact: true }),
   ).toHaveAttribute("aria-current", "page");
   if (info.project.name === "mobile") {
     const menu = page.locator(".public-mobile-context");
@@ -113,7 +113,7 @@ test("public About tab explains BRM's purpose and has its own section navigation
       await menu.locator("summary").first().click();
   }
   const nav = page.getByRole("navigation", {
-    name: "About BRM navigation",
+    name: "About adoption.is navigation",
     exact: true,
   });
   await nav

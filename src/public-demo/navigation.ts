@@ -11,7 +11,7 @@ export function publicArea(pathname: string): PublicArea {
 export const publicAreaNames: Record<PublicArea, string> = {
   home: "Home",
   discover: "Discover",
-  about: "About BRM",
+  about: "About adoption.is",
   leaders: "Leaders",
   profile: "Profile",
 };

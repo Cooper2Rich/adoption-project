@@ -115,7 +115,7 @@ test("main tabs get distinct menus and Home section links scroll within Home", a
   await nav.getByRole("link", { name: "Our mission", exact: true }).click();
   await expect(
     page.getByRole("heading", {
-      name: "Good causes deserve a bigger audience.",
+      name: "Our mission.",
     }),
   ).toBeInViewport();
   await mainTab(page, "Discover ads");

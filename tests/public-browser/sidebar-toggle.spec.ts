@@ -57,7 +57,7 @@ test("main tabs toggle secondary menus while preserving the page and filters", a
     await expect(closeSidebar).toHaveCount(0);
   }
   for (const [name, area] of [
-    ["About BRM", "About BRM"],
+    ["About adoption.is", "About adoption.is"],
     ["Home", "Home"],
     ["Leaderboard", "Leaders"],
     ["Viewer account", "Profile"],
@@ -117,7 +117,7 @@ for (const scenario of roleCases) {
       for (const publicName of [
         "Home",
         "Discover ads",
-        "About BRM",
+        "About adoption.is",
         "Leaderboard",
         "Viewer account",
       ]) {

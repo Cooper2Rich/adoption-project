@@ -75,7 +75,7 @@ export function useRoleProfile(access: DemoAccess, identity: Identity | null) {
     bio: "",
     website: "",
     focus: "",
-    team: access.role === "admin" ? "Blue Ripple Media" : "",
+    team: access.role === "admin" ? "adoption.is" : "",
     title: access.role === "admin" ? "Platform administrator" : "",
     availability: "Open to projects",
     timezone: "America/Chicago",
