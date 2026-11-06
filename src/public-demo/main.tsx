@@ -29,7 +29,7 @@ createRoot(document.getElementById("root")!).render(
             Public demo · fictional data · no real payments
           </span>
         </span>
-        <a href="https://github.com/Cooper2Rich/slander">
+        <a href="https://github.com/Cooper2Rich/slander/tree/main">
           Project repository ↗
         </a>
         <ThemePicker />
