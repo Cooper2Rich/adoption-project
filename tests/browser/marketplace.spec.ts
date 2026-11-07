@@ -64,7 +64,14 @@ test("complete fictional campaign journey: terms, eligibility, tracked giving, s
     .getByLabel("Creator profile", { exact: true })
     .selectOption({ label: "Alex River · fictional" });
   await page.getByRole("button", { name: "Open creator studio" }).click();
+  // Desktop and mobile share the showcase. Wait for saved consent before acting.
+  const participationLoaded = page.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/api/campaigns/${id}/records/participations`) &&
+      response.ok(),
+  );
   await openCampaign(page);
+  const participation = await (await participationLoaded).json();
   const accept = page.getByRole("button", {
     name: "Accept campaign terms",
     exact: true,
@@ -72,7 +79,7 @@ test("complete fictional campaign journey: terms, eligibility, tracked giving, s
   await expect(
     page.getByRole("button", { name: /Terms accepted|Accept campaign terms/ }),
   ).toBeVisible();
-  if (await accept.isVisible()) await accept.click();
+  if (participation.items.length === 0) await accept.click();
   await expect(
     page.getByRole("button", { name: "✓ Terms accepted" }),
   ).toBeDisabled();
