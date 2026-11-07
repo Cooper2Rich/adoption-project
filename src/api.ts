@@ -35,10 +35,19 @@ export async function downloadMedia(path: string, access: DemoAccess) {
   const response = await mediaResponse(path, access);
   if (!response.ok)
     throw new Error("The creative media is unavailable in this view.");
-  const url = URL.createObjectURL(await response.blob());
+  const blob = await response.blob();
+  const extensions: Record<string, string> = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/webp": ".webp",
+    "video/mp4": ".mp4",
+    "video/quicktime": ".mov",
+    "video/webm": ".webm",
+  };
+  const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `${APP_NAME.toLowerCase()}-creative`;
+  link.download = `${APP_NAME.toLowerCase()}-creative${extensions[blob.type] || ""}`;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
