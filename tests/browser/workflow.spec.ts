@@ -198,7 +198,7 @@ test("project setup, upload, automatic eligibility, immutable revision and pairi
   await page.getByRole("button", { name: "Save creative" }).click();
   const mediaDownload = await mediaDownloadPromise;
   expect(mediaDownload.suggestedFilename()).toMatch(
-    /^slander-creative\.(jpeg|jpg)$/,
+    /^adoption\.is-creative\.(jpeg|jpg)$/,
   );
   expect(await mediaDownload.failure()).toBeNull();
   await page.screenshot({

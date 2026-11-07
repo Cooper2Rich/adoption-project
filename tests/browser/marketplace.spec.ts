@@ -140,7 +140,7 @@ test("complete fictional campaign journey: terms, eligibility, tracked giving, s
     .click();
   const file = await downloading;
   expect(file.suggestedFilename()).toBe(
-    "slander-fictional-sample-statement.json",
+    "adoption.is-fictional-sample-statement.json",
   );
   await expect(
     page.getByText(/Sample statement exported\. This current sample week/),
