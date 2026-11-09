@@ -1,0 +1,96 @@
+# Meta and TikTok advertising funding research
+
+Evidence checked 2026-11-09. Planning only. Resolution evidence for [Verify supported Meta and TikTok ad-account funding mechanisms](https://github.com/Cooper2Rich/adoption-project/issues/15), within [Plan Meta and TikTok client-owned advertising integrations](https://github.com/Cooper2Rich/adoption-project/issues/9). Cooper2Rich's assignment was verified before research.
+
+## Context that travels with this disposable branch
+
+The user's latest decision is that clients own their ad accounts while Slander collects an **advertising fund**, primarily public advertising crowdfunding with supplementary client contributions, and automatically pays/funds Meta and TikTok. This supersedes direct-client-billing assumptions. Advertising funding is distinct from fundraising donations, creator earnings and the prize fund. Asset ownership, payer identity, payment timing and authorization are separate decisions. Adoption.is is the first client; subsequent clients must retain their own assets. Bank-account pooling/separation, allocation policy, processor and payment rail remain undecided.
+
+The local glossary and O-01 notes may not exist on the default branch: the glossary defines the advertising fund as above; O-01 is a reporting approval/validation effort, with demo connections and no established live financial access. Reporting authorization is not a financial authorization. The older launch PRD excludes public advertising contributions and automated ad buying; this map expands planning scope without updating that PRD or authorizing implementation.
+
+## Investigation result
+
+**No end-to-end automatic funding mechanism is verified for Slander's intended combination of crowdfunding collection, Slander as payer, and client-owned accounts.** There are documented automatic provider charges and genuine credit/balance allocation API surfaces. Eligibility, ownership topology, commercial enrollment and external settlement remain gates. Absence of verified support here is not proof that a negotiated provider arrangement is impossible.
+
+| Mechanism | Evidence status | Consequence for this model |
+| --- | --- | --- |
+| Provider automatically charges approved payment method | TikTok documented; Meta candidate requiring accessible current help/account confirmation | Could satisfy automated payment without Slander initiating each charge; third-party payer approval remains unverified |
+| Add prepaid balance in UI | TikTok documented; Meta candidate with inaccessible help | UI action does not establish external top-up API |
+| Automatic shared-balance allocation | TikTok documented with owned-account/same-entity limits | Does not prove agency BC can pay partner-owned client accounts |
+| API balance/credit allocation | TikTok BC transfer and Meta credit-allocation SDK surfaces verified | Allocation is not proof of external cash collection, top-up or bank settlement; app/account eligibility unverified |
+| Agency invoicing/credit line | Documented TikTok invoicing; Meta SDK agency bill-to representation | Requires provider approval and exact liability/bill-to configuration; credit is not collected cash |
+| Processor payout directly to ad-account ID | Not established by any reviewed provider interface | Do not design a generic payout-to-ad-account feature |
+
+## TikTok: verified primary evidence and boundaries
+
+### Automatic payment, prepaid balance and recharge
+
+[Set up automatic payment](https://ads.tiktok.com/help/article/set-up-automatic-payment) (July 2026) documents threshold/date charging of a valid payment method. BC-owned accounts add that method in BC. Prepaid cards cannot be used for automatic payment; card verification involves a temporary charge. Availability differs by advertiser. This proves TikTok-initiated charges, not an API for Slander to charge arbitrary cards, and does not approve Slander's payment instrument on a client's account.
+
+[Manual payment](https://ads.tiktok.com/resources/help/article/manual-payment) (July 2026) requires funding before delivery; delivery stops when the balance is exhausted. For BC-managed accounts, additions go through BC Payment Management. [Add to your account balance](https://ads.tiktok.com/resources/help/article/add-to-your-account-balance-in-tiktok-ads-manager) (July 2026) documents a UI checkout flow and use of cash balance against automatic-payment invoices. Neither article documents an external-money top-up API.
+
+[Automatic balance recharge](https://ads.tiktok.com/help/article/how-to-set-up-automatic-balance-recharge) (July 2026) is a distinct provider automation: manual-payment accounts **without a Business Center**, upgraded to Payment Portfolio, can configure threshold/amount rules charging a selected method. This is a narrow candidate, not general BC auto-top-up or proof of API support. Do not remove a client's BC merely to fit this option.
+
+[Billing option changes](https://ads-useast2a.tiktok.com/resources/help/article/about-billing-option-changes?lang=en) (July 2026) permits eligible manual-to-automatic/monthly-invoice and automatic-to-monthly-invoice changes. Reverse changes are unsupported. Account-manager or stable payment-history eligibility can apply. Selection must precede assumptions about reversibility.
+
+### Ownership, shared balances and finance authority
+
+[BC payment management](https://ads.tiktok.com/resources/help/article/learn-the-basic-operations-of-bc-and-complete-the-basic-bc-settings?lang=en) says payment management requires BC ownership, including a managed-customer ownership-transfer route. Mere partner asset access is not this ownership. Transferring client assets to Slander would violate the settled ownership model; it is not a silent workaround.
+
+[Automatic Balance Allocation](https://ads.tiktok.com/help/article/about-the-auto-allocate-balance-in-business-center?redirected=2) (February 2025) applies to monthly-invoiced auction accounts **owned by** the BC. It draws on BC balance and uses account budgets as spending caps; ad credits are not automatically allocated. Upgrading is irreversible. Therefore the article cannot substantiate allocation from Slander's BC to accounts merely shared by client BCs.
+
+[Payment Portfolio](https://ads.tiktok.com/resources/help/article/about-payment-portfolio?lang=en) (May 2026) distinguishes advanced shared cash/credit from standard manual allocation. Advanced sharing is across accounts under the **same entity name**; ad credits remain manual. The article identifies scenarios without multi-party billing as a fit. Multiple portfolios can separate payment methods and balances inside one entity; this does not establish cross-client pooling permission or replace a Slander allocation policy. [Upgrade instructions](https://ads.tiktok.com/resources/help/article/how-to-use-payment-portfolio) (July 2026) require approved ad accounts and appropriate admin/finance access; upgrade availability depends on billing configuration. These are UI capabilities, not API contracts.
+
+[Roles and permissions](https://ads.tiktok.com/resources/help/article/about-business-center-roles-and-permissions?lang=en) (August 2025) assigns payment-method and allocation management to Finance Manager and viewing/exporting histories to Finance Manager/Analyst. Admins need advanced finance roles. Some older help says admin or finance role; use the current account's displayed advanced roles and provider confirmation rather than assuming basic admin or campaign operator suffices. UI roles also do not prove developer-app finance scope.
+
+### Actual API surface, not inferred from UI
+
+TikTok's [official SDK BC API reference](https://github.com/tiktok/tiktok-business-api-sdk/blob/main/java_sdk/docs/BcApi.md) exposes `POST /open_api/v1.3/bc/transfer/` for adding/deducting ad-account balance within BC, alongside `bc/balance/get`, `advertiser/balance/get`, `bc/transaction/get`, `advertiser/transaction/get` and `bc/account/transaction/get`. It requires an access-token argument despite generated sections saying no authorization required. That boilerplate must not be read as unauthenticated finance access.
+
+The [transfer request model](https://github.com/tiktok/tiktok-business-api-sdk/blob/main/java_sdk/docs/BcTransferBody.md) contains BC/advertiser/child-BC identifiers, cash/grant amounts, transfer type/level and request ID. It establishes an allocation request schema, not acceptance of an external bank/card or processor payout. Child-BC fields do not prove arbitrary partner-account eligibility, allowed enum values or access for Slander's developer app.
+
+The linked [BC Transfer portal documentation](https://business-api.tiktok.com/portal/docs?id=1739939095321601) returned a JavaScript shell with no readable content. Current scopes, BC types, ownership/partner restrictions, supported billing modes, currency rules, transfer limits, idempotency, errors and compatibility after Payment Portfolio upgrade therefore remain **unverified**. Obtain that contract and provider confirmation before promising API allocation on client-owned accounts. No reviewed API establishes external cash top-up or account-closing refunds.
+
+### Invoicing, region/currency and reconciliation
+
+[Billing options](https://ads.tiktok.com/resources/help/article/tiktok-billing-options) documents monthly invoicing for eligible businesses, contract-currency payments and bank transfer/accepted methods using invoice instructions. The spending limit is not a payment method. A designated bill-to party does not remove the receiving business's stated responsibility for advertising spend. [Invoice autopay](https://ads-useast2a.tiktok.com/resources/help/article/how-to-set-up-automatic-payments-for-monthly-invoicing?lang=en) (November 2025) permits automatic unpaid-invoice payment using eligible online methods on contract-defined dates. Neither establishes a general invoice-payment API.
+
+Enrollment documentation is not fully uniform: [Invoice FAQs](https://ads.tiktok.com/resources/help/article/invoice-faq?redirected=2) says only managed accounts can apply for credit-line invoicing, whereas the newer finance-role table lists self-serve applications. Treat enrollment as account-specific, not guaranteed or categorically managed-only.
+
+[Supported payment methods](https://ads.tiktok.com/resources/help/article/supported-payment-methods) (July 2026) depends on billing country/region, billing option and currency; managed customers must ask their representative. [North America table](https://ads.tiktok.com/resources/help/article/north-america-supported-payment-methods) (October 2025) lists US USD manual payment via Venmo/PayPal/card, US automatic payment via bankcards/PayPal in listed currencies, and USD invoicing methods including direct debit. This is an example, not a choice of Slander's jurisdiction, currency or rail. Recheck the exact client and payer combinations.
+
+[Invoice management](https://ads.us.tiktok.com/resources/help/article/manage-invoices-business-center) offers invoice status and downloads in BC. Combine these with authorized API transaction/balance records; advertising performance spend alone is not a bank settlement record.
+
+[Non-BC refunds](https://ads.tiktok.com/resources/help/article/request-refund) require eligible unspent balances, exclude taxes and close the account; refunds normally return to the original method within 60 days. [BC refunds](https://ads.tiktok.com/resources/help/article/request-a-refund-for-ad-accounts-with-a-business-center) describe returning balance to the owning BC as an alternative; refunding instead can require closing all associated ad accounts, with managed customers contacting their representative. This is not a liquid wallet or a documented API withdrawal. A contributor refund or collection dispute cannot be assumed to unwind spent ads or immediately recover prepaid cash.
+
+## Meta: verified SDK evidence; current help/commercial rules inaccessible
+
+Meta's first-party [Business SDK](https://github.com/facebook/facebook-python-business-sdk/blob/main/facebook_business/adobjects/business.py) exposes reads for `extendedcredits`, `creditcards` and `business_invoices`. These show financial data interfaces, not permission to debit a card or settle an invoice. Its [ExtendedCredit object](https://github.com/facebook/facebook-python-business-sdk/blob/main/facebook_business/adobjects/extendedcredit.py) includes a POST to `owning_credit_allocation_configs` with amount, receiving business, liability, partition and bill-to parameters. These are real credit-management surfaces, not a cash deposit endpoint.
+
+The [allocation object](https://github.com/facebook/facebook-python-business-sdk/blob/main/facebook_business/adobjects/extendedcreditallocationconfig.py) represents owning/receiving businesses, request status, Agency/Advertiser bill-to, and liability/partition enums; it supports amount updates and deletion. This makes a negotiated agency credit-line arrangement a credible candidate while preserving separate client ownership. Schema availability does not establish which legal entities, countries, account types or apps may use it. WhatsApp credit-attachment methods in the same SDK are not evidence for advertising-account funding.
+
+[Invoice records](https://github.com/facebook/facebook-python-business-sdk/blob/main/facebook_business/adobjects/omegacustomertrx.py) expose ad-account IDs, currency, invoice and due dates, amount due, payment status, download links and invoice/credit-memo/debit-memo types. This supports a candidate reconciliation interface subject to access and completeness checks; it does not establish a refund API or settlement instruction. [AdAccount](https://github.com/facebook/facebook-python-business-sdk/blob/main/facebook_business/adobjects/adaccount.py) has funding-source details; a funding-source identifier alone is not proof of a supported top-up or payment operation.
+
+The following primary help pages returned login/temporary-block pages rather than substantive documentation: [billing settings](https://www.facebook.com/business/help/1730009227245741), [payment options](https://www.facebook.com/business/help/776240779095515), [manual-payment setup](https://www.facebook.com/business/help/173319523214585), [available-funds additions](https://www.facebook.com/business/help/350519228479855), and [unused-funds refund reference](https://www.facebook.com/business/help/333798826401061). The [Business Manager API guide](https://developers.facebook.com/docs/marketing-api/business-manager-api/get-started) and [credit guide](https://developers.facebook.com/docs/marketing-api/business-manager-api/credit/) were inaccessible. No inaccessible page is counted as current substantive verification. Secondary descriptions/mirrors were not used to establish Meta rules.
+
+Meta's official [ordinary billing walkthrough](https://www.youtube.com/watch?v=GDPLEypuR1U) and [credit-line walkthrough](https://www.youtube.com/watch?v=XdvBxzpeZHo) confirm distinct UI workflows but date from 2022. They cannot settle current 2026 enrollment or card restrictions.
+
+Consequently automatic card/debit billing, prepaid available funds/auto-reload, and agency monthly invoicing are **candidates requiring current Meta confirmation**, not proven options for this client/payer pair. Obtain current accepted-method/country/currency rules; finance/full-control and client-consent requirements; whether a partner may attach Slander's instrument without ownership transfer; credit-line approval, sharing restrictions, bill-to/liability and account attachment; any required invoicing migration; and refund eligibility/original-destination rules. No current public API for Slander-originated external cash top-up, invoice settlement or refund was established. Do not infer nonexistence, unrestricted card availability or eligibility from SDK schemas.
+
+## Collection, settlement and human decision gates
+
+A payment processor payout is not inherently addressable to a Meta/TikTok advertiser ID. As a concrete illustration only, [Stripe payouts](https://docs.stripe.com/payouts) move available processor funds to a bank account, not an ad-account ID. Stripe is not selected here. An invoice bank transfer is a separate provider-approved payment with required references; a processor's ordinary payout is not proof that it can send that transfer or reconcile it to the correct advertiser.
+
+Before adopting any candidate, obtain provider/commercial confirmation covering Slander paying for client-owned accounts with advertising crowdfunding proceeds, permissible instruments and cardholder/legal-entity mismatch, client authorization, invoice entity/tax treatment, enrollment and country/currency constraints. A collection processor must separately approve the actual crowdfunding/agency model, beneficiary, custody/settlement arrangement, disputes/reserves and refunds. Appropriate professional review is still needed; this note supplies no legal or financial assurance.
+
+[Choose advertising fund collection and platform payment model](https://github.com/Cooper2Rich/adoption-project/issues/16) remains open. Human choices include bank-account separation or pooling with explicit allocations; payer and supported rail; when proceeds become spendable; reserves for unsettled contributions/disputes, fees/FX and unpaid platform charges; per-client spend authority; and unused-fund/refund policy. A campaign budget, provider cash balance, credit limit, collected cash and settled payment are different facts. None authorizes cross-client spending.
+
+Verification gates for later authorized setup/implementation:
+
+1. Record the actual client-owned account/BC, payer entity, region, currency, billing mode and finance authority. Obtain approval for the crowdfunding-funded third-party payer model.
+2. For provider automatic charging, verify the permitted instrument can be attached and charged while ownership stays with the client. Decide whether provider-managed automation meets the requested behavior.
+3. For API allocation, obtain current endpoint contracts and app scopes; confirm partner-owned eligibility explicitly or use a separately authorized client-BC path if the provider approves it. Do not transfer assets to fit an API.
+4. Prove external settlement separately from internal allocation. Reconcile collection net proceeds, bank/card charges, platform deposits/allocations, invoices, spend, fees, credits and refunds using stable provider IDs; confirm timing, pagination, corrections, duplicate-request and failure behavior before automation.
+5. If no supported automatic route is approved, automated funding is **blocked**. A manual funding bridge requires an explicit human scope change; do not silently revert to direct-client billing or claim the requirement is satisfied.
+
+This research ticket can close with documented capabilities and explicit verification gates. It does not close the human funding choice or authorize account setup, credentials, collections, spending, ad operations, application work or deployment. This branch is disposable evidence, contains one note, has no PR and must never be merged.
