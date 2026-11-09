@@ -4,7 +4,9 @@ Research date: 2026-11-09. Context: [Establish Meta and TikTok production access
 
 ## Context and evidence boundary
 
-User decisions: plan only; setup and coding follow later. Clients own advertising accounts and pay providers directly. Slander must create ads, change campaigns and import performance. adoption.is is first; connections must be reusable for later clients. App authorization grants delegated access, not ownership or permission from the client to spend arbitrary amounts.
+User decisions: plan only; setup and coding follow later. Clients own advertising accounts. The starting brief specified direct provider payment; the latest map now records a superseding billing decision, described below. Slander must create ads, change campaigns and import performance. adoption.is is first; connections must be reusable for later clients. App authorization grants delegated access, not ownership or permission from the client to spend arbitrary amounts.
+
+Concurrent map update observed at publication (2026-11-09): Slander is now to collect advertising funds, primarily public advertising crowdfunding plus client contributions, and fund/pay the providers through a supported mechanism. This supersedes direct client billing. [Verify supported Meta and TikTok ad-account funding mechanisms](https://github.com/Cooper2Rich/adoption-project/issues/15) and [Choose advertising fund collection and platform payment model](https://github.com/Cooper2Rich/adoption-project/issues/16) cover that separate work. This note researches advertising access and control only; it proves no funding/payment capability. References below to the starting direct-billing arrangement describe the original brief, not the latest map destination.
 
 Inspected local context at repository HEAD `be42c9c029fcceee62e0910af1cadb59b74678af`: `AGENTS.md`, `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, `GLOSSARY.md`, `src/public-demo/ad-platforms.ts`, `src/types.ts`, and the following user-owned untracked files. These files may be absent on this research branch: `docs/PRD-adoption-is-launch.md`, `docs/o-01-approval-wizard.md`, `docs/o-01-reporting-validation.md`, `docs/meta-tiktok-reporting-gap-closure.md`. References here record the local evidence inspected; they do not imply those documents were committed.
 
@@ -17,7 +19,7 @@ Evidence notation: **D-live** = readable first-party page; **D-index** = first-p
 | Identity or resource | Meaning for this plan |
 | --- | --- |
 | Human login | A real operator/administrator who can consent or manage business assets. Slander application login is separate. |
-| Client business | Owner of the client ad accounts and brand assets; direct provider billing is the user-selected commercial arrangement. |
+| Client business | Owner of the client ad accounts and brand assets; payment responsibility is separate and now governed by the funding tickets. |
 | Agency business workspace | A possible delegated asset-access container; choosing agency-managed onboarding versus client self-connect remains a human decision. |
 | Developer account and app | Registration and application identity under which API permissions/review are evaluated; not the advertiser or organic brand profile. |
 | Advertising account | Billing, currency, timezone, role and campaign container; use the provider's actual ID. |
@@ -45,7 +47,7 @@ These boundaries combine the Meta prerequisites [M1], TikTok asset-role document
 
 **P:** developer-app creation and App permissions pages returned no readable content [T6–T7]. Exact Marketing API permission names, review submission evidence, access tier, legal/business verification requirements, allowed third-party use for the selected entity/region and allowlists remain unverified. TikTok's FAQ does document allowlist applications as a separate capability gate [T8]. Do not substitute TikTok for Developers Login Kit/Content Posting approval: its own FAQ routes advertising APIs to TikTok for Business [T9].
 
-**D-live [T1]:** requesting another business's advertising account requires a Business Center administrator and owner approval; disapproved accounts cannot be requested. Analyst can view ads/performance; Operator can create/edit campaigns and view performance, and also includes finance powers. Admin additionally manages account settings/permissions. Thus an Analyst-based O-01 setup is insufficient for writes. Operator is not a bespoke Slander spending policy; do not interpret its provider powers as product authorization or a requirement to transfer client billing to Slander.
+**D-live [T1]:** requesting another business's advertising account requires a Business Center administrator and owner approval; disapproved accounts cannot be requested. Analyst can view ads/performance; Operator can create/edit campaigns and view performance, and also includes finance powers. Admin additionally manages account settings/permissions. Thus an Analyst-based O-01 setup is insufficient for writes. Operator is not a bespoke Slander spending or funding policy; do not interpret its provider powers as product authorization or a requirement to transfer client billing to Slander.
 
 **D-index [T4–T5]:** the advertiser authorizes the selected API app and requested permissions; the flow includes identity verification and a callback code exchange through a server endpoint. Permission errors can require reauthorization or restoring the authorizing person's advertiser access. Business Center account access and app consent are separate prerequisites.
 
@@ -82,7 +84,7 @@ The local demo `Connection` has account ID/name, target ID/name and connectedAt,
 | One target ID | Model platform campaigns, ad sets/ad groups, ads, creatives and identities separately. Store actual returned IDs and mappings to competition entries with effective intervals. |
 | ConnectedAt means connected | Track consent, app approval, accessible assets, token health, identity rights and read/write capabilities independently. Re-check before writes; do not assume a selected account is authorized. |
 | Disconnect removes local state | Define queue cancellation, shared-grant impact, provider revocation and recovery separately. Revoking API access is not proof existing delivered ads stop; emergency pause semantics need a human decision. |
-| Demo USD cents and percentage allocation | Obtain real account currency/timezone and endpoint budget units/minima. Client-paid billing does not make provider budgets hard product spending caps. |
+| Demo USD cents and percentage allocation | Obtain real account currency/timezone and endpoint budget units/minima. The selected funding/payment arrangement does not make provider budgets hard product spending caps. |
 | Rules enabled permits automation | Require a client-approved action/spend policy and auditable intent/result records, with uncertain outcomes reconciled before repetition. |
 
 **R:** future backend credential custody should store secret references rather than tokens in browser-local demo state, validate callback state and client/app binding, redact token-bearing logs and retain grant/revocation evidence. Keep provider permissions distinct from campaign-manager approvals. These recommendations await [Set client consent and spending approval rules](https://github.com/Cooper2Rich/adoption-project/issues/13) and [Choose the production integration architecture and rollout gates](https://github.com/Cooper2Rich/adoption-project/issues/14).
