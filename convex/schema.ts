@@ -9,8 +9,10 @@ import { rulesValidator } from "./campaignRules.ts";
 import { videoTables } from "./videoSchema.ts";
 
 import { incidentTables } from "./incidentSchema.ts";
+import { readinessTables } from "./readinessSchema.ts";
 
 export default defineSchema({
+  ...readinessTables,
   ...incidentTables,
   ...videoTables,
   photoUploads: defineTable({
@@ -174,6 +176,7 @@ export default defineSchema({
     fixtureRunId: v.optional(v.string()),
     fixtureArchiveNow: v.optional(v.number()),
     fixtureIncidentNow: v.optional(v.number()),
+    fixtureReadinessNow: v.optional(v.number()),
     authority: authorityValidator,
     reservationFundingCents: v.number(),
     reservedSlots: v.number(),

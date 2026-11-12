@@ -17,6 +17,7 @@ import { PhotoReview } from "./Photos.tsx";
 import "./preview.css";
 import { OperatorIncidents } from "./OperatorIncidents.tsx";
 import { PreviewWorkspace } from "./PreviewWorkspace.tsx";
+import { LaunchReadiness } from "./LaunchReadiness.tsx";
 
 function PublicFailure() {
   return (
@@ -130,6 +131,7 @@ function ManagerWorkspace({ local = false }: { local?: boolean }) {
         <button onClick={() => setScreen("incidents")}>
           Operator incidents
         </button>
+        <button onClick={() => setScreen("readiness")}>Launch readiness</button>
         <a href="?workspace=creator">My creator workspace</a>
       </nav>
       {local && screen !== "preview" ? (
@@ -140,6 +142,8 @@ function ManagerWorkspace({ local = false }: { local?: boolean }) {
       ) : null}
       {screen === "preview" && local ? (
         <PreviewWorkspace />
+      ) : screen === "readiness" ? (
+        <LaunchReadiness />
       ) : screen === "incidents" ? (
         <OperatorIncidents />
       ) : screen === "photos" ? (

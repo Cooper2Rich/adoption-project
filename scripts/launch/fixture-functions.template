@@ -328,3 +328,38 @@ export const incidentWatchdog = mutation({ args: { emailId: v.id("incidentEmails
   if (!email || !incident?.synthetic || !campaign?.fixtureRunId || campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned fixture required");
   return await watchEmail(ctx, { emailId: email._id, generation: email.wakeVersion }, args.skipAction === true);
 } });
+
+import { readinessEvidence } from "./readinessSchema.ts";
+import { recordValidatedReadiness } from "./readiness.ts";
+export const readinessProof = mutation({ args: { ...readinessEvidence, sourceOverride: v.optional(v.string()), syntheticOverride: v.optional(v.boolean()) }, handler: async (ctx, args) => {
+  const { sourceOverride, syntheticOverride, ...input } = args;
+  return await recordValidatedReadiness(ctx, input, { source: sourceOverride ?? "owned-readiness-validator", actor: "controlled-readiness-observer", synthetic: syntheticOverride ?? true });
+} });
+export const readinessControl = mutation({ args: { campaignId: v.string(), now: v.optional(v.union(v.number(), v.null())), managerActive: v.optional(v.boolean()), financeRevision: v.optional(v.string()), balanceCents: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const campaign = await ctx.db.query("campaigns").withIndex("by_slug", q => q.eq("slug", args.campaignId)).unique();
+  if (!campaign?.fixtureRunId || campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned fixture required");
+  if (args.now !== undefined) await ctx.db.patch(campaign._id, { fixtureReadinessNow: args.now === null ? undefined : args.now });
+  if (args.managerActive !== undefined) {
+    const manager = await ctx.db.query("memberships").withIndex("by_subject_nonprofit", q => q.eq("subject", "manager-a").eq("nonprofitId", campaign.nonprofitId)).unique();
+    if (manager) await ctx.db.patch(manager._id, { active: args.managerActive });
+  }
+  if (args.financeRevision !== undefined) await ctx.db.patch(campaign._id, { reservationFinanceRevision: args.financeRevision });
+  if (args.balanceCents !== undefined) await ctx.db.patch(campaign._id, { reservationFundingCents: args.balanceCents });
+} });
+
+
+import { readinessRelease } from "./readinessSchema.ts";
+import { recordCurrentReleaseTarget } from "./readiness.ts";
+export const readinessReleaseTarget = mutation({ args: { ...readinessRelease, sourceOverride: v.optional(v.string()) }, handler: async (ctx, args) => {
+  const { sourceOverride, ...input } = args;
+  return await recordCurrentReleaseTarget(ctx, input, { source: sourceOverride ?? "owned-release-controller", actor: "controlled-release-observer", synthetic: true });
+} });
+
+export const readinessZeroPrizeCampaign = mutation({ args: {}, handler: async (ctx) => {
+  const source = await ctx.db.query("campaigns").withIndex("by_slug", q => q.eq("slug", "adoption")).unique();
+  if (!source?.fixtureRunId || source.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned fixture required");
+  const slug = "zero-prize-readiness";
+  if (await ctx.db.query("campaigns").withIndex("by_slug", q => q.eq("slug", slug)).unique()) throw new Error("Owned campaign already exists");
+  const { _id, _creationTime, fixtureReadinessNow, ...record } = source;
+  await ctx.db.insert("campaigns", { ...record, slug, name: "Owned zero prize verification", reservedSlots: 0, reservedCents: 0, reservationFundingCents: 0 });
+} });
