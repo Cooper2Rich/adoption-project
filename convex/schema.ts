@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { rulesValidator } from "./campaignRules.ts";
 import {
   authorityValidator,
   inputValidator,
@@ -7,17 +8,51 @@ import {
 } from "./allocation/validators.ts";
 
 export default defineSchema({
+  campaignResources: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    kind: v.union(v.literal("provider"), v.literal("finance")),
+    reference: v.string(),
+  }).index("by_campaign", ["campaignSlug"]),
   campaigns: defineTable({
     slug: v.string(),
     nonprofitId: v.string(),
     name: v.string(),
-    fixtureRunId: v.string(),
+    fixtureRunId: v.optional(v.string()),
     authority: authorityValidator,
     reservationFundingCents: v.number(),
     reservedSlots: v.number(),
     reservedCents: v.number(),
     reservationFinanceRevision: v.string(),
   }).index("by_slug", ["slug"]),
+  campaignSettings: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    operationId: v.string(),
+    fingerprint: v.string(),
+    rules: rulesValidator,
+    version: v.literal(1),
+    acceptedTermsVersion: v.string(),
+    actor: v.string(),
+    source: v.string(),
+    createdAt: v.number(),
+    batchPreparation: v.object({
+      weekday: v.literal(3),
+      time: v.literal("12:00"),
+      timezone: v.literal("America/Chicago"),
+    }),
+  }).index("by_campaign", ["campaignSlug"]),
+  campaignAudit: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    settingsId: v.id("campaignSettings"),
+    actor: v.string(),
+    source: v.string(),
+    at: v.number(),
+    version: v.number(),
+    operationId: v.string(),
+    action: v.literal("rules-created-and-locked"),
+  }).index("by_campaign", ["campaignSlug"]),
   memberships: defineTable({
     subject: v.string(),
     nonprofitId: v.string(),

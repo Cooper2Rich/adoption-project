@@ -1,7 +1,11 @@
 import type { QueryCtx } from "./functions.ts";
 import { convexToJson, type Value } from "convex/values";
 
-export async function authorizedCampaign(ctx: QueryCtx, campaignId: string) {
+export async function authorizedCampaign(
+  ctx: QueryCtx,
+  campaignId: string,
+  fixtureOnly = false,
+) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) throw new Error("FORBIDDEN: Sign in is required");
   const campaign = await ctx.db
@@ -26,13 +30,20 @@ export async function authorizedCampaign(ctx: QueryCtx, campaignId: string) {
     throw new Error("FORBIDDEN: Campaign access denied");
   // This first slice accepts synthetic evidence only inside an explicitly owned run.
   if (
-    !process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID ||
-    campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID
+    (fixtureOnly && !campaign.fixtureRunId) ||
+    (campaign.fixtureRunId &&
+      (!process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID ||
+        campaign.fixtureRunId !==
+          process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID))
   )
     throw new Error(
       "Fixture evidence is not accepted outside the isolated preview harness",
     );
-  return { campaign, subject: identity.subject };
+  return {
+    campaign,
+    subject: identity.subject,
+    isAdministrator: operator?.active === true,
+  };
 }
 
 export function stableRequest(value: Value): string {

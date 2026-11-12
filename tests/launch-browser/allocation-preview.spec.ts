@@ -23,7 +23,7 @@ test("manager saves a real persisted preview and retrieves it in a fresh session
   const context = await browser.newContext();
   try {
     const second = await context.newPage();
-    await second.goto("http://127.0.0.1:3210/", {
+    await second.goto(new URL("/", page.url()).toString(), {
       waitUntil: "domcontentloaded",
     });
     await expect(second.getByTestId("boost-total")).toHaveText("$10.00");
