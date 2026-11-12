@@ -1,4 +1,4 @@
-import { count, ctr, money, type PublicAd } from "./catalog";
+import { count, ctr, money, type PublicAd } from "./catalog.ts";
 export function AdStats({
   ad,
 }: {

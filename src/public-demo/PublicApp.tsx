@@ -1,10 +1,3 @@
-import { useEffect, useState } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
 import {
   ArrowUpRight,
   Heart,
@@ -12,17 +5,23 @@ import {
   PanelLeftClose,
   Search,
 } from "lucide-react";
-import App from "../App";
-import { Logo, Modal } from "../components/ui";
-import { APP_NAME } from "../runtime";
-import { WorkspaceRail } from "../components/WorkspaceRail";
-import type { NavigationControls } from "../components/navigation-controls";
-import { publicArea } from "./navigation";
-import { PublicMobileNavigation, PublicNavigation } from "./PublicNavigation";
-import { PublicHome } from "./PublicHome";
-import { PublicAbout } from "./PublicAbout";
-import { AdCard } from "./AdCard";
-import { AdMedia } from "./AdMedia";
+import { useEffect, useState } from "react";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import App from "../App.tsx";
+import type { NavigationControls } from "../components/navigation-controls.ts";
+import { Logo, Modal } from "../components/ui.tsx";
+import { WorkspaceRail } from "../components/WorkspaceRail.tsx";
+import { APP_NAME } from "../runtime.ts";
+import { AdCard } from "./AdCard.tsx";
+import { AdMedia } from "./AdMedia.tsx";
+import { AdminFunding } from "./AdminFunding.tsx";
+import { AdStats } from "./AdStats.tsx";
+import * as managementViews from "./CampaignManagement.tsx";
 import {
   activeViewer,
   createViewer,
@@ -30,20 +29,24 @@ import {
   fundedCents,
   loadAds,
   loadPublicCampaigns,
-  type PublicCampaign,
   money,
   selectViewer,
   viewerState,
   type PublicAd,
-} from "./catalog";
-import * as demoViews from "./WorkspaceViews";
-import * as managementViews from "./CampaignManagement";
-import { ProjectRequestsPage } from "./ProjectRequests";
-import { AdminFunding } from "./AdminFunding";
-import { CreatorEarnings } from "./CreatorEarnings";
-import { AdStats } from "./AdStats";
-import { PublicLeaderboard } from "./PublicLeaderboard";
-import type { LeaderboardPeriod } from "./leaderboard-periods";
+  type PublicCampaign,
+} from "./catalog.ts";
+import { CreatorEarnings } from "./CreatorEarnings.tsx";
+import type { LeaderboardPeriod } from "./leaderboard-periods.ts";
+import { publicArea } from "./navigation.ts";
+import { ProjectRequestsPage } from "./ProjectRequests.tsx";
+import { PublicAbout } from "./PublicAbout.tsx";
+import { PublicHome } from "./PublicHome.tsx";
+import { PublicLeaderboard } from "./PublicLeaderboard.tsx";
+import {
+  PublicMobileNavigation,
+  PublicNavigation,
+} from "./PublicNavigation.tsx";
+import * as demoViews from "./WorkspaceViews.tsx";
 const workspaceViews = {
   ...demoViews,
   ...managementViews,

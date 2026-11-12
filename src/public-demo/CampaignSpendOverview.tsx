@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
 import { Wallet } from "lucide-react";
-import { useWorkspace } from "../context";
-import { AdPlatformsPage } from "./AdPlatforms";
-import { CompletedAdSpend } from "./CompletedAdSpend";
 import { useState } from "react";
-import type { CampaignAdSetup } from "./ad-platforms";
-import { CampaignBudgetBreakdown } from "./CampaignBudgetBreakdown";
+import { Link } from "react-router-dom";
+import { useWorkspace } from "../context.tsx";
+import type { CampaignAdSetup } from "./ad-platforms.ts";
+import { AdPlatformsPage } from "./AdPlatforms.tsx";
+import { CampaignBudgetBreakdown } from "./CampaignBudgetBreakdown.tsx";
+import { CompletedAdSpend } from "./CompletedAdSpend.tsx";
 
 export function CampaignSpendOverview() {
   const { campaignScope } = useWorkspace();

@@ -1,3 +1,4 @@
+import { chicagoDay, firstDayBaseline } from "./chicago.ts";
 import {
   integer,
   money,
@@ -5,7 +6,6 @@ import {
   percentage,
   providerSplit,
 } from "./money.ts";
-import { chicagoDay, firstDayBaseline } from "./chicago.ts";
 
 export type AllocationInput = {
   at: number;

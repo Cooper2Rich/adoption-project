@@ -1,5 +1,5 @@
-import { test, expect, type Locator, type Page } from "@playwright/test";
-import { navigate, selectCreator, selectOwner } from "./helpers";
+import { expect, test, type Locator, type Page } from "@playwright/test";
+import { navigate, selectCreator, selectOwner } from "./helpers.ts";
 
 async function assertPreview(
   page: Page,

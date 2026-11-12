@@ -1,10 +1,10 @@
-import { useState, type FormEvent } from "react";
 import { ArrowRight, Check, Info } from "lucide-react";
-import { api } from "../api";
-import { useWorkspace } from "../context";
-import type { Project } from "../types";
-import { Modal, Instagram } from "./ui";
-import { PUBLIC_DEMO } from "../runtime";
+import { useState, type FormEvent } from "react";
+import { api } from "../api.ts";
+import { useWorkspace } from "../context.tsx";
+import { PUBLIC_DEMO } from "../runtime.ts";
+import type { Project } from "../types.ts";
+import { Instagram, Modal } from "./ui.tsx";
 
 export function ProjectForm({
   project,

@@ -1,13 +1,13 @@
-import type { DemoAccess } from "../types";
-import type { Workspace } from "../types";
-import { viewerState } from "./catalog";
-import { creatorEarningsReport } from "./creator-earnings";
+import type { DemoAccess, Workspace } from "../types.ts";
+
+import { viewerState } from "./catalog.ts";
+import { creatorEarningsReport } from "./creator-earnings.ts";
 import {
-  workspaceRequest,
   attributionFor,
   campaignId,
   creatorId,
-} from "./workspace.js";
+  workspaceRequest,
+} from "./workspace.ts";
 
 // Project/creative actions reuse local domain rules. Money is explicitly simulated.
 const key = "slander-public-preview-v1";

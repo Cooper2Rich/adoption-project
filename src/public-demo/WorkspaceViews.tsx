@@ -1,23 +1,23 @@
+import { ArrowUpRight, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowUpRight, Wallet } from "lucide-react";
-import { useWorkspace } from "../context";
-import { EmptyState, Media, Modal, StatusBadge } from "../components/ui";
-import { ReviewDialog } from "../components/ReviewDialog";
-import type { Post } from "../types";
-import { AdStats } from "./AdStats";
-import { AdMedia } from "./AdMedia";
-import { useCreatorEarnings } from "./CreatorEarnings";
-import { FinancialSampleControl } from "./FinancialSamples";
-import { CompletedAdSpend } from "./CompletedAdSpend";
-import { CampaignBudgetPanel } from "./CampaignBudgetBreakdown";
+import { ReviewDialog } from "../components/ReviewDialog.tsx";
+import { EmptyState, Media, Modal, StatusBadge } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import type { Post } from "../types.ts";
+import { AdMedia } from "./AdMedia.tsx";
+import { AdStats } from "./AdStats.tsx";
+import { CampaignBudgetPanel } from "./CampaignBudgetBreakdown.tsx";
 import {
+  durationLabel,
   loadAds,
   money,
   viewerState,
-  durationLabel,
   type PublicAd,
-} from "./catalog";
+} from "./catalog.ts";
+import { CompletedAdSpend } from "./CompletedAdSpend.tsx";
+import { useCreatorEarnings } from "./CreatorEarnings.tsx";
+import { FinancialSampleControl } from "./FinancialSamples.tsx";
 
 export function CreatorPastAds() {
   return <CreatorAds past />;

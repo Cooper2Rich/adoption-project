@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { api } from "../api";
-import { useWorkspace } from "../context";
-import { EmptyState } from "../components/ui";
-import { money } from "./catalog";
-import type { CreatorEarningsReport } from "./creator-earnings";
+import { api } from "../api.ts";
+import { EmptyState, dateLabel } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import { money } from "./catalog.ts";
+import type { CreatorEarningsReport } from "./creator-earnings.ts";
 import {
   FinancialSampleControl,
   useFinancialSamples,
-} from "./FinancialSamples";
-import { dateLabel } from "../components/ui";
-import { CreatorWins } from "./CreatorWins";
-import { AdMedia } from "./AdMedia";
+} from "./FinancialSamples.tsx";
+
+import { AdMedia } from "./AdMedia.tsx";
+import { CreatorWins } from "./CreatorWins.tsx";
 
 export function useCreatorEarnings() {
   const { access, posts } = useWorkspace();

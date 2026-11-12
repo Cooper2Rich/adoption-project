@@ -1,5 +1,5 @@
-import type { QueryCtx } from "./functions.ts";
 import { convexToJson, type Value } from "convex/values";
+import type { QueryCtx } from "./functions.ts";
 
 export async function authorizedCampaign(
   ctx: QueryCtx,

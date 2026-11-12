@@ -1,4 +1,4 @@
-import type { AdPlatform } from "./ad-platforms";
+import type { AdPlatform } from "./ad-platforms.ts";
 
 export type CompletedAdSpend = {
   id: string;

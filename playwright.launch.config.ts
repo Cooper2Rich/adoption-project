@@ -7,7 +7,7 @@ export default defineConfig({
   timeout: 30000,
   use: { baseURL: "http://127.0.0.1:3210", trace: "retain-on-failure" },
   webServer: [3210, 3211].map((port) => ({
-    command: `node scripts/launch/dev.mjs --port ${port}`,
+    command: `node scripts/launch/dev.ts --port ${port}`,
     url: `http://127.0.0.1:${port}/__allocation/health`,
     reuseExistingServer: false,
     timeout: 180000,

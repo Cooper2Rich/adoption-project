@@ -1,5 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-import { navigate } from "./helpers";
+import { expect, test, type Page } from "@playwright/test";
+import { navigate } from "./helpers.ts";
 
 async function coffee(page: Page) {
   await page.goto("./#/explore");

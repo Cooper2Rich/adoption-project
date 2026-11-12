@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("ordinary workspace errors still retry without reloading the document", async ({
   page,

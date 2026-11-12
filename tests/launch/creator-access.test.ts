@@ -1,6 +1,7 @@
-import test from "node:test";
+import { makeFunctionReference } from "convex/server";
 import assert from "node:assert/strict";
-import { createLocalBackend } from "../../scripts/launch/local-backend.mjs";
+import test from "node:test";
+import { createLocalBackend } from "../../scripts/launch/local-backend.ts";
 import { campaignRules as rules } from "./fixtures.ts";
 
 test(
@@ -12,8 +13,20 @@ test(
     const manager = backend.client("manager-a");
     const alice = backend.client("creator-a");
     const bob = backend.client("creator-b");
-    let invitation, second, acceptance, request, terms, privateIds;
-    const command = async (name, args) => {
+    let invitation: { _id: any },
+      second: { _id: any },
+      acceptance: {
+        subject: unknown;
+        version: unknown;
+        acceptedAt: number;
+        source: unknown;
+        termsId: unknown;
+        termsBody: string;
+      },
+      request: any,
+      terms: any,
+      privateIds;
+    const command = async (name: string, args: any) => {
       const output = await backend.command(
         "run",
         `fixtures:${name}`,
@@ -21,13 +34,16 @@ test(
       );
       return output.trim() ? JSON.parse(output) : null;
     };
-    const invite = async (subject, operationId = subject) =>
-      manager.mutation("creatorAccess:invite", {
-        ...scope,
-        email: `${subject}@creators.example`,
-        operationId,
-      });
-    const dispatch = (record, kind = "create") =>
+    const invite = async (subject: string, operationId = subject) =>
+      manager.mutation(
+        makeFunctionReference<"mutation">("creatorAccess:invite"),
+        {
+          ...scope,
+          email: `${subject}@creators.example`,
+          operationId,
+        },
+      );
+    const dispatch = (record: any, kind = "create") =>
       manager.action("clerkInvitations:dispatch", {
         ...scope,
         invitationId: record._id,
@@ -38,11 +54,14 @@ test(
         "AC01 manager locks rules then invitation retries deduplicate and Clerk confirms before creator access",
         async () => {
           await assert.rejects(invite("creator-a"), /RULES_REQUIRED/);
-          await manager.mutation("campaignSetup:create", {
-            ...scope,
-            operationId: "rules",
-            rules,
-          });
+          await manager.mutation(
+            makeFunctionReference<"mutation">("campaignSetup:create"),
+            {
+              ...scope,
+              operationId: "rules",
+              rules,
+            },
+          );
           const pair = await Promise.all([
             invite("creator-a"),
             invite("creator-a"),
@@ -50,7 +69,10 @@ test(
           invitation = pair[0];
           assert.equal(pair[0]._id, pair[1]._id);
           await assert.rejects(
-            alice.query("creatorAccess:workspace", scope),
+            alice.query(
+              makeFunctionReference<"query">("creatorAccess:workspace"),
+              scope,
+            ),
             /FORBIDDEN/,
           );
           const results = await Promise.all([
@@ -70,10 +92,13 @@ test(
           );
           assert.equal(
             (
-              await alice.query("creatorAccess:workspace", {
-                ...scope,
-                invitationId: invitation._id,
-              })
+              await alice.query(
+                makeFunctionReference<"query">("creatorAccess:workspace"),
+                {
+                  ...scope,
+                  invitationId: invitation._id,
+                },
+              )
             ).invitation.email,
             "creator-a@creators.example",
           );
@@ -94,10 +119,13 @@ test(
             backend.client("creator-adoption", { role: "manager" }),
           ]) {
             await assert.rejects(
-              denied.query("creatorAccess:workspace", {
-                ...scope,
-                invitationId: invitation._id,
-              }),
+              denied.query(
+                makeFunctionReference<"query">("creatorAccess:workspace"),
+                {
+                  ...scope,
+                  invitationId: invitation._id,
+                },
+              ),
               /FORBIDDEN/,
             );
           }
@@ -107,23 +135,34 @@ test(
             backend.client("manager-b"),
           ]) {
             await assert.rejects(
-              denied.query("creatorAccess:managerWorkspace", scope),
+              denied.query(
+                makeFunctionReference<"query">(
+                  "creatorAccess:managerWorkspace",
+                ),
+                scope,
+              ),
               /FORBIDDEN/,
             );
             await assert.rejects(
-              denied.mutation("creatorAccess:invite", {
-                ...scope,
-                email: "attack@creators.example",
-                operationId: "denied",
-              }),
+              denied.mutation(
+                makeFunctionReference<"mutation">("creatorAccess:invite"),
+                {
+                  ...scope,
+                  email: "attack@creators.example",
+                  operationId: "denied",
+                },
+              ),
               /FORBIDDEN/,
             );
             await assert.rejects(
-              denied.mutation("creatorAccess:revoke", {
-                ...scope,
-                invitationId: invitation._id,
-                operationId: "denied",
-              }),
+              denied.mutation(
+                makeFunctionReference<"mutation">("creatorAccess:revoke"),
+                {
+                  ...scope,
+                  invitationId: invitation._id,
+                  operationId: "denied",
+                },
+              ),
               /FORBIDDEN/,
             );
             await assert.rejects(
@@ -136,7 +175,10 @@ test(
             );
           }
           await assert.rejects(
-            manager.query("creatorAccess:workspace", scope),
+            manager.query(
+              makeFunctionReference<"query">("creatorAccess:workspace"),
+              scope,
+            ),
             /FORBIDDEN/,
           );
         },
@@ -144,11 +186,17 @@ test(
       await t.test(
         "AC02 missing actual terms visibly projects blocked signup and server denies submission",
         async () => {
-          const view = await alice.query("creatorAccess:workspace", scope);
+          const view = await alice.query(
+            makeFunctionReference<"query">("creatorAccess:workspace"),
+            scope,
+          );
           assert.equal(view.terms, null);
           assert.equal(view.acceptance, null);
           await assert.rejects(
-            alice.query("creatorAccess:submissionAccess", scope),
+            alice.query(
+              makeFunctionReference<"query">("creatorAccess:submissionAccess"),
+              scope,
+            ),
             /ACCEPTANCE_REQUIRED/,
           );
           terms = await command("terms", {
@@ -156,7 +204,7 @@ test(
             synthetic: true,
           });
           const configured = await alice.query(
-            "creatorAccess:workspace",
+            makeFunctionReference<"query">("creatorAccess:workspace"),
             scope,
           );
           assert.equal(configured.terms.synthetic, true);
@@ -182,21 +230,30 @@ test(
             confirmed: true,
           };
           await assert.rejects(
-            alice.mutation("creatorAccess:accept", {
-              ...request,
-              confirmed: false,
-            }),
+            alice.mutation(
+              makeFunctionReference<"mutation">("creatorAccess:accept"),
+              {
+                ...request,
+                confirmed: false,
+              },
+            ),
             /CONFIRMATION_REQUIRED/,
           );
           await assert.rejects(
-            alice.mutation("creatorAccess:accept", {
-              ...request,
-              version: "stale-version",
-            }),
+            alice.mutation(
+              makeFunctionReference<"mutation">("creatorAccess:accept"),
+              {
+                ...request,
+                version: "stale-version",
+              },
+            ),
             /TERMS_UNAVAILABLE/,
           );
           await assert.rejects(
-            bob.mutation("creatorAccess:accept", request),
+            bob.mutation(
+              makeFunctionReference<"mutation">("creatorAccess:accept"),
+              request,
+            ),
             /FORBIDDEN/,
           );
         },
@@ -205,17 +262,26 @@ test(
         "AC02/03 concurrent signup atomically binds subject and preserves one complete immutable agreement snapshot",
         async () => {
           const contenders = await Promise.all([
-            alice.mutation("creatorAccess:accept", request),
+            alice.mutation(
+              makeFunctionReference<"mutation">("creatorAccess:accept"),
+              request,
+            ),
             backend
               .client("creator-a")
-              .mutation("creatorAccess:accept", request),
+              .mutation(
+                makeFunctionReference<"mutation">("creatorAccess:accept"),
+                request,
+              ),
           ]);
           acceptance = contenders[0];
           assert.equal(contenders[0]._id, contenders[1]._id);
-          const duplicate = await alice.mutation("creatorAccess:accept", {
-            ...request,
-            operationId: "other-retry",
-          });
+          const duplicate = await alice.mutation(
+            makeFunctionReference<"mutation">("creatorAccess:accept"),
+            {
+              ...request,
+              operationId: "other-retry",
+            },
+          );
           assert.deepEqual(duplicate, acceptance);
           assert.equal(acceptance.subject, "creator-a");
           assert.equal(acceptance.version, "synthetic-test-v1");
@@ -224,8 +290,14 @@ test(
           assert.equal(acceptance.termsId, terms);
           assert.match(acceptance.termsBody, /SYNTHETIC/);
           assert.equal(
-            (await alice.query("creatorAccess:submissionAccess", scope))
-              .permitted,
+            (
+              await alice.query(
+                makeFunctionReference<"query">(
+                  "creatorAccess:submissionAccess",
+                ),
+                scope,
+              )
+            ).permitted,
             true,
           );
           await assert.rejects(
@@ -233,25 +305,34 @@ test(
               .client("reassigned-subject", {
                 email: "creator-a@creators.example",
               })
-              .query("creatorAccess:workspace", scope),
+              .query(
+                makeFunctionReference<"query">("creatorAccess:workspace"),
+                scope,
+              ),
             /FORBIDDEN/,
           );
-          await bob.mutation("creatorAccess:accept", {
-            ...request,
-            invitationId: second._id,
-            operationId: "accept-b",
-          });
-          const audit = await manager.query("creatorAccess:audit", scope);
+          await bob.mutation(
+            makeFunctionReference<"mutation">("creatorAccess:accept"),
+            {
+              ...request,
+              invitationId: second._id,
+              operationId: "accept-b",
+            },
+          );
+          const audit = await manager.query(
+            makeFunctionReference<"query">("creatorAccess:audit"),
+            scope,
+          );
           assert.equal(
             audit.filter(
-              (row) =>
+              (row: any) =>
                 row.action === "accepted" &&
                 row.invitationId === invitation._id,
             ).length,
             1,
           );
           const row = audit.find(
-            (row) =>
+            (row: any) =>
               row.action === "accepted" && row.invitationId === invitation._id,
           );
           assert.equal(row.actor, acceptance.subject);
@@ -279,7 +360,7 @@ test(
             subject: "creator-b",
           });
           const records = await alice.query(
-            "creatorAccess:privateRecords",
+            makeFunctionReference<"query">("creatorAccess:privateRecords"),
             scope,
           );
           assert.equal(records.length, 2);
@@ -289,35 +370,52 @@ test(
           );
           for (const recordId of [...privateIds, foreign]) {
             await assert.rejects(
-              bob.query("creatorAccess:privateRecord", { ...scope, recordId }),
+              bob.query(
+                makeFunctionReference<"query">("creatorAccess:privateRecord"),
+                { ...scope, recordId },
+              ),
               /FORBIDDEN/,
             );
             await assert.rejects(
               backend
                 .client()
-                .query("creatorAccess:privateRecord", { ...scope, recordId }),
+                .query(
+                  makeFunctionReference<"query">("creatorAccess:privateRecord"),
+                  { ...scope, recordId },
+                ),
               /FORBIDDEN/,
             );
           }
           await assert.rejects(
-            alice.query("creatorAccess:privateRecord", {
-              ...scope,
-              recordId: foreign,
-            }),
+            alice.query(
+              makeFunctionReference<"query">("creatorAccess:privateRecord"),
+              {
+                ...scope,
+                recordId: foreign,
+              },
+            ),
             /FORBIDDEN/,
           );
           for (const recordId of privateIds)
             assert.match(
               (
-                await alice.query("creatorAccess:privateRecord", {
-                  ...scope,
-                  recordId,
-                })
+                await alice.query(
+                  makeFunctionReference<"query">("creatorAccess:privateRecord"),
+                  {
+                    ...scope,
+                    recordId,
+                  },
+                )
               ).summary,
               /creator-a/,
             );
           assert.deepEqual(
-            await backend.client().query("creatorAccess:publicCampaign", {}),
+            await backend
+              .client()
+              .query(
+                makeFunctionReference<"query">("creatorAccess:publicCampaign"),
+                {},
+              ),
             { name: "adoption.is", slug: "adoption" },
           );
         },
@@ -325,26 +423,43 @@ test(
       await t.test(
         "AC01/02 audit acceptance and exact retries survive a backend restart and second session",
         async () => {
-          const audit = await manager.query("creatorAccess:audit", scope);
+          const audit = await manager.query(
+            makeFunctionReference<"query">("creatorAccess:audit"),
+            scope,
+          );
           await backend.restart();
           assert.deepEqual(
             await backend
               .client("creator-a")
-              .mutation("creatorAccess:accept", request),
+              .mutation(
+                makeFunctionReference<"mutation">("creatorAccess:accept"),
+                request,
+              ),
             acceptance,
           );
           assert.deepEqual(
-            await manager.query("creatorAccess:audit", scope),
+            await manager.query(
+              makeFunctionReference<"query">("creatorAccess:audit"),
+              scope,
+            ),
             audit,
           );
           assert.equal(
-            (await alice.query("creatorAccess:privateRecords", scope)).length,
+            (
+              await alice.query(
+                makeFunctionReference<"query">("creatorAccess:privateRecords"),
+                scope,
+              )
+            ).length,
             2,
           );
           assert.equal((await dispatch(invitation)).state, "confirmed");
           const journal = (
-            await manager.query("creatorAccess:providerHistory", scope)
-          ).filter((row) => row.invitationId === invitation._id);
+            await manager.query(
+              makeFunctionReference<"query">("creatorAccess:providerHistory"),
+              scope,
+            )
+          ).filter((row: any) => row.invitationId === invitation._id);
           assert.equal(journal.length, 1);
           assert.equal(journal[0].actor, "manager-a");
           assert.equal(journal[0].source, "clerkInvitations:dispatch");
@@ -356,18 +471,27 @@ test(
       await t.test(
         "AC01 current manager revocation denies cached acceptance and private requests before Clerk reconciliation",
         async () => {
-          await manager.mutation("creatorAccess:revoke", {
-            ...scope,
-            invitationId: invitation._id,
-            operationId: "revoke-a",
-          });
+          await manager.mutation(
+            makeFunctionReference<"mutation">("creatorAccess:revoke"),
+            {
+              ...scope,
+              invitationId: invitation._id,
+              operationId: "revoke-a",
+            },
+          );
           for (const op of ["workspace", "submissionAccess", "privateRecords"])
             await assert.rejects(
-              alice.query(`creatorAccess:${op}`, scope),
+              alice.query(
+                makeFunctionReference<"query">(`creatorAccess:${op}`),
+                scope,
+              ),
               /FORBIDDEN/,
             );
           await assert.rejects(
-            alice.mutation("creatorAccess:accept", request),
+            alice.mutation(
+              makeFunctionReference<"mutation">("creatorAccess:accept"),
+              request,
+            ),
             /FORBIDDEN/,
           );
           await assert.rejects(dispatch(invitation), /INVITATION_REVOKED/);
@@ -381,11 +505,14 @@ test(
           );
           assert.equal(backend.clerk.counts().writes, before);
           assert.deepEqual(
-            await manager.mutation("creatorAccess:revoke", {
-              ...scope,
-              invitationId: invitation._id,
-              operationId: "revoke-a",
-            }),
+            await manager.mutation(
+              makeFunctionReference<"mutation">("creatorAccess:revoke"),
+              {
+                ...scope,
+                invitationId: invitation._id,
+                operationId: "revoke-a",
+              },
+            ),
             { revoked: true },
           );
         },
@@ -397,7 +524,12 @@ test(
           backend.clerk.mode("failed");
           assert.equal((await dispatch(failed)).state, "failed");
           await assert.rejects(
-            backend.client("failed").query("creatorAccess:workspace", scope),
+            backend
+              .client("failed")
+              .query(
+                makeFunctionReference<"query">("creatorAccess:workspace"),
+                scope,
+              ),
             /FORBIDDEN/,
           );
           backend.clerk.mode("confirmed");
@@ -407,7 +539,12 @@ test(
           assert.equal((await dispatch(uncertain)).state, "unknown");
           const before = backend.clerk.counts().writes;
           await assert.rejects(
-            backend.client("uncertain").query("creatorAccess:workspace", scope),
+            backend
+              .client("uncertain")
+              .query(
+                makeFunctionReference<"query">("creatorAccess:workspace"),
+                scope,
+              ),
             /FORBIDDEN/,
           );
           backend.clerk.mode("confirmed");
@@ -427,18 +564,29 @@ test(
         async () => {
           await command("removeFixtureScope", { campaignSlug: "adoption" });
           assert.equal(
-            (await bob.query("creatorAccess:workspace", scope)).terms,
+            (
+              await bob.query(
+                makeFunctionReference<"query">("creatorAccess:workspace"),
+                scope,
+              )
+            ).terms,
             null,
           );
           await assert.rejects(
-            bob.query("creatorAccess:submissionAccess", scope),
+            bob.query(
+              makeFunctionReference<"query">("creatorAccess:submissionAccess"),
+              scope,
+            ),
             /TERMS_UNAVAILABLE/,
           );
           await assert.rejects(
-            bob.mutation("creatorAccess:accept", {
-              ...request,
-              invitationId: second._id,
-            }),
+            bob.mutation(
+              makeFunctionReference<"mutation">("creatorAccess:accept"),
+              {
+                ...request,
+                invitationId: second._id,
+              },
+            ),
             /TERMS_UNAVAILABLE/,
           );
           await assert.rejects(dispatch(second), /FIXTURE_ADAPTER_FORBIDDEN/);
@@ -494,11 +642,14 @@ test(
             await assert.rejects(manager.query(operation, scope), /FORBIDDEN/);
           await assert.rejects(invite("creator-a"), /FORBIDDEN/);
           await assert.rejects(
-            manager.mutation("creatorAccess:revoke", {
-              ...scope,
-              invitationId: invitation._id,
-              operationId: "revoke-a",
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("creatorAccess:revoke"),
+              {
+                ...scope,
+                invitationId: invitation._id,
+                operationId: "revoke-a",
+              },
+            ),
             /FORBIDDEN/,
           );
           await assert.rejects(dispatch(slow), /FORBIDDEN/);
@@ -515,8 +666,11 @@ test(
           );
           assert.equal(backend.clerk.counts().writes, before);
           const history = (
-            await administrator.query("creatorAccess:providerHistory", scope)
-          ).find((row) => row.invitationId === slow._id);
+            await administrator.query(
+              makeFunctionReference<"query">("creatorAccess:providerHistory"),
+              scope,
+            )
+          ).find((row: any) => row.invitationId === slow._id);
           assert.equal(history.history[0].actor, "manager-a");
           assert.equal(history.history.at(-1).actor, "administrator");
         },

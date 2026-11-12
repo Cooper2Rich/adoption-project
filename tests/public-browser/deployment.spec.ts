@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("published demo loads its application, assets and Kindred Reach favicon", async ({
   page,

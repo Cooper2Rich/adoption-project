@@ -1,17 +1,17 @@
-import { useState, useEffect, type FormEvent } from "react";
-import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
 import { Archive, ArrowLeft, ArrowUpRight, Plus } from "lucide-react";
-import { api } from "../api";
-import { WorkspaceContext, useWorkspace } from "../context";
-import { EmptyState, Modal } from "../components/ui";
-import { ProjectsPage } from "../pages/Projects";
-import { ProjectDetail } from "../pages/ProjectDetail";
-import { PostsPage } from "../pages/Posts";
-import { CampaignsPage } from "../pages/Campaigns";
-import { ArchivesPage, SpendingPage } from "./WorkspaceViews";
-import type { DemoOptions, ManagedCampaign } from "../types";
-import { AdPlatformsPage } from "./AdPlatforms";
-import { CampaignSpendOverview } from "./CampaignSpendOverview";
+import { useEffect, useState, type FormEvent } from "react";
+import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
+import { api } from "../api.ts";
+import { EmptyState, Modal } from "../components/ui.tsx";
+import { WorkspaceContext, useWorkspace } from "../context.tsx";
+import { CampaignsPage } from "../pages/Campaigns.tsx";
+import { PostsPage } from "../pages/Posts.tsx";
+import { ProjectDetail } from "../pages/ProjectDetail.tsx";
+import { ProjectsPage } from "../pages/Projects.tsx";
+import type { DemoOptions } from "../types.ts";
+import { AdPlatformsPage } from "./AdPlatforms.tsx";
+import { CampaignSpendOverview } from "./CampaignSpendOverview.tsx";
+import { ArchivesPage, SpendingPage } from "./WorkspaceViews.tsx";
 
 export function AdminCampaigns({ archived = false }: { archived?: boolean }) {
   const {

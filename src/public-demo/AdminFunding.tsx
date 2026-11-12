@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { useWorkspace } from "../context";
-import { loadAds, viewerState, money, type PublicAd } from "./catalog";
-import { campaignFundingReport } from "./funding-report";
+import { dateLabel } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import { loadAds, money, viewerState, type PublicAd } from "./catalog.ts";
 import {
   FinancialSampleControl,
   useFinancialSamples,
-} from "./FinancialSamples";
-import { dateLabel } from "../components/ui";
+} from "./FinancialSamples.tsx";
+import { campaignFundingReport } from "./funding-report.ts";
 
 export function AdminFunding() {
   const {

@@ -1,5 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-import { navigate, selectCreator, selectOwner } from "./helpers";
+import { expect, test, type Page } from "@playwright/test";
+import { navigate, selectCreator, selectOwner } from "./helpers.ts";
 
 async function expectNormalZoom(page: Page) {
   expect(

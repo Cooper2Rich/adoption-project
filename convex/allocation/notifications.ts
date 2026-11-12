@@ -1,5 +1,5 @@
-import type { MutationCtx, Doc } from "../functions.ts";
 import type { GenericId } from "convex/values";
+import type { Doc, MutationCtx } from "../functions.ts";
 import type { AllocationResult } from "./planner.ts";
 
 export async function recordSimulatedIncidents(

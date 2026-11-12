@@ -1,4 +1,4 @@
-import { test, expect, type Locator } from "@playwright/test";
+import { expect, test, type Locator } from "@playwright/test";
 
 async function scale(image: Locator) {
   return image.evaluate(

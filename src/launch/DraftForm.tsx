@@ -1,8 +1,8 @@
 import { useRef, useState, type FormEvent } from "react";
 import type { AllocationInput } from "../../convex/allocation/planner.ts";
-import type { Campaign, SavedPreview } from "./api";
-import { allocationInput } from "./fixture-input";
-import { dollars, money } from "./format";
+import type { Campaign, SavedPreview } from "./api.ts";
+import { allocationInput } from "./fixture-input.ts";
+import { dollars, money } from "./format.ts";
 
 const scenarios = [
   { id: "complete", name: "Complete daily scores" },

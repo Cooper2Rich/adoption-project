@@ -54,7 +54,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-144.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-144.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -71,7 +71,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-145.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-145.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -88,7 +88,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-146.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-146.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -105,7 +105,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-147.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-147.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -122,7 +122,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-148.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-148.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -139,7 +139,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-149.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-149.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -156,7 +156,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-150.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-150.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -174,7 +174,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-151.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-151.test.ts` (planned; file absent).
 - **Pass condition:** All 3 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -191,7 +191,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-152.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-152.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -208,7 +208,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-153.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-153.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -226,7 +226,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-154.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-154.test.ts` (planned; file absent).
 - **Pass condition:** All 3 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -243,7 +243,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-155.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-155.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -260,7 +260,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-156.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-156.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -277,7 +277,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-157.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-157.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -294,7 +294,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-158.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-158.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -311,7 +311,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-159.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-159.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -329,7 +329,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-160.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-160.test.ts` (planned; file absent).
 - **Pass condition:** All 3 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -347,7 +347,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-161.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-161.test.ts` (planned; file absent).
 - **Pass condition:** All 3 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -364,7 +364,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-162.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-162.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -381,7 +381,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-163.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-163.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -398,7 +398,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-164.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-164.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -415,7 +415,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-165.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-165.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -432,7 +432,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-166.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-166.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -449,7 +449,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-167.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-167.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -466,7 +466,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-168.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-168.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -483,7 +483,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-169.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-169.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -500,7 +500,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-170.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-170.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -517,7 +517,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-171.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-171.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -534,7 +534,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-172.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-172.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -551,7 +551,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-173.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-173.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -568,7 +568,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-174.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-174.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -585,7 +585,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-175.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-175.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -602,7 +602,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-176.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-176.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -619,7 +619,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-177.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-177.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -636,7 +636,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-178.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-178.test.ts` (planned; file absent).
 - **Pass condition:** All 2 criteria reach production-intended service behavior with relevant denial, boundary, duplicate, restart and failure assertions; no missing-file, import-only, skipped, zero-test or demo-only pass.
 - **Evidence:** Criterion-mapped runner output, isolated persisted records and redacted decision/provider-contract traces; browser evidence for visible flows.
 
@@ -653,7 +653,7 @@ No provider write, money movement, account setup, production deployment or issue
 
 #### Verification
 
-- **Command:** `node --test tests/launch/REQ-179.test.js` (planned; file absent).
+- **Command:** `node --test tests/launch/REQ-179.test.ts` (planned; file absent).
 - **Pass condition:** Both criteria reach production-intended service transitions with denial, duplicate, restart and unresolved-provider assertions; missing-file/import-only/zero-test outcomes do not pass.
 - **Evidence:** Controlled-clock runner output, persisted incident and placement state transitions, financial snapshot/authority references and intercepted notification records.
 
@@ -761,43 +761,43 @@ Required preview inputs identify nonprofit/campaign, Chicago date/admission time
 
 **Not executable and not authorized.** Requirement-local commands are planned paths, absent today. A missing file is not behavioral red evidence. Passing the document audit only checks structure.
 
-- **REQ-144:** planned `node --test tests/launch/REQ-144.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-145:** planned `node --test tests/launch/REQ-145.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-146:** planned `node --test tests/launch/REQ-146.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-147:** planned `node --test tests/launch/REQ-147.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-148:** planned `node --test tests/launch/REQ-148.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-149:** planned `node --test tests/launch/REQ-149.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-150:** planned `node --test tests/launch/REQ-150.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-151:** planned `node --test tests/launch/REQ-151.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-152:** planned `node --test tests/launch/REQ-152.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-153:** planned `node --test tests/launch/REQ-153.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-154:** planned `node --test tests/launch/REQ-154.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-155:** planned `node --test tests/launch/REQ-155.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-156:** planned `node --test tests/launch/REQ-156.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-157:** planned `node --test tests/launch/REQ-157.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-158:** planned `node --test tests/launch/REQ-158.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-159:** planned `node --test tests/launch/REQ-159.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-160:** planned `node --test tests/launch/REQ-160.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-161:** planned `node --test tests/launch/REQ-161.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-162:** planned `node --test tests/launch/REQ-162.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-163:** planned `node --test tests/launch/REQ-163.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-164:** planned `node --test tests/launch/REQ-164.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-165:** planned `node --test tests/launch/REQ-165.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-166:** planned `node --test tests/launch/REQ-166.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-167:** planned `node --test tests/launch/REQ-167.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-168:** planned `node --test tests/launch/REQ-168.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-169:** planned `node --test tests/launch/REQ-169.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-170:** planned `node --test tests/launch/REQ-170.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-171:** planned `node --test tests/launch/REQ-171.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-172:** planned `node --test tests/launch/REQ-172.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-173:** planned `node --test tests/launch/REQ-173.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-174:** planned `node --test tests/launch/REQ-174.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-175:** planned `node --test tests/launch/REQ-175.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-176:** planned `node --test tests/launch/REQ-176.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-177:** planned `node --test tests/launch/REQ-177.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
-- **REQ-178:** planned `node --test tests/launch/REQ-178.test.js`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-144:** planned `node --test tests/launch/REQ-144.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-145:** planned `node --test tests/launch/REQ-145.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-146:** planned `node --test tests/launch/REQ-146.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-147:** planned `node --test tests/launch/REQ-147.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-148:** planned `node --test tests/launch/REQ-148.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-149:** planned `node --test tests/launch/REQ-149.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-150:** planned `node --test tests/launch/REQ-150.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-151:** planned `node --test tests/launch/REQ-151.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-152:** planned `node --test tests/launch/REQ-152.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-153:** planned `node --test tests/launch/REQ-153.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-154:** planned `node --test tests/launch/REQ-154.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-155:** planned `node --test tests/launch/REQ-155.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-156:** planned `node --test tests/launch/REQ-156.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-157:** planned `node --test tests/launch/REQ-157.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-158:** planned `node --test tests/launch/REQ-158.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-159:** planned `node --test tests/launch/REQ-159.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-160:** planned `node --test tests/launch/REQ-160.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-161:** planned `node --test tests/launch/REQ-161.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-162:** planned `node --test tests/launch/REQ-162.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-163:** planned `node --test tests/launch/REQ-163.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-164:** planned `node --test tests/launch/REQ-164.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-165:** planned `node --test tests/launch/REQ-165.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-166:** planned `node --test tests/launch/REQ-166.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-167:** planned `node --test tests/launch/REQ-167.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-168:** planned `node --test tests/launch/REQ-168.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-169:** planned `node --test tests/launch/REQ-169.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-170:** planned `node --test tests/launch/REQ-170.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-171:** planned `node --test tests/launch/REQ-171.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-172:** planned `node --test tests/launch/REQ-172.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-173:** planned `node --test tests/launch/REQ-173.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-174:** planned `node --test tests/launch/REQ-174.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-175:** planned `node --test tests/launch/REQ-175.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-176:** planned `node --test tests/launch/REQ-176.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-177:** planned `node --test tests/launch/REQ-177.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
+- **REQ-178:** planned `node --test tests/launch/REQ-178.test.ts`; cover every criterion plus applicable provider gate/denial/failure/recovery assertions.
 
-- **REQ-179:** planned `node --test tests/launch/REQ-179.test.js`; cover both recovery criteria with actual authority/evidence and independent-hold assertions.
+- **REQ-179:** planned `node --test tests/launch/REQ-179.test.ts`; cover both recovery criteria with actual authority/evidence and independent-hold assertions.
 
 Then run applicable real browser/service suites and `npm test` / `npm run build`, preserving any unrelated baseline failures. Provider/account contract checks run only in separately authorized isolated environments with redacted records. Update criterion-to-command mapping after any contract revision. Whole launch requires PG evidence, complete implemented verification and production release review. Q94 completes specification review only. No structural pass, preview pass, callback receipt, research closure or nominal balance may override a failed gate.
 

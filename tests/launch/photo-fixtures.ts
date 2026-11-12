@@ -1,5 +1,5 @@
-import sharp from "sharp";
 import { crc32 } from "node:zlib";
+import sharp from "sharp";
 
 export async function pngBytes(size?: number) {
   const base = await sharp({

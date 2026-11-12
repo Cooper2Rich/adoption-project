@@ -1,6 +1,6 @@
-import type { Post, Project } from "../types";
-import type { Support } from "./catalog";
+import type { Post, Project } from "../types.ts";
 import { allocateAdFund, recordedAdFundAllocation } from "./ad-fund-policy.ts";
+import type { Support } from "./catalog.ts";
 
 export type SamplePayment = {
   id: string;

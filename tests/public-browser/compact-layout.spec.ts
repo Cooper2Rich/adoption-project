@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("laptop feed fits five readable cards with navigation closed and four with the secondary sidebar open", async ({
   page,
@@ -96,11 +96,15 @@ test("public About tab explains BRM's purpose and has its own section navigation
         : "Workspace shortcuts",
     exact: true,
   });
-  await primary.getByRole("link", { name: "About adoption.is", exact: true }).click();
+  await primary
+    .getByRole("link", { name: "About adoption.is", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Good causes deserve to be heard." }),
   ).toBeVisible();
-  await expect(page.locator(".about-why")).toContainText("OUR MISSION & VISION");
+  await expect(page.locator(".about-why")).toContainText(
+    "OUR MISSION & VISION",
+  );
   await expect(page.locator(".about-why")).toContainText(
     "[Mission statement placeholder",
   );

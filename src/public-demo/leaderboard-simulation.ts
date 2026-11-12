@@ -1,4 +1,4 @@
-import type { PublicAd } from "./catalog";
+import type { PublicAd } from "./catalog.ts";
 
 // A repeating burst schedule supplies cumulative fictional metrics, never money
 // records. Each burst is large enough to visibly change a demo campaign leader.

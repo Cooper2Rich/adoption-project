@@ -1,10 +1,10 @@
+import { Check, Image as ImageIcon, Send, Upload } from "lucide-react";
 import { useState, type FormEvent } from "react";
-import { Check, Upload, Send, Image as ImageIcon } from "lucide-react";
-import { api } from "../api";
-import { demoAsset } from "../runtime";
-import { useWorkspace } from "../context";
-import type { Post, Project, Format } from "../types";
-import { Modal, Media } from "./ui";
+import { api } from "../api.ts";
+import { useWorkspace } from "../context.tsx";
+import { demoAsset } from "../runtime.ts";
+import type { Format, Post, Project } from "../types.ts";
+import { Media, Modal } from "./ui.tsx";
 
 export function SubmissionForm({
   project,

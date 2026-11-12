@@ -24,7 +24,7 @@ export function initializeTheme() {
   applyTheme(readTheme());
 }
 
-function subscribe(notify: () => void) {
+function subscribe(notify: (...args: any[]) => any) {
   const sync = (event: StorageEvent) => {
     if (event.key !== storageKey && event.key !== null) return;
     applyTheme(readTheme());

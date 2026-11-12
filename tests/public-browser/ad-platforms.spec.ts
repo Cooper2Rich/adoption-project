@@ -1,10 +1,10 @@
-import { test, expect, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import {
   navigate,
   openWorkspaceMenu,
-  selectOwner,
   selectCreator,
-} from "./helpers";
+  selectOwner,
+} from "./helpers.ts";
 
 async function openCoffee(page: Page) {
   await page.goto("./#/explore");

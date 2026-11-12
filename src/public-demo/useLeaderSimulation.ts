@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import type { PublicAd } from "./catalog";
+import type { PublicAd } from "./catalog.ts";
 import {
-  periodAd,
   leaderboardWindow,
+  periodAd,
   type LeaderboardPeriod,
-} from "./leaderboard-periods";
-import { simulateLeaders } from "./leaderboard-simulation";
+} from "./leaderboard-periods.ts";
+import { simulateLeaders } from "./leaderboard-simulation.ts";
 
 export const LEADERBOARD_UPDATE_INTERVAL = 10 * 60 * 1000;
 export function useLeaderSimulation(

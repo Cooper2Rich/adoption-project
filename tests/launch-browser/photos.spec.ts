@@ -1,7 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { ConvexHttpClient } from "convex/browser";
-import { campaignRules as rules } from "../launch/fixtures";
-import { pngBytes, jpegBytes } from "../launch/photo-fixtures";
+import { makeFunctionReference } from "convex/server";
+import { campaignRules as rules } from "../launch/fixtures.ts";
+import { jpegBytes, pngBytes } from "../launch/photo-fixtures.ts";
 
 test("T03 creator actual photo upload correction rejection and manager approval journey", async ({
   page,
@@ -16,24 +17,33 @@ test("T03 creator actual photo upload correction rejection and manager approval 
   manager.setAuth(session.token);
   const scope = { campaignId: "adoption" };
   try {
-    await manager.mutation("campaignSetup:create", {
-      ...scope,
-      operationId: "t03-browser-rules",
-      rules,
-    });
+    await manager.mutation(
+      makeFunctionReference<"mutation">("campaignSetup:create"),
+      {
+        ...scope,
+        operationId: "t03-browser-rules",
+        rules,
+      },
+    );
   } catch (error) {
     expect(String(error)).toMatch(/RULES_LOCKED/);
   }
-  const invitation = await manager.mutation("creatorAccess:invite", {
-    ...scope,
-    email: "creator-b@creators.example",
-    operationId: "t03-browser-invite",
-  });
+  const invitation = await manager.mutation(
+    makeFunctionReference<"mutation">("creatorAccess:invite"),
+    {
+      ...scope,
+      email: "creator-b@creators.example",
+      operationId: "t03-browser-invite",
+    },
+  );
   await manager.action("clerkInvitations:dispatch", {
     ...scope,
     invitationId: invitation._id,
     kind: "create",
   });
+  // Establish the owned fixture before navigation; isVisible() can observe
+  // the loading state before the unavailable-terms heading renders.
+  await page.request.post(`${base}/__allocation/terms`);
   const context = await browser.newContext({
     viewport: info.project.use.viewport,
   });
@@ -49,12 +59,6 @@ test("T03 creator actual photo upload correction rejection and manager approval 
     await creator.goto(
       `${base}/?workspace=creator&invitation=${invitation._id}`,
     );
-    if (
-      await creator
-        .getByRole("heading", { name: "Participation terms unavailable" })
-        .isVisible()
-    )
-      await page.request.post(`${base}/__allocation/terms`);
     await creator.getByRole("checkbox").check();
     await creator
       .getByRole("button", { name: "Complete campaign signup" })
@@ -100,7 +104,10 @@ test("T03 creator actual photo upload correction rejection and manager approval 
     ).json();
     const client = new ConvexHttpClient(creatorSession.url);
     client.setAuth(creatorSession.token);
-    let entries = await client.query("photos:workspace", scope);
+    let entries = await client.query(
+      makeFunctionReference<"query">("photos:workspace"),
+      scope,
+    );
     expect(entries).toHaveLength(1);
     const entryId = entries[0]._id,
       trackedPath = entries[0].trackedPath;
@@ -234,12 +241,15 @@ test("T03 creator actual photo upload correction rejection and manager approval 
       "separate pending entry with its own link",
     );
     await expect(creator.getByRole("article")).toHaveCount(2);
-    entries = await client.query("photos:workspace", scope);
-    const replacement = entries.find((e) => e._id !== entryId);
+    entries = await client.query(
+      makeFunctionReference<"query">("photos:workspace"),
+      scope,
+    );
+    const replacement = entries.find((e: any) => e._id !== entryId);
     expect(replacement.status).toBe("pending");
     expect(replacement.trackedPath).not.toBe(trackedPath);
     expect(replacement.firstApprovedAt).toBeUndefined();
-    expect(entries.find((e) => e._id === entryId).status).toBe("approved");
+    expect(entries.find((e: any) => e._id === entryId).status).toBe("approved");
     await creator.screenshot({
       path: `.codex/ralph/t03-${info.project.name}-replacement-entry.png`,
       fullPage: true,
@@ -249,11 +259,14 @@ test("T03 creator actual photo upload correction rejection and manager approval 
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true);
-    await manager.mutation("creatorAccess:revoke", {
-      ...scope,
-      invitationId: invitation._id,
-      operationId: "t03-browser-revoke",
-    });
+    await manager.mutation(
+      makeFunctionReference<"mutation">("creatorAccess:revoke"),
+      {
+        ...scope,
+        invitationId: invitation._id,
+        operationId: "t03-browser-revoke",
+      },
+    );
     await expect(
       creator.getByRole("heading", { name: "Workspace unavailable" }),
     ).toBeVisible();

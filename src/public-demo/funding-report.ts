@@ -1,7 +1,7 @@
-import type { ManagedCampaign, Project } from "../types";
-import type { PublicAd, Support } from "./catalog";
-import { leaderboardWindow, periodAd } from "./leaderboard-periods.ts";
+import type { ManagedCampaign, Project } from "../types.ts";
 import { recordedAdFundAllocation } from "./ad-fund-policy.ts";
+import type { PublicAd, Support } from "./catalog.ts";
+import { leaderboardWindow, periodAd } from "./leaderboard-periods.ts";
 import { samplePaymentsFor, type SamplePayment } from "./sample-finances.ts";
 
 export function campaignFundingReport(

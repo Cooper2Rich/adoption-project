@@ -1,10 +1,10 @@
+import { Link2, Play, Settings2, Unplug } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Link2, Play, Settings2, Unplug } from "lucide-react";
-import { api } from "../api";
-import { useWorkspace } from "../context";
-import { Modal } from "../components/ui";
-import { money } from "./catalog";
+import { api } from "../api.ts";
+import { Modal } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import "./ad-platforms.css";
 import {
   adPlatforms,
   demoAdAccounts,
@@ -12,11 +12,11 @@ import {
   platformNames,
   type AdPlatform,
   type CampaignAdSetup,
-} from "./ad-platforms";
-import "./ad-platforms.css";
-import { CompletedAdSpend } from "./CompletedAdSpend";
-import { CampaignBudgetBreakdown } from "./CampaignBudgetBreakdown";
-import { useFinancialSamples } from "./FinancialSamples";
+} from "./ad-platforms.ts";
+import { CampaignBudgetBreakdown } from "./CampaignBudgetBreakdown.tsx";
+import { money } from "./catalog.ts";
+import { CompletedAdSpend } from "./CompletedAdSpend.tsx";
+import { useFinancialSamples } from "./FinancialSamples.tsx";
 
 export function AdPlatformsPage({
   embedded = false,
@@ -530,8 +530,8 @@ function ConnectionDialog({
       >
         <p>
           Explore account selection with fictional USD accounts. This does not
-          sign in to {platformNames[provider]} or grant adoption.is
-          advertising access.
+          sign in to {platformNames[provider]} or grant adoption.is advertising
+          access.
         </p>
         <label>
           {platformNames[provider]} demo ad account

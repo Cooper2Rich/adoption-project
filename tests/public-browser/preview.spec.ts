@@ -1,10 +1,5 @@
-import { test, expect } from "@playwright/test";
-import {
-  navigate,
-  selectCreator,
-  selectOwner,
-  openRiverCampaign,
-} from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, openRiverCampaign, selectCreator } from "./helpers.ts";
 
 test("earlier campaign-preview consent, creative and gift survive the full-site upgrade", async ({
   page,

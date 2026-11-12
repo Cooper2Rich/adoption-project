@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campaign funding and advertiser account paths</title>
+<style>
+:root { font-family:var(--font-sans); color:var(--foreground); }
+html,body { margin:0; }
+#campaign-paths { display:grid; gap:24px; }
+#campaign-paths section { display:grid; gap:10px; }
+#campaign-paths h3 { margin:0; font-weight:500; }
+#campaign-paths .flow { display:grid; grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr) 20px minmax(0,1fr); align-items:center; gap:4px; }
+#campaign-paths .node { padding:16px; border-radius:var(--radius); background:var(--secondary); color:var(--secondary-foreground); min-width:0; overflow-wrap:anywhere; }
+#campaign-paths .node span { display:block; }
+#campaign-paths .node span+span { margin-top:8px; }
+#campaign-paths .arrow { text-align:center; color:var(--muted-foreground); }
+#campaign-paths .annotation { color:var(--muted-foreground); }
+#campaign-paths .labels { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; color:var(--muted-foreground); }
+#campaign-paths a { color:var(--foreground); }
+@media(max-width:520px) {
+ #campaign-paths .flow { grid-template-columns:minmax(0,1fr); gap:8px; }
+ #campaign-paths .arrow { transform:rotate(90deg); }
+ #campaign-paths .labels { display:none; }
+}
+</style>
+</head>
+<body>
+<main id="campaign-paths" aria-label="Comparison of three proposed campaign funding and advertising account layouts">
+<div class="annotation">Proposed structures · Provider and advertising-platform approval still required</div>
+<div class="labels" aria-hidden="true"><span>Funds held by provider</span><span>Payment routing</span><span>Advertising billing</span></div>
+<section aria-labelledby="shared-label">
+ <h3 id="shared-label">Shared across nonprofits</h3>
+ <div class="flow">
+  <div class="node"><span>Campaign A balance</span><span>Campaign B balance</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node">Routing charges to the correct campaign balance is unverified</div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><span>One Meta ad account</span><span>One TikTok ad account</span></div>
+ </div>
+ <div class="annotation">Shared advertiser eligibility and aggregate-charge allocation remain unresolved.</div>
+</section>
+<section aria-labelledby="nonprofit-label">
+ <h3 id="nonprofit-label">Separate for each nonprofit</h3>
+ <div class="flow">
+  <div class="node"><span>Nonprofit A balance</span><span>Nonprofit B balance</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><span>Approved instrument A</span><span>Approved instrument B</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><span>Meta A + TikTok A</span><span>Meta B + TikTok B</span></div>
+ </div>
+ <div class="annotation">Campaigns inside the same nonprofit still need their own fund-separation design.</div>
+</section>
+<section aria-labelledby="campaign-label">
+ <h3 id="campaign-label">Separate for each campaign</h3>
+ <div class="flow">
+  <div class="node"><span>Campaign A financial account</span><span>Campaign B financial account</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><span>Instrument linked to A</span><span>Instrument linked to B</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><span>Meta A + TikTok A</span><span>Meta B + TikTok B</span></div>
+ </div>
+ <div class="annotation">Candidate for strict campaign balances; requires approved account/card linkage and more provisioning.</div>
+</section>
+<div class="annotation">Slander manages all three layouts. Separate ad accounts alone do not establish separate custody or eliminate billing losses.</div>
+<div class="annotation"><a href="https://github.com/Cooper2Rich/adoption-project/blob/research/nonprofit-ad-account-layouts/docs/meta-tiktok-nonprofit-account-layouts-research.md">Advertiser evidence</a> · <a href="https://github.com/Cooper2Rich/adoption-project/blob/research/nonprofit-campaign-funds/docs/nonprofit-campaign-fund-separation-research.md">Funding evidence</a></div>
+</main>
+</body>
+</html>

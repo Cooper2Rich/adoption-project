@@ -1,0 +1,210 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;650;700;800&display=swap");
+
+body.public-demo {
+  font-family: "Archivo", sans-serif;
+  --brand-blue: #d5b893;
+  --brand-light: #d5b893;
+  --brand-mid: #617891;
+  --brand-deep: #6f4d38;
+  --ink: #ffffff;
+  --muted: #9db0c5;
+  --line: #3a4d6e;
+  --lime: #d5b893;
+  --green: #25344f;
+  --night: #131b2b;
+  --surface: #1b2638;
+  --raised: #25344f;
+  --accent: #2e4060;
+  --accent-strong: #3a4d6e;
+  --amber: #d5b893;
+  --theme-text: #ffffff;
+  --theme-muted: #c8dbea;
+  --theme-link: #d5b893;
+  --theme-line: #3a4d6e;
+  --theme-canvas: #131b2b;
+  --theme-surface: #1b2638;
+  --theme-raised: #25344f;
+  --theme-accent: #2e4060;
+  --theme-warning-text: #d5b893;
+  --theme-warning-surface: #25344f;
+  --theme-success-text: #c8dbea;
+  --theme-success-surface: #1b2638;
+  --illustration-canvas: #1b2638;
+  --illustration-shape: #2e4060;
+  --illustration-line: #617891;
+  --illustration-accent: #d5b893;
+  --illustration-ink: #c8dbea;
+  color: var(--ink);
+  background: var(--night);
+  color-scheme: dark;
+}
+
+body.public-demo[data-theme="light"] {
+  --brand-blue: #25344f;
+  --brand-light: #6f4d38;
+  --brand-mid: #617891;
+  --brand-deep: #632024;
+  --ink: #25344f;
+  --muted: #4d5c70;
+  --line: #b7cbdc;
+  --night: #eaf2f7;
+  --surface: #ffffff;
+  --raised: #c8dbea;
+  --accent: #d5b893;
+  --accent-strong: #c5a47e;
+  --amber: #6f4d38;
+  --theme-text: #25344f;
+  --theme-muted: #4d5c70;
+  --theme-link: #6f4d38;
+  --theme-line: #b7cbdc;
+  --theme-canvas: #eaf2f7;
+  --theme-surface: #ffffff;
+  --theme-raised: #c8dbea;
+  --theme-accent: #d5b893;
+  --theme-warning-text: #632024;
+  --theme-warning-surface: #f3ece3;
+  --theme-success-text: #25344f;
+  --theme-success-surface: #c8dbea;
+  --illustration-canvas: #c8dbea;
+  --illustration-shape: #617891;
+  --illustration-line: #6f4d38;
+  --illustration-accent: #d5b893;
+  --illustration-ink: #25344f;
+  color-scheme: light;
+}
+
+html:has(body.public-demo[data-theme="light"]) {
+  background: #eaf2f7;
+}
+
+.kindred-logo,
+.public-demo .kindred-logo {
+  font-family: "Archivo", sans-serif;
+  gap: 10px;
+  letter-spacing: -0.6px;
+  color: var(--ink);
+}
+
+body:not(.public-demo) .kindred-logo {
+  background: #c8dbea;
+  color: #25344f;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+body:not(.public-demo) .kindred-mark {
+  content: url("/brand/kindred-reach-mark-light.png");
+}
+
+.kindred-wordmark {
+  font-size: 21px;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: -0.8px;
+}
+
+.kindred-logo .kindred-mark,
+.public-demo .kindred-logo .kindred-mark {
+  width: 38px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.public-demo .sidebar .kindred-wordmark {
+  font-size: 19px;
+}
+
+.kindred-logo.small .kindred-mark,
+.public-demo .kindred-logo.small .kindred-mark {
+  width: 30px;
+  height: 36px;
+}
+
+.public-demo[data-theme="light"] .kindred-logo {
+  background: #c8dbea;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.public-demo[data-theme="light"] .kindred-mark {
+  content: url("/brand/kindred-reach-mark-light.png");
+}
+
+.public-demo .hero-copy h1,
+.public-demo .home-section-heading h2,
+.public-demo .about-intro h1 {
+  font-family: "Archivo", sans-serif;
+}
+
+.public-demo .public-notice {
+  background: #1b2638;
+  color: #c8dbea;
+}
+
+.public-demo .public-notice .theme-picker select {
+  background: #25344f;
+  color: #ffffff;
+  border-color: #3a4d6e;
+}
+
+.public-demo[data-theme="light"] .theme-picker select {
+  color-scheme: light;
+}
+
+.public-demo :is(.button.primary, .button.secondary, .skip-link) {
+  background: #d5b893;
+  border-color: #d5b893;
+  color: #25344f;
+}
+
+.public-demo :is(.button.primary, .button.secondary):hover {
+  background: #e2c8a8;
+  border-color: #e2c8a8;
+}
+
+.public-demo .ripple-mission #vision-title {
+  margin: 28px 0 12px;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+}
+
+.public-demo :is(.button, a, select, input, textarea):focus-visible {
+  outline: 2px solid #d5b893;
+  outline-offset: 3px;
+}
+
+.public-demo[data-theme="light"]
+  :is(.button, a, select, input, textarea):focus-visible {
+  outline-color: #6f4d38;
+}
+
+.public-demo[data-theme="light"]
+  :is(.hero-feature, .ad-play, .inline-play, .ad-duration) {
+  --ink: #ffffff;
+  color: #ffffff;
+}
+
+.public-demo :is(input, textarea)::placeholder {
+  color: var(--muted);
+}
+
+@media (max-width: 600px) {
+  .public-demo .public-breadcrumb {
+    min-width: 0;
+  }
+
+  .public-demo .public-breadcrumb strong {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .kindred-header-brand {
+    flex-shrink: 0;
+  }
+
+  .kindred-wordmark {
+    font-size: 18px;
+  }
+}

@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 const id = "fictional-river-showcase-v1";
 async function openCampaign(page: Page) {
   if (

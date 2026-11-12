@@ -1,16 +1,17 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useMutation, useQuery } from "convex/react";
 import { upload } from "@vercel/blob/client";
-import { photoApi, type PhotoEntry } from "./photo-api";
-import { usePhotoToken } from "./photo-auth";
-import { campaign } from "./creator-api";
+import { useMutation, useQuery } from "convex/react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { Doc } from "../../convex/functions.ts";
-import { timestamp } from "./format";
+import { campaign } from "./creator-api.ts";
+import { timestamp } from "./format.ts";
+import { photoApi, type PhotoEntry } from "./photo-api.ts";
+import { usePhotoToken } from "./photo-auth.tsx";
+import { ProcessedVideo, VideoStatuses } from "./Videos.tsx";
 
 function errorText(error: unknown) {
   return (
     String(error instanceof Error ? error.message : error).match(
-      /(?:PHOTO_[A-Z_]+|STALE_VERSION|TERMS_UNAVAILABLE|ACCEPTANCE_REQUIRED|REASON_REQUIRED|DESCRIPTION_REQUIRED|OPERATION_CONFLICT|FORBIDDEN):[^\n]*/,
+      /(?:VIDEO_[A-Z_]+|PHOTO_[A-Z_]+|STALE_VERSION|TERMS_UNAVAILABLE|ACCEPTANCE_REQUIRED|REASON_REQUIRED|DESCRIPTION_REQUIRED|OPERATION_CONFLICT|FORBIDDEN):[^\n]*/,
     )?.[0] ?? "Photo operation could not be confirmed. Reconnect and retry."
   );
 }
@@ -76,6 +77,7 @@ function EntryHistory({ entry }: { entry: PhotoEntry }) {
         the public campaign.
       </p>
       <div className="photo-grid">
+        {current.video && <ProcessedVideo id={current.video} />}
         {current.photos.map((id) => (
           <PrivatePhoto key={id} id={id} />
         ))}
@@ -114,7 +116,9 @@ function EntryHistory({ entry }: { entry: PhotoEntry }) {
   );
 }
 export function CreatorPhotos({ canSubmit }: { canSubmit: boolean }) {
-  const entries = useQuery(photoApi.workspace, campaign);
+  const entries = useQuery(photoApi.workspace, campaign)?.filter(
+    (e) => !e.versions.find((v) => v.version === e.version)?.video,
+  );
   const reserve = useMutation(photoApi.reserve),
     submit = useMutation(photoApi.submit);
   const token = usePhotoToken();
@@ -429,6 +433,7 @@ export function PhotoReview() {
     <main className="preview-layout campaign-setup">
       <p className="eyebrow">adoption.is / Manager review</p>
       <h1>Review creator photos.</h1>
+      <VideoStatuses />
       <p>
         Review the submitted originals. Return any creative or formatting
         problem to the creator. Approval permits public display; paid

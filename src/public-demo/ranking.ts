@@ -1,4 +1,4 @@
-import type { PublicAd } from "./catalog";
+import type { PublicAd } from "./catalog.ts";
 
 // October 24 PRD addendum overrides grading-v2's older weights and ties.
 // User-approved demo targets, not production configuration or payouts.

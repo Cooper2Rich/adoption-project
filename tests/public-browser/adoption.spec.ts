@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate } from "./helpers.ts";
 
 test("Adoption Is contains the ACU project and the original 60-second ad with sound and previews", async ({
   page,

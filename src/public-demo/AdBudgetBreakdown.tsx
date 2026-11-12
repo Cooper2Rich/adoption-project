@@ -1,6 +1,6 @@
-import { money } from "./catalog";
-import { platformNames } from "./ad-platforms";
-import type { adBudgetBreakdown } from "./ad-budget";
+import type { adBudgetBreakdown } from "./ad-budget.ts";
+import { platformNames } from "./ad-platforms.ts";
+import { money } from "./catalog.ts";
 
 export function AdBudgetBreakdown({
   report,

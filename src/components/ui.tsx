@@ -1,21 +1,21 @@
-import { useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { WorkspaceContext } from "../context";
-import { mediaResponse } from "../api";
-import { APP_NAME, demoAsset } from "../runtime";
-import { useAdPreview } from "./useAdPreview";
 import {
   ArrowUpRight,
   Check,
   Clock3,
+  Film,
+  Image as ImageIcon,
+  Layers,
   MessageSquare,
+  Sparkles,
   X,
   XCircle,
-  Image as ImageIcon,
-  Film,
-  Layers,
-  Sparkles,
 } from "lucide-react";
-import type { PostStatus, Post } from "../types";
+import { useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { mediaResponse } from "../api.ts";
+import { WorkspaceContext } from "../context.tsx";
+import { APP_NAME, demoAsset } from "../runtime.ts";
+import type { Post, PostStatus } from "../types.ts";
+import { useAdPreview } from "./useAdPreview.ts";
 
 export function Logo({ small = false }: { small?: boolean }) {
   return (

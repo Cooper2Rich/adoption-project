@@ -1,16 +1,16 @@
+import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Trophy } from "lucide-react";
-import { useWorkspace } from "../context";
-import { count, loadAds, loadPublicCampaigns, money } from "./catalog";
-import { loadPastResults } from "./leaderboard-history";
+import { useWorkspace } from "../context.tsx";
+import { AdMedia } from "./AdMedia.tsx";
+import { count, loadAds, loadPublicCampaigns, money } from "./catalog.ts";
+import { creatorLeaderboardWins, type CreatorWin } from "./creator-wins.ts";
+import { useFinancialSamples } from "./FinancialSamples.tsx";
+import { loadPastResults } from "./leaderboard-history.ts";
 import {
   leaderboardWindow,
   type LeaderboardPeriod,
-} from "./leaderboard-periods";
-import { creatorLeaderboardWins, type CreatorWin } from "./creator-wins";
-import { useFinancialSamples } from "./FinancialSamples";
-import { AdMedia } from "./AdMedia";
+} from "./leaderboard-periods.ts";
 
 const dateLabel = (date: string) =>
   new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {

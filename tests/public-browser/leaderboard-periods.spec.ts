@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("current leaders move while completed daily and weekly winners stay fixed", async ({
   page,

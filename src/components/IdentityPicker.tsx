@@ -1,7 +1,7 @@
-import { useState, type FormEvent } from "react";
 import { ArrowRight, Building2, Plus, UserRound } from "lucide-react";
-import { api } from "../api";
-import type { DemoAccess, DemoOptions, Identity } from "../types";
+import { useState, type FormEvent } from "react";
+import { api } from "../api.ts";
+import type { DemoAccess, DemoOptions, Identity } from "../types.ts";
 
 export function IdentityPicker({
   access,

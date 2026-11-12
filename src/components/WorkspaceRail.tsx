@@ -1,13 +1,13 @@
 import { Compass, House, Info, Trophy, UserRound } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { Avatar, Logo } from "./ui";
-import { publicArea } from "../public-demo/navigation";
-import type { Role } from "../types";
-import { roleTabs, roleTabKey } from "./role-navigation";
+import { publicArea } from "../public-demo/navigation.ts";
+import type { Role } from "../types.ts";
 import {
   selectNavigationTab,
   type NavigationControls,
-} from "./navigation-controls";
+} from "./navigation-controls.ts";
+import { roleTabKey, roleTabs } from "./role-navigation.ts";
+import { Avatar, Logo } from "./ui.tsx";
 
 export function WorkspaceRail({
   role,

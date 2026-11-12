@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
 import { Check, Clock3, MessageSquare, Plus, Send } from "lucide-react";
-import { useWorkspace } from "../context";
+import { Link } from "react-router-dom";
 import {
   dateLabel,
   EmptyState,
-  relativeTime,
   Instagram,
-} from "../components/ui";
+  relativeTime,
+} from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
 
 export function ActivityPage() {
   const { activity, search } = useWorkspace();

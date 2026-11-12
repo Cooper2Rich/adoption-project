@@ -1,8 +1,9 @@
+import { useAction, useMutation, useQuery } from "convex/react";
 import { useRef, useState, type FormEvent } from "react";
-import { useMutation, useQuery, useAction } from "convex/react";
-import { creatorApi, campaign } from "./creator-api";
-import { timestamp } from "./format";
-import { CreatorPhotos } from "./Photos";
+import { campaign, creatorApi } from "./creator-api.ts";
+import { timestamp } from "./format.ts";
+import { CreatorPhotos } from "./Photos.tsx";
+import { CreatorVideos } from "./Videos.tsx";
 
 export function CreatorInvitations() {
   const invitations = useQuery(creatorApi.manager, campaign);
@@ -256,6 +257,7 @@ export function CreatorWorkspace() {
           </section>
           <PrivateStatus />
           <CreatorPhotos canSubmit={terms?._id === acceptance.termsId} />
+          <CreatorVideos canSubmit={terms?._id === acceptance.termsId} />
         </>
       ) : !terms ? (
         <section className="panel" role="alert">

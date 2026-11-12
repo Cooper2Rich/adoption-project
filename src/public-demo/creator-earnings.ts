@@ -1,6 +1,6 @@
-import type { Post } from "../types";
-import type { Support } from "./catalog";
+import type { Post } from "../types.ts";
 import { recordedAdFundAllocation } from "./ad-fund-policy.ts";
+import type { Support } from "./catalog.ts";
 import { samplePaymentsFor, type SamplePayment } from "./sample-finances.ts";
 
 type Gift = {

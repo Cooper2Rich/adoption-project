@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { preview } from "vite";
 
 test("T01 built production entry requires configured Clerk and never uses a fixture session", async ({

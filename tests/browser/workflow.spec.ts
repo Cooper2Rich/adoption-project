@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("project setup, upload, automatic eligibility, immutable revision and pairing", async ({
   page,

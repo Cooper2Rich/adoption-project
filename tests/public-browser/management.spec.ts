@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, openWorkspaceMenu, selectOwner } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, openWorkspaceMenu, selectOwner } from "./helpers.ts";
 
 test("owners request projects; only Admin assigns a campaign and approval creates a pricing-pending draft", async ({
   page,

@@ -1,4 +1,4 @@
-import { useTheme } from "../theme";
+import { useTheme } from "../theme.ts";
 
 export function ThemePicker() {
   const { theme, setTheme } = useTheme();

@@ -1,14 +1,14 @@
-import { Link } from "react-router-dom";
 import {
   ArrowDown,
   ArrowUp,
   ArrowUpRight,
-  Trophy,
   TrendingUp,
+  Trophy,
 } from "lucide-react";
-import { AdMedia } from "./AdMedia";
-import { count, money, type PublicAd } from "./catalog";
-import type { ScoredAd } from "./ranking";
+import { Link } from "react-router-dom";
+import { AdMedia } from "./AdMedia.tsx";
+import { count, money, type PublicAd } from "./catalog.ts";
+import type { ScoredAd } from "./ranking.ts";
 
 export function LeaderRow({
   ad,

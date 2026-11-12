@@ -1,5 +1,5 @@
-import type { SavedPreview } from "./api";
-import { money, timestamp } from "./format";
+import type { SavedPreview } from "./api.ts";
+import { money, timestamp } from "./format.ts";
 
 export function PreviewPlan({ record }: { record: SavedPreview }) {
   const result = record.result;

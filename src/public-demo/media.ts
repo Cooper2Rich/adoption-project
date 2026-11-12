@@ -1,6 +1,6 @@
-import { demoAsset } from "../runtime";
-import { createHash } from "./platform-crypto";
-import { adoptionAds } from "./adoption-ads.js";
+import { demoAsset } from "../runtime.ts";
+import { adoptionAds } from "./adoption-ads.ts";
+import { createHash } from "./platform-crypto.ts";
 
 const samples = new Map<string, Uint8Array>();
 let preparing: Promise<void> | undefined;

@@ -1,6 +1,6 @@
 import { Trophy } from "lucide-react";
-import type { Post } from "../types";
-import { Avatar } from "./ui";
+import type { Post } from "../types.ts";
+import { Avatar } from "./ui.tsx";
 
 export function Leaderboard({ posts }: { posts: Post[] }) {
   const creators = new Map<string, { name: string; count: number }>();

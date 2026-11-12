@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import {
   ArrowUpRight,
+  BarChart3,
   Check,
+  Download,
   HeartHandshake,
   Leaf,
   Wallet,
-  BarChart3,
-  Download,
 } from "lucide-react";
-import { api } from "../api";
-import { APP_NAME, PUBLIC_DEMO, demoAsset } from "../runtime";
-import { Logo } from "../components/ui";
-import { useWorkspace } from "../context";
-import type { Post } from "../types";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { api } from "../api.ts";
+import { Logo } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import { APP_NAME, PUBLIC_DEMO, demoAsset } from "../runtime.ts";
+import type { Post } from "../types.ts";
 
 type Terms = {
   id: string;
@@ -103,7 +103,7 @@ export function CampaignsPage() {
     setTab("Overview");
     void load().catch((e) => setError(e.message));
   }, [id, access]);
-  async function act(fn: () => Promise<void>) {
+  async function act(fn: (...args: any[]) => any) {
     setBusy(true);
     setError("");
     try {

@@ -1,19 +1,19 @@
-import { Component, useCallback, useState, type ReactNode } from "react";
-import { createRoot } from "react-dom/client";
+import { ClerkProvider, SignIn, UserButton, useAuth } from "@clerk/react";
 import {
   ConvexProviderWithAuth,
   ConvexReactClient,
   useConvexAuth,
 } from "convex/react";
-import { harnessSession } from "./api";
-import { PreviewWorkspace } from "./PreviewWorkspace";
-import { CampaignSetup } from "./CampaignSetup";
-import { CreatorInvitations, CreatorWorkspace } from "./CreatorWorkspace";
-import { ClerkProvider, SignIn, UserButton, useAuth } from "@clerk/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { Component, useCallback, useState, type ReactNode } from "react";
+import { createRoot } from "react-dom/client";
+import { harnessSession } from "./api.ts";
+import { CampaignSetup } from "./CampaignSetup.tsx";
+import { CreatorInvitations, CreatorWorkspace } from "./CreatorWorkspace.tsx";
+import { PhotoAuth } from "./photo-auth.tsx";
+import { PhotoReview } from "./Photos.tsx";
 import "./preview.css";
-import { PhotoAuth } from "./photo-auth";
-import { PhotoReview } from "./Photos";
+import { PreviewWorkspace } from "./PreviewWorkspace.tsx";
 
 class AccessBoundary extends Component<
   { children: ReactNode },

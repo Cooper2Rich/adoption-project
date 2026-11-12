@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, selectOwner, openRiverCampaign } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, openRiverCampaign, selectOwner } from "./helpers.ts";
 
 test("leaderboard scopes campaigns, searches creators and opens ad profiles", async ({
   page,

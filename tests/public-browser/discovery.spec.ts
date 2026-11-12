@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, openWorkspaceMenu, selectCreator } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, openWorkspaceMenu, selectCreator } from "./helpers.ts";
 
 test("public discovery previews video, opens profiles, filters, and supports ad spend as a viewer", async ({
   page,

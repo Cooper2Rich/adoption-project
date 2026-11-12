@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
-import { demoAsset } from "../runtime";
-import { mediaResponse } from "../api";
-import type { DemoAccess, Post } from "../types";
-import { mediaFile } from "./media";
-import { useAdPreview } from "../components/useAdPreview";
-import { adoptionAds } from "./adoption-ads.js";
+import { useEffect, useState } from "react";
+import { mediaResponse } from "../api.ts";
+import { useAdPreview } from "../components/useAdPreview.ts";
+import { demoAsset } from "../runtime.ts";
+import type { DemoAccess, Post } from "../types.ts";
+import { adoptionAds } from "./adoption-ads.ts";
+import { mediaFile } from "./media.ts";
 
 export function AdMedia({
   ad,

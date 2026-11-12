@@ -1,4 +1,5 @@
-import type { PublicAd, PublicCampaign } from "./catalog";
+import { adoptionAds } from "./adoption-ads.ts";
+import type { PublicAd, PublicCampaign } from "./catalog.ts";
 import {
   leaderboardWindow,
   periodAd,
@@ -6,7 +7,6 @@ import {
   type LeaderboardWindow,
 } from "./leaderboard-periods.ts";
 import { rankPublicAds, type ScoredAd } from "./ranking.ts";
-import { adoptionAds } from "./adoption-ads.js";
 
 const DAY = 86400000;
 const key = "ripple-leaderboard-history-v1";

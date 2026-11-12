@@ -23,7 +23,7 @@ The public homepage and public viewer experience are critical launch functionali
 ## Current state and evidence
 
 - Inspected the running local public demo at port 5173, including its homepage, Discover page, creator entry screen, and manager campaign list. Its brand is adoption.is. It currently shows multiple fictional campaigns and demo role switching.
-- README.md describes a browser-local public demo without real payments or ad delivery. src/public-demo/api.ts and src/public-demo/workspace.js use browser-local storage. The original Express workspace also exists; neither its presence nor a passing demo test proves the agreed production journeys work.
+- README.md describes a browser-local public demo without real payments or ad delivery. src/public-demo/api.ts and src/public-demo/workspace.ts use browser-local storage. The original Express workspace also exists; neither its presence nor a passing demo test proves the agreed production journeys work.
 - src/public-demo/ranking.ts implements capped square-root scoring with weights 40 impressions / 30 total link clicks / 30 fundraising, followed by clicks, fundraising, and impressions as tie-breakers. The older 15/10/35/40 grading illustration is not the selected score.
 - src/public-demo/leaderboard-periods.ts currently uses UTC. The agreed launch timezone is America/Chicago; the existing period tests are evidence of a difference, not proof of compliance.
 - src/public-demo/leaderboard-simulation.ts fabricates changing demo metrics. Fictional results must not enter live competition or financial records.
@@ -337,7 +337,7 @@ The public homepage and public viewer experience are critical launch functionali
 
 #### Verification
 
-- **Command:** `node --test tests/public-ranking.test.js` (existing formula baseline only; not production integration coverage).
+- **Command:** `node --test tests/public-ranking.test.ts` (existing formula baseline only; not production integration coverage).
 - **Pass condition:** Weighted calculation and invalid/missing-input checks. Every acceptance criterion must be exercised against real application behavior or faithful provider test-mode contracts; existing demo results alone do not satisfy it.
 - **Evidence:** Requirement-mapped automated test output, relevant redacted records, and browser traces where applicable.
 
@@ -1058,7 +1058,7 @@ Coverage to supply under V-01:
 - **REQ-112:** Production verification command not assigned; cover every acceptance criterion and retain mapped evidence before readiness.
 - **REQ-113:** Production verification command not assigned; cover every acceptance criterion and retain mapped evidence before readiness.
 - **REQ-114:** Production verification command not assigned; cover every acceptance criterion and retain mapped evidence before readiness.
-- **REQ-115:** Existing baseline: node --test tests/public-ranking.test.js; production scoring and source-integration checks remain required.
+- **REQ-115:** Existing baseline: node --test tests/public-ranking.test.ts; production scoring and source-integration checks remain required.
 - **REQ-116:** Production verification command not assigned; cover every acceptance criterion and retain mapped evidence before readiness.
 - **REQ-117:** Production verification command not assigned; cover every acceptance criterion and retain mapped evidence before readiness.
 - **REQ-118:** Production verification command not assigned; cover every acceptance criterion and retain mapped evidence before readiness.
@@ -1091,7 +1091,7 @@ Coverage to supply under V-01:
 Ordered checks available now, from the repository root:
 
 1. **Document structure only:** run the PRD skill audit against this file and save docs/PRD-adoption-is-launch.audit.json. Passing structure does not prove application behavior or resolve open questions.
-2. **REQ-115 baseline only:** run node --test tests/public-ranking.test.js. This checks existing demo behavior, not the entire production requirement.
+2. **REQ-115 baseline only:** run node --test tests/public-ranking.test.ts. This checks existing demo behavior, not the entire production requirement.
 3. **Regression baseline:** run npm test. Record failures without changing unrelated application behavior to force this draft to pass.
 4. **Future completion, blocked by V-01:** assign and run production checks for REQ-101 through REQ-143, followed by applicable build, regression and public/authenticated end-to-end checks against isolated test records.
 
@@ -1111,7 +1111,7 @@ Retain **Blocked** until these conditions hold, even when the document structure
 Historical validation performed 2026-11-06:
 
 - Document structure audit: passed, 32 requirements, zero errors, 10 warnings. Report: docs/PRD-adoption-is-launch.audit.json.
-- Existing score baseline: node --test tests/public-ranking.test.js, 6 passed, zero failed.
+- Existing score baseline: node --test tests/public-ranking.test.ts, 6 passed, zero failed.
 - Existing regression baseline: npm test, 130 passed, zero failed.
 - These checks do not verify new production behavior. In particular, existing UTC-period, historical commission and demo-role tests do not approve those policies for this Chicago-time, campaign-configured, single-manager launch.
 - Warning review: REQ-116, REQ-118, REQ-119, REQ-122 and REQ-124 each describe one policy with necessary boundary conditions or enumerated inputs. They remain grouped for product review. REQ-125 (public refresh versus source polling), REQ-127 (manual input versus reconciliation), REQ-129 (duplicate prevention versus post-payment reversals), REQ-130 (workspace visibility versus privacy) and REQ-132 (no ad launch versus source mapping) contain separable implementation concerns. Preserve their scope, but split them during downstream ticket decomposition and map tests separately. These warnings are not being suppressed or treated as executable readiness.
@@ -1131,7 +1131,7 @@ Historical validation performed 2026-11-06:
 - Primary-source provider research is recorded in docs/provider-research-adoption-is-launch.md. It narrows O-01/O-02/O-07 but does not resolve account-specific reporting, financial arrangements, or Clerk forwarded-link and recovery behavior. Meta Insights documentation was inaccessible during research. No provider account or test-mode integration was operated.
 - REQ-117 and REQ-126 now distinguish coverage completeness from import-operation success, define monitoring before the first successful import, and preserve the strict more-than-five-minute threshold. Provider-specific proof of coverage remains O-01.
 - docs/adoption-launch-verification-plan.md maps all 43 requirements and individual acceptance criteria to designated future commands and identifies boundary/failure scenarios. Those files do not exist yet: missing-file failures are not behavioral red tests, and V-01 remains blocked.
-- Current local baseline: `node --test tests/public-ranking.test.js` passed six demo tests. `npm test` failed with 17 passed and 12 test files unable to load an incomplete local `zod` installation. Neither result establishes launch readiness. The refreshed deterministic audit passes with zero errors and ten warnings; the semantic audit remains blocked.
+- Current local baseline: `node --test tests/public-ranking.test.ts` passed six demo tests. `npm test` failed with 17 passed and 12 test files unable to load an incomplete local `zod` installation. Neither result establishes launch readiness. The refreshed deterministic audit passes with zero errors and ten warnings; the semantic audit remains blocked.
 
 
 ### Consolidated structure check - 2026-11-11

@@ -1,7 +1,12 @@
-import { v } from "convex/values";
 import { makeFunctionReference } from "convex/server";
-import { action, internalMutation, internalQuery } from "./functions.ts";
-import type { Doc } from "./functions.ts";
+import { v } from "convex/values";
+import {
+  action,
+  internalMutation,
+  internalQuery,
+  type Doc,
+} from "./functions.ts";
+
 import { authorizedCampaign } from "./access.ts";
 const args = {
   campaignId: v.string(),
