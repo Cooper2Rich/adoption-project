@@ -1,17 +1,17 @@
-import { v } from "convex/values";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
-import { query, mutation, type QueryCtx, type Doc } from "./functions.ts";
-import {
-  acceptedCreator,
-  requireSubmissionParticipant,
-} from "./creatorAccess.ts";
+import { v } from "convex/values";
 import {
   authorizedCampaign,
   operationIdentity,
   stableRequest,
 } from "./access.ts";
+import {
+  acceptedCreator,
+  requireSubmissionParticipant,
+} from "./creatorAccess.ts";
+import { mutation, query, type Doc, type QueryCtx } from "./functions.ts";
 
 const scope = { campaignId: v.string() };
 const photoId = v.id("photoUploads");
@@ -216,6 +216,7 @@ export const submit = mutation({
     title: v.string(),
     description: v.string(),
     photos: v.array(photoId),
+    video: v.optional(v.id("videoUploads")),
   },
   handler: async (ctx, args) => {
     const { campaign, subject, acceptance } =
@@ -237,7 +238,9 @@ export const submit = mutation({
         throw new Error("OPERATION_CONFLICT");
       return (await ctx.db.get(prior.entryId))!;
     }
-    photoLimits(args.photos.map(() => 1));
+    if (args.video && args.photos.length)
+      throw new Error("VIDEO_COUNT: Choose one video or 1 to 10 photos");
+    if (!args.video) photoLimits(args.photos.map(() => 1));
     if (new Set(args.photos).size !== args.photos.length)
       throw new Error("PHOTO_DUPLICATE: Choose distinct uploaded photos");
     const uploads = await Promise.all(args.photos.map((id) => ctx.db.get(id)));
@@ -252,7 +255,18 @@ export const submit = mutation({
         !upload.size
       )
         forbidden();
-    photoLimits(uploads.map((u) => u!.size!));
+    if (!args.video) photoLimits(uploads.map((u) => u!.size!));
+    const video = args.video ? await ctx.db.get(args.video) : null;
+    if (
+      args.video &&
+      (!video ||
+        video.subject !== subject ||
+        video.campaignSlug !== args.campaignId ||
+        video.nonprofitId !== campaign.nonprofitId ||
+        video.acceptanceId !== acceptance._id ||
+        !video.sha256)
+    )
+      forbidden();
     let entry = args.entryId ? await ctx.db.get(args.entryId) : null;
     if (
       args.entryId &&
@@ -282,7 +296,10 @@ export const submit = mutation({
     const changedMedia =
       !current ||
       JSON.stringify(contentIdentity(previousUploads)) !==
-        JSON.stringify(contentIdentity(uploads));
+        JSON.stringify(contentIdentity(uploads)) ||
+      (current.video
+        ? (await ctx.db.get(current.video))?.sha256
+        : undefined) !== video?.sha256;
     const replacementOf =
       entry && entry.firstApprovedAt && changedMedia ? entry._id : undefined;
     if (replacementOf) entry = null;
@@ -308,6 +325,7 @@ export const submit = mutation({
       title: args.title,
       description: args.description,
       photos: args.photos,
+      ...(args.video ? { video: args.video } : {}),
       acceptanceId: acceptance._id,
       actor: subject,
       source: "photos:submit",
@@ -372,6 +390,21 @@ export const review = mutation({
     }
     if (entry!.version !== args.expectedVersion)
       throw new Error("STALE_VERSION: Review the latest submitted version");
+    if (args.decision === "approved") {
+      const version = await ctx.db
+        .query("photoVersions")
+        .withIndex("by_entry_version", (q) =>
+          q.eq("entryId", args.entryId).eq("version", entry!.version),
+        )
+        .unique();
+      if (
+        version?.video &&
+        (await ctx.db.get(version.video))?.state !== "ready"
+      )
+        throw new Error(
+          "VIDEO_NOT_READY: Review verified processed playback before approval",
+        );
+    }
     if (args.decision !== "approved" && !args.reason.trim())
       throw new Error("REASON_REQUIRED: Tell the creator what needs to change");
     if (args.reason.length > 5000)
@@ -473,6 +506,7 @@ export const publicEntry = query({
       title: version!.title,
       description: version!.description,
       photos: version!.photos,
+      ...(version!.video ? { video: version!.video } : {}),
       trackedPath: `/fundraise/${entryId}`,
     };
   },

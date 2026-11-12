@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { PUBLIC_DEMO } from "./runtime";
-import type { DemoAccess, Identity, Role } from "./types";
+import { PUBLIC_DEMO } from "./runtime.ts";
+import type { DemoAccess, Identity, Role } from "./types.ts";
 
 export type RoleProfile = {
   name: string;

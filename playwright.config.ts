@@ -7,7 +7,7 @@ export default defineConfig({
   reporter: "list",
   use: { baseURL: "http://127.0.0.1:3100", trace: "retain-on-failure" },
   webServer: {
-    command: "node server/index.js",
+    command: "node server/index.ts",
     url: "http://127.0.0.1:3100/api/health",
     reuseExistingServer: false,
     env: {

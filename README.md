@@ -16,7 +16,6 @@ The three How it works cards use real stock photography. Hover a card or focus i
 
 [**Open the public interactive demo →**](https://cooper2rich.github.io/adoption-project/)
 
-
 [**John's demo link**](https://cooper2rich.github.io/adoption-project/)
 
 John's link opens the same live adoption.is demo and stays current with deployments from `main`.
@@ -46,6 +45,8 @@ A responsive, provider-free local campaign marketplace demo built with React, Ex
 ## Run
 
 Use Node.js **24 or later** (built-in SQLite).
+
+All application, API, test, and tooling source uses TypeScript (`.ts`/`.tsx`). Node.js runs tool and server entry points directly with native type stripping. `npm run check:language` prevents additional implementation languages from entering the repository; `npm run typecheck` checks the frontend, Convex backend, API routes, demo server, and tooling with strict compiler settings. The historical demo retains flexible types at its evolving JSON/SQLite record boundaries. HTML, CSS, JSON, YAML, generated browser bundles, and third-party packages retain their normal formats.
 
 ```sh
 npm install
@@ -86,7 +87,7 @@ Admin can open **Ad platforms** on any campaign card or in a campaign's secondar
 
 The GitHub Pages demo automatically builds and deploys from **main** through [Publish public demo from main](.github/workflows/public-demo.yml). Every push to main runs the domain tests and `npm run build:public` before publishing the generated site. The workflow can also be run manually from Actions on main. GitHub Pages uses the workflow deployment; `gh-pages` retains generated assets as an archive, not the application source. The staging helper restores and retains historical hashed JS/CSS so already-open tabs can still load lazy modules after publication. Do not delete old assets during deployment. If a required module fails to load, **Reload demo** requests the latest entry point while preserving the route, saved profiles, contributions and browser media; ordinary workspace errors retain **Try again**.
 
-Public discovery and simplified workspaces reuse project, eligibility, revision, scope and exception domain modules through browser adapters. Fictional records live in localStorage; uploaded media lives in IndexedDB. Nothing connects to the local API, database or files. Rebuild the filmed coffee ads with `node scripts/generate-coffee-videos.mjs`; source footage and credits are recorded in `scripts/coffee-footage.mjs`. Verify desktop/mobile workflows with `npm run test:public`. Clearing this site's browser storage starts a fresh fictional workspace.
+Public discovery and simplified workspaces reuse project, eligibility, revision, scope and exception domain modules through browser adapters. Fictional records live in localStorage; uploaded media lives in IndexedDB. Nothing connects to the local API, database or files. Rebuild the filmed coffee ads with `node scripts/generate-coffee-videos.ts`; source footage and credits are recorded in `scripts/coffee-footage.ts`. Verify desktop/mobile workflows with `npm run test:public`. Clearing this site's browser storage starts a fresh fictional workspace.
 
 Data persists in `data/slander.sqlite`; uploads stay in `data/uploads`. `SLANDER_DATA_DIR` selects an isolated directory. Never delete data to refresh the demo. Startup migrates existing records and retains identifiers. Showcase initialization is explicit, never a startup side effect.
 
@@ -94,7 +95,7 @@ Data persists in `data/slander.sqlite`; uploads stay in `data/uploads`. `SLANDER
 npm run check
 npm run test:e2e
 npm run format:check
-node --test tests/marketplace.test.js tests/finance.test.js tests/analytics.test.js tests/showcase.test.js
+node --test tests/marketplace.test.ts tests/finance.test.ts tests/analytics.test.ts tests/showcase.test.ts
 ```
 
 Browser checks use isolated SQLite data and desktop/mobile Chromium. Tests never run against the user's `data/` directory.

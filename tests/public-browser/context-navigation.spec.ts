@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 async function contextMenu(page: Page, area: string) {
   const open = page.getByRole("button", {

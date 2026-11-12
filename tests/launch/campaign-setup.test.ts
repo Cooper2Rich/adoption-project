@@ -1,7 +1,8 @@
-import test from "node:test";
+import { makeFunctionReference } from "convex/server";
 import assert from "node:assert/strict";
-import { createLocalBackend } from "../../scripts/launch/local-backend.mjs";
+import test from "node:test";
 import { clerkProviders } from "../../convex/clerkIdentity.ts";
+import { createLocalBackend } from "../../scripts/launch/local-backend.ts";
 import { chicagoInstant } from "../../src/launch/campaign-dates.ts";
 
 const rules = {
@@ -109,44 +110,62 @@ test(
           ];
           for (const change of invalid)
             await assert.rejects(
-              manager.mutation("campaignSetup:create", {
-                ...request,
-                rules: { ...rules, ...change },
-              }),
+              manager.mutation(
+                makeFunctionReference<"mutation">("campaignSetup:create"),
+                {
+                  ...request,
+                  rules: { ...rules, ...change },
+                },
+              ),
             );
           const { weeklyPrizeCents: omitted, ...incomplete } = rules;
           void omitted;
           await assert.rejects(
-            manager.mutation("campaignSetup:create", {
-              ...request,
-              rules: incomplete,
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              {
+                ...request,
+                rules: incomplete,
+              },
+            ),
           );
           assert.equal(
             (
-              await manager.query("campaignSetup:workspace", {
-                campaignId: "adoption",
-              })
+              await manager.query(
+                makeFunctionReference<"query">("campaignSetup:workspace"),
+                {
+                  campaignId: "adoption",
+                },
+              )
             ).settings,
             null,
           );
           assert.deepEqual(
-            await manager.query("campaignSetup:audit", {
-              campaignId: "adoption",
-            }),
+            await manager.query(
+              makeFunctionReference<"query">("campaignSetup:audit"),
+              {
+                campaignId: "adoption",
+              },
+            ),
             [],
           );
         },
       );
-      let saved;
+      let saved: { _id: any; createdAt: any };
       await t.test(
         "AC02/03 concurrent exact retries create one complete locked rules record",
         async () => {
           const [first, second] = await Promise.all([
-            manager.mutation("campaignSetup:create", request),
+            manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              request,
+            ),
             backend
               .client("manager-a")
-              .mutation("campaignSetup:create", request),
+              .mutation(
+                makeFunctionReference<"mutation">("campaignSetup:create"),
+                request,
+              ),
           ]);
           saved = first;
           assert.equal(first._id, second._id);
@@ -159,9 +178,12 @@ test(
           assert.equal(first.nonprofitId, "nonprofit-a");
           assert.equal(first.version, 1);
           assert.equal(first.acceptedTermsVersion, "campaign-rules-v1");
-          const workspace = await manager.query("campaignSetup:workspace", {
-            campaignId: "adoption",
-          });
+          const workspace = await manager.query(
+            makeFunctionReference<"query">("campaignSetup:workspace"),
+            {
+              campaignId: "adoption",
+            },
+          );
           assert.equal(workspace.name, "adoption.is");
           assert.equal(workspace.isAdministrator, false);
           assert.equal(workspace.settings._id, first._id);
@@ -198,48 +220,66 @@ test(
           for (const change of changes) {
             const changed = { ...rules, ...change };
             await assert.rejects(
-              manager.mutation("campaignSetup:update", {
-                campaignId: "adoption",
-                rules: changed,
-              }),
+              manager.mutation(
+                makeFunctionReference<"mutation">("campaignSetup:update"),
+                {
+                  campaignId: "adoption",
+                  rules: changed,
+                },
+              ),
             );
             await assert.rejects(
-              manager.mutation("campaignSetup:create", {
-                ...request,
-                rules: changed,
-              }),
+              manager.mutation(
+                makeFunctionReference<"mutation">("campaignSetup:create"),
+                {
+                  ...request,
+                  rules: changed,
+                },
+              ),
             );
             assert.deepEqual(
               (
-                await manager.query("campaignSetup:workspace", {
-                  campaignId: "adoption",
-                })
+                await manager.query(
+                  makeFunctionReference<"query">("campaignSetup:workspace"),
+                  {
+                    campaignId: "adoption",
+                  },
+                )
               ).settings.rules,
               rules,
             );
           }
           await assert.rejects(
-            manager.mutation("campaignSetup:create", {
-              ...request,
-              rules: {
-                ...rules,
-                dailyTargets: { ...rules.dailyTargets, impressions: 101 },
+            manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              {
+                ...request,
+                rules: {
+                  ...rules,
+                  dailyTargets: { ...rules.dailyTargets, impressions: 101 },
+                },
               },
-            }),
+            ),
             /OPERATION_CONFLICT/,
           );
           await assert.rejects(
-            manager.mutation("campaignSetup:create", {
-              ...request,
-              operationId: "another-creation",
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              {
+                ...request,
+                operationId: "another-creation",
+              },
+            ),
             /RULES_LOCKED/,
           );
           await assert.rejects(
-            manager.mutation("campaignSetup:update", {
-              campaignId: "adoption",
-              rules,
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:update"),
+              {
+                campaignId: "adoption",
+                rules,
+              },
+            ),
             /RULES_LOCKED/,
           );
         },
@@ -263,11 +303,14 @@ test(
                 fundraisingCents: 1,
               },
             };
-            const record = await manager.mutation("campaignSetup:create", {
-              campaignId,
-              operationId: "boundary",
-              rules: boundary,
-            });
+            const record = await manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              {
+                campaignId,
+                operationId: "boundary",
+                rules: boundary,
+              },
+            );
             assert.deepEqual(record.rules, boundary);
           }
         },
@@ -295,36 +338,55 @@ test(
                 /FORBIDDEN/,
               );
             await assert.rejects(
-              client.mutation("campaignSetup:create", request),
+              client.mutation(
+                makeFunctionReference<"mutation">("campaignSetup:create"),
+                request,
+              ),
               /FORBIDDEN/,
             );
             await assert.rejects(
-              client.mutation("campaignSetup:create", {
-                ...request,
-                operationId: "denied-new",
-              }),
+              client.mutation(
+                makeFunctionReference<"mutation">("campaignSetup:create"),
+                {
+                  ...request,
+                  operationId: "denied-new",
+                },
+              ),
               /FORBIDDEN/,
             );
             await assert.rejects(
-              client.mutation("campaignSetup:update", {
-                campaignId: "adoption",
-                rules,
-              }),
+              client.mutation(
+                makeFunctionReference<"mutation">("campaignSetup:update"),
+                {
+                  campaignId: "adoption",
+                  rules,
+                },
+              ),
               /FORBIDDEN/,
             );
           }
           await assert.rejects(
-            manager.query("campaignSetup:administratorAuthority", {
-              campaignId: "adoption",
-            }),
+            manager.query(
+              makeFunctionReference<"query">(
+                "campaignSetup:administratorAuthority",
+              ),
+              {
+                campaignId: "adoption",
+              },
+            ),
             /FORBIDDEN/,
           );
           assert.deepEqual(
             await backend
               .client("administrator")
-              .query("campaignSetup:administratorAuthority", {
-                campaignId: "adoption",
-              }),
+              .query(
+                makeFunctionReference<"query">(
+                  "campaignSetup:administratorAuthority",
+                ),
+                {
+                  campaignId: "adoption",
+                },
+              ),
             { authorized: true },
           );
         },
@@ -333,17 +395,27 @@ test(
         "AC03/04 different concurrent operations cannot conflict and a second nonprofit stays isolated",
         async () => {
           const contenders = await Promise.allSettled([
-            otherManager.mutation("campaignSetup:create", {
-              ...request,
-              campaignId: "other",
-              operationId: "other-a",
-            }),
-            otherManager.mutation("campaignSetup:create", {
-              ...request,
-              campaignId: "other",
-              operationId: "other-b",
-              rules: { ...rules, commissionBasisPoints: 0, dailyPrizeCents: 0 },
-            }),
+            otherManager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              {
+                ...request,
+                campaignId: "other",
+                operationId: "other-a",
+              },
+            ),
+            otherManager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              {
+                ...request,
+                campaignId: "other",
+                operationId: "other-b",
+                rules: {
+                  ...rules,
+                  commissionBasisPoints: 0,
+                  dailyPrizeCents: 0,
+                },
+              },
+            ),
           ]);
           assert.equal(
             contenders.filter((row) => row.status === "fulfilled").length,
@@ -354,14 +426,20 @@ test(
             /RULES_LOCKED/,
           );
           await assert.rejects(
-            manager.query("campaignSetup:workspace", { campaignId: "other" }),
+            manager.query(
+              makeFunctionReference<"query">("campaignSetup:workspace"),
+              { campaignId: "other" },
+            ),
             /FORBIDDEN/,
           );
           assert.equal(
             (
-              await otherManager.query("campaignSetup:workspace", {
-                campaignId: "other",
-              })
+              await otherManager.query(
+                makeFunctionReference<"query">("campaignSetup:workspace"),
+                {
+                  campaignId: "other",
+                },
+              )
             ).nonprofitId,
             "nonprofit-b",
           );
@@ -386,19 +464,25 @@ test(
             for (const resourceId of owned)
               assert.match(
                 (
-                  await owner.query("campaignSetup:resource", {
-                    campaignId,
-                    resourceId,
-                  })
+                  await owner.query(
+                    makeFunctionReference<"query">("campaignSetup:resource"),
+                    {
+                      campaignId,
+                      resourceId,
+                    },
+                  )
                 ).reference,
                 /unvalidated-fixture/,
               );
             for (const resourceId of foreign)
               await assert.rejects(
-                owner.query("campaignSetup:resource", {
-                  campaignId,
-                  resourceId,
-                }),
+                owner.query(
+                  makeFunctionReference<"query">("campaignSetup:resource"),
+                  {
+                    campaignId,
+                    resourceId,
+                  },
+                ),
                 /FORBIDDEN/,
               );
           }
@@ -407,9 +491,12 @@ test(
       await t.test(
         "AC03 audit and exact response-loss retry survive separate sessions and process restart",
         async () => {
-          const audit = await manager.query("campaignSetup:audit", {
-            campaignId: "adoption",
-          });
+          const audit = await manager.query(
+            makeFunctionReference<"query">("campaignSetup:audit"),
+            {
+              campaignId: "adoption",
+            },
+          );
           assert.equal(audit.length, 1);
           assert.equal(audit[0].settingsId, saved._id);
           assert.equal(audit[0].actor, "manager-a");
@@ -425,7 +512,10 @@ test(
             (
               await backend
                 .client("manager-a")
-                .query("campaignSetup:workspace", { campaignId: "adoption" })
+                .query(
+                  makeFunctionReference<"query">("campaignSetup:workspace"),
+                  { campaignId: "adoption" },
+                )
             ).settings._id,
             saved._id,
           );
@@ -434,14 +524,19 @@ test(
             (
               await backend
                 .client("manager-a")
-                .mutation("campaignSetup:create", request)
+                .mutation(
+                  makeFunctionReference<"mutation">("campaignSetup:create"),
+                  request,
+                )
             )._id,
             saved._id,
           );
           assert.deepEqual(
             await backend
               .client("manager-a")
-              .query("campaignSetup:audit", { campaignId: "adoption" }),
+              .query(makeFunctionReference<"query">("campaignSetup:audit"), {
+                campaignId: "adoption",
+              }),
             audit,
           );
         },
@@ -467,21 +562,30 @@ test(
               /FORBIDDEN/,
             );
           await assert.rejects(
-            manager.mutation("campaignSetup:create", request),
+            manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              request,
+            ),
             /FORBIDDEN/,
           );
           await assert.rejects(
-            manager.mutation("campaignSetup:create", {
-              ...request,
-              operationId: "revoked-new",
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:create"),
+              {
+                ...request,
+                operationId: "revoked-new",
+              },
+            ),
             /FORBIDDEN/,
           );
           await assert.rejects(
-            manager.mutation("campaignSetup:update", {
-              campaignId: "adoption",
-              rules,
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("campaignSetup:update"),
+              {
+                campaignId: "adoption",
+                rules,
+              },
+            ),
             /FORBIDDEN/,
           );
         },

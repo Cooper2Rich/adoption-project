@@ -20,12 +20,12 @@ export function PublicAbout() {
           <span className="home-eyebrow">OUR MISSION & VISION</span>
           <div>
             <p>
-              [Mission statement placeholder — share adoption.is’s purpose,
-              who we serve, and how we make a difference.]
+              [Mission statement placeholder — share adoption.is’s purpose, who
+              we serve, and how we make a difference.]
             </p>
             <p>
-              [Vision statement placeholder — describe the future adoption.is
-              is working toward and the lasting impact we hope to create.]
+              [Vision statement placeholder — describe the future adoption.is is
+              working toward and the lasting impact we hope to create.]
             </p>
           </div>
         </div>

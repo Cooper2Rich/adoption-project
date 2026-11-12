@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   ArrowRight,
   CheckCheck,
@@ -6,8 +5,9 @@ import {
   Filter,
   Image as ImageIcon,
 } from "lucide-react";
-import { useWorkspace } from "../context";
-import type { Post } from "../types";
+import { useState } from "react";
+import { Leaderboard } from "../components/Leaderboard.tsx";
+import { ReviewDialog } from "../components/ReviewDialog.tsx";
 import {
   Avatar,
   EmptyState,
@@ -15,11 +15,11 @@ import {
   Media,
   relativeTime,
   StatusBadge,
-} from "../components/ui";
-import { ReviewDialog } from "../components/ReviewDialog";
-import { Leaderboard } from "../components/Leaderboard";
-import { PUBLIC_DEMO } from "../runtime";
-import { AdMedia } from "../public-demo/AdMedia";
+} from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import { AdMedia } from "../public-demo/AdMedia.tsx";
+import { PUBLIC_DEMO } from "../runtime.ts";
+import type { Post } from "../types.ts";
 
 export function PostList({
   posts,

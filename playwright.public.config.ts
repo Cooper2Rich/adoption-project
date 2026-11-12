@@ -14,7 +14,7 @@ export default defineConfig({
   webServer: liveBaseURL
     ? undefined
     : {
-        command: "node scripts/preview-public.mjs",
+        command: "node scripts/preview-public.ts",
         url: "http://127.0.0.1:3200/adoption-project/",
         reuseExistingServer: false,
       },

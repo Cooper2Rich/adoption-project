@@ -1,8 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
 import {
   ArrowDownUp,
-  ArrowRight,
   ArrowUpRight,
   CalendarDays,
   Check,
@@ -13,11 +10,13 @@ import {
   Plus,
   Sprout,
 } from "lucide-react";
-import { useWorkspace } from "../context";
-import { PUBLIC_DEMO, demoAsset } from "../runtime";
-import { ProjectForm } from "../components/ProjectForm";
-import { Avatar, dateLabel, EmptyState, Instagram } from "../components/ui";
-import { ProjectRequestForm } from "../public-demo/ProjectRequests";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ProjectForm } from "../components/ProjectForm.tsx";
+import { Avatar, dateLabel, EmptyState, Instagram } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import { ProjectRequestForm } from "../public-demo/ProjectRequests.tsx";
+import { demoAsset, PUBLIC_DEMO } from "../runtime.ts";
 
 export function ProjectsPage({ campaignId }: { campaignId?: string }) {
   const {

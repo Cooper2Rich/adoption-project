@@ -1,5 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-import { navigate } from "./helpers";
+import { expect, test, type Page } from "@playwright/test";
+import { navigate } from "./helpers.ts";
 
 const breakdown = (page: Page) =>
   page.getByRole("region", { name: "Campaign budget breakdown", exact: true });

@@ -1,4 +1,4 @@
-import type { PublicAd } from "./catalog";
+import type { PublicAd } from "./catalog.ts";
 
 export type LeaderboardPeriod = "daily" | "weekly";
 export type DailyMetrics = {

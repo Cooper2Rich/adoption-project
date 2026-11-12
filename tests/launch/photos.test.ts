@@ -1,17 +1,18 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import { createServer } from "node:http";
-import { once } from "node:events";
-import { createHash } from "node:crypto";
-import { servePhotoRequest } from "../../api/photos.mjs";
-import { createLocalBackend } from "../../scripts/launch/local-backend.mjs";
-import { campaignRules as rules } from "./fixtures.ts";
-import { pngBytes, jpegBytes } from "./photo-fixtures.ts";
-import { blobPhotoStore } from "../../server/launch/photos.mjs";
 import { getPayloadFromClientToken } from "@vercel/blob/client";
+import { makeFunctionReference } from "convex/server";
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { once } from "node:events";
+import { createServer } from "node:http";
+import test from "node:test";
+import { servePhotoRequest } from "../../api/photos.ts";
+import { createLocalBackend } from "../../scripts/launch/local-backend.ts";
+import { blobPhotoStore } from "../../server/launch/photos.ts";
+import { campaignRules as rules } from "./fixtures.ts";
+import { jpegBytes, pngBytes } from "./photo-fixtures.ts";
 
 test("T03 Vercel parsed JSON/body helpers and native stream reach the same API service", async () => {
-  const service = async (request) => Response.json(await request.json());
+  const service = async (request: any) => Response.json(await request.json());
   const server = createServer(async (req, res) => {
     if (req.url !== "/native") {
       let bytes = "";
@@ -78,7 +79,7 @@ test("T03 official Blob SDK capability is exact-path, expiring, type/size bounde
       multipart: true,
     },
   };
-  const result = await store.token(request, body, async (id) => {
+  const result = await store.token(request, body, async (id: unknown) => {
     assert.equal(id, "owned-id");
     return record;
   });
@@ -126,7 +127,7 @@ test(
       manager = backend.client("manager-a"),
       bob = backend.client("creator-b"),
       guest = backend.client();
-    const command = async (name, args) =>
+    const command = async (name: string, args: any) =>
       JSON.parse(
         (await backend.command(
           "run",
@@ -134,7 +135,12 @@ test(
           JSON.stringify(args),
         )) || "null",
       );
-    const route = (action, id, subject = "creator-a", options = {}) =>
+    const route = (
+      action: string,
+      id: any,
+      subject = "creator-a",
+      options = {},
+    ) =>
       fetch(`${origin}/api/photos?action=${action}&uploadId=${id}`, {
         ...options,
         headers: {
@@ -144,15 +150,19 @@ test(
         },
       });
     let operation = 0;
-    const reserve = (bytes, type = "image/png", actor = alice) =>
-      actor.mutation("photos:reserve", {
+    const reserve = (
+      bytes: string | any[] | Buffer<ArrayBuffer>,
+      type = "image/png",
+      actor = alice,
+    ) =>
+      actor.mutation(makeFunctionReference<"mutation">("photos:reserve"), {
         ...scope,
         filename: type === "image/png" ? "photo.png" : "photo.jpg",
         size: bytes.length,
         type,
         operationId: `upload-${++operation}`,
       });
-    async function upload(bytes, type = "image/png") {
+    async function upload(bytes: Buffer<ArrayBuffer>, type = "image/png") {
       const record = await reserve(bytes, type);
       const written = await route("local-upload", record._id, "creator-a", {
         method: "PUT",
@@ -165,27 +175,45 @@ test(
       assert.equal(checked.status, 200, await checked.clone().text());
       return checked.json();
     }
-    const request = (photos, extra = {}) => ({
+    const request = (photos: any[], extra = {}) => ({
       ...scope,
       operationId: `submission-${++operation}`,
       title: "A family together",
       description: "Original photo for adoption.is",
-      photos: photos.map((p) => p._id),
+      photos: photos.map((p: any) => p._id),
       ...extra,
     });
-    let png, jpeg, entry, originalRequest, revision, replacement;
+    let png: {
+        _id: any;
+        size: unknown;
+        sha256: unknown;
+        pathname: string;
+        type: any;
+        subject: any;
+      },
+      jpeg: any,
+      entry: { _id: unknown; acceptanceId: any },
+      originalRequest: any,
+      revision,
+      replacement;
     try {
-      await manager.mutation("campaignSetup:create", {
-        ...scope,
-        operationId: "rules",
-        rules,
-      });
-      for (const subject of ["creator-a", "creator-b"]) {
-        const invite = await manager.mutation("creatorAccess:invite", {
+      await manager.mutation(
+        makeFunctionReference<"mutation">("campaignSetup:create"),
+        {
           ...scope,
-          email: `${subject}@creators.example`,
-          operationId: subject,
-        });
+          operationId: "rules",
+          rules,
+        },
+      );
+      for (const subject of ["creator-a", "creator-b"]) {
+        const invite = await manager.mutation(
+          makeFunctionReference<"mutation">("creatorAccess:invite"),
+          {
+            ...scope,
+            email: `${subject}@creators.example`,
+            operationId: subject,
+          },
+        );
         await manager.action("clerkInvitations:dispatch", {
           ...scope,
           invitationId: invite._id,
@@ -200,7 +228,10 @@ test(
             /ACCEPTANCE_REQUIRED/,
           );
           await assert.rejects(
-            alice.mutation("photos:submit", request([])),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              request([]),
+            ),
             /ACCEPTANCE_REQUIRED/,
           );
         },
@@ -210,15 +241,21 @@ test(
         synthetic: true,
       });
       for (const client of [alice, bob]) {
-        const workspace = await client.query("creatorAccess:workspace", scope);
-        await client.mutation("creatorAccess:accept", {
-          ...scope,
-          invitationId: workspace.invitation._id,
-          termsId: terms,
-          version: workspace.terms.version,
-          confirmed: true,
-          operationId: "accept",
-        });
+        const workspace = await client.query(
+          makeFunctionReference<"query">("creatorAccess:workspace"),
+          scope,
+        );
+        await client.mutation(
+          makeFunctionReference<"mutation">("creatorAccess:accept"),
+          {
+            ...scope,
+            invitationId: workspace.invitation._id,
+            termsId: terms,
+            version: workspace.terms.version,
+            confirmed: true,
+            operationId: "accept",
+          },
+        );
       }
       await t.test(
         "AC01 authoritative stored JPEG/PNG bytes, reserved owner/path and signed receipts",
@@ -241,15 +278,24 @@ test(
             operationId: "concurrent-upload-reservation",
           };
           const reserved = await Promise.all([
-            alice.mutation("photos:reserve", reservation),
-            alice.mutation("photos:reserve", reservation),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:reserve"),
+              reservation,
+            ),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:reserve"),
+              reservation,
+            ),
           ]);
           assert.equal(reserved[0]._id, reserved[1]._id);
           await assert.rejects(
-            alice.mutation("photos:reserve", {
-              ...reservation,
-              filename: "changed.png",
-            }),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:reserve"),
+              {
+                ...reservation,
+                filename: "changed.png",
+              },
+            ),
             /OPERATION_CONFLICT/,
           );
           assert.equal(png.size, (await pngBytes()).length);
@@ -279,7 +325,7 @@ test(
             400,
           );
           await assert.rejects(
-            alice.mutation("photos:verify", {
+            alice.mutation(makeFunctionReference<"mutation">("photos:verify"), {
               ...scope,
               receipt: {
                 uploadId: png._id,
@@ -296,7 +342,10 @@ test(
           );
           const unverified = await reserve(await pngBytes());
           await assert.rejects(
-            alice.mutation("photos:submit", request([unverified])),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              request([unverified]),
+            ),
             /FORBIDDEN/,
           );
           assert.equal(
@@ -353,13 +402,16 @@ test(
             /PHOTO_SIZE/,
           );
           await assert.rejects(
-            alice.mutation("photos:reserve", {
-              ...scope,
-              filename: "photo.gif",
-              size: 12,
-              type: "image/gif",
-              operationId: "gif",
-            }),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:reserve"),
+              {
+                ...scope,
+                filename: "photo.gif",
+                size: 12,
+                type: "image/gif",
+                operationId: "gif",
+              },
+            ),
             /Validator|validator|image\/png/,
           );
         },
@@ -375,15 +427,18 @@ test(
             1_000_000_000,
           );
           const maxEntry = await alice.mutation(
-            "photos:submit",
+            makeFunctionReference<"mutation">("photos:submit"),
             request(photos, { title: "Exact inclusive limits" }),
           );
           assert.equal(
             (
-              await alice.query("photos:entry", {
-                ...scope,
-                entryId: maxEntry._id,
-              })
+              await alice.query(
+                makeFunctionReference<"query">("photos:entry"),
+                {
+                  ...scope,
+                  entryId: maxEntry._id,
+                },
+              )
             ).versions[0].photos.length,
             10,
           );
@@ -398,15 +453,24 @@ test(
           assert.equal(actual, 100_000_000);
           assert.equal(returned.digest("hex"), photos[9].sha256);
           await assert.rejects(
-            alice.mutation("photos:submit", request([...photos, png])),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              request([...photos, png]),
+            ),
             /PHOTO_COUNT/,
           );
           await assert.rejects(
-            alice.mutation("photos:submit", request([])),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              request([]),
+            ),
             /PHOTO_COUNT/,
           );
           await assert.rejects(
-            alice.mutation("photos:submit", request([png, png])),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              request([png, png]),
+            ),
             /PHOTO_DUPLICATE/,
           );
           await assert.rejects(
@@ -437,20 +501,29 @@ test(
         async () => {
           originalRequest = request([png]);
           const results = await Promise.all([
-            alice.mutation("photos:submit", originalRequest),
-            alice.mutation("photos:submit", originalRequest),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              originalRequest,
+            ),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              originalRequest,
+            ),
           ]);
           entry = results[0];
           assert.equal(entry._id, results[1]._id);
-          const saved = await alice.query("photos:entry", {
-            ...scope,
-            entryId: entry._id,
-          });
+          const saved = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: entry._id,
+            },
+          );
           assert.equal(saved.versions.length, 1);
           assert.equal(saved.events.length, 1);
           assert.equal(saved.versions[0].acceptanceId, entry.acceptanceId);
           await assert.rejects(
-            alice.mutation("photos:submit", {
+            alice.mutation(makeFunctionReference<"mutation">("photos:submit"), {
               ...originalRequest,
               title: "Changed retry",
             }),
@@ -469,25 +542,39 @@ test(
           ]) {
             const client = backend.client(subject || undefined);
             await assert.rejects(
-              client.query("photos:entry", { ...scope, entryId: entry._id }),
+              client.query(makeFunctionReference<"query">("photos:entry"), {
+                ...scope,
+                entryId: entry._id,
+              }),
               /FORBIDDEN/,
             );
             await assert.rejects(
-              client.query("photos:resource", { ...scope, uploadId: png._id }),
+              client.query(makeFunctionReference<"query">("photos:resource"), {
+                ...scope,
+                uploadId: png._id,
+              }),
               /FORBIDDEN/,
             );
             const response = await route("resource", png._id, subject);
             assert.equal(response.status, 403);
             assert.ok(!(await response.text()).includes(png.pathname));
           }
-          assert.deepEqual(await bob.query("photos:workspace", scope), []);
+          assert.deepEqual(
+            await bob.query(
+              makeFunctionReference<"query">("photos:workspace"),
+              scope,
+            ),
+            [],
+          );
           await assert.rejects(
-            guest.query("photos:publicEntry", { entryId: entry._id }),
+            guest.query(makeFunctionReference<"query">("photos:publicEntry"), {
+              entryId: entry._id,
+            }),
             /FORBIDDEN/,
           );
           await assert.rejects(
             manager.mutation(
-              "photos:submit",
+              makeFunctionReference<"mutation">("photos:submit"),
               request([png], { entryId: entry._id, expectedVersion: 1 }),
             ),
             /FORBIDDEN/,
@@ -505,7 +592,7 @@ test(
             await pngBytes(),
           );
           await assert.rejects(
-            alice.mutation("photos:review", {
+            alice.mutation(makeFunctionReference<"mutation">("photos:review"), {
               ...scope,
               entryId: entry._id,
               expectedVersion: 1,
@@ -529,51 +616,73 @@ test(
             reason: "Use the landscape photo",
           };
           await assert.rejects(
-            manager.mutation("photos:review", { ...review, reason: "" }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("photos:review"),
+              { ...review, reason: "" },
+            ),
             /REASON_REQUIRED/,
           );
-          await manager.mutation("photos:review", review);
-          const rejected = await manager.mutation("photos:review", {
-            ...review,
-            operationId: "reject",
-            decision: "rejected",
-            reason: "Please submit the original without text",
-          });
+          await manager.mutation(
+            makeFunctionReference<"mutation">("photos:review"),
+            review,
+          );
+          const rejected = await manager.mutation(
+            makeFunctionReference<"mutation">("photos:review"),
+            {
+              ...review,
+              operationId: "reject",
+              decision: "rejected",
+              reason: "Please submit the original without text",
+            },
+          );
           assert.equal(rejected.status, "rejected");
-          const before = await alice.query("photos:entry", {
-            ...scope,
-            entryId: entry._id,
-          });
+          const before = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: entry._id,
+            },
+          );
           assert.ok(
             before.events.some(
-              (e) => e.reason === "Please submit the original without text",
+              (e: any) =>
+                e.reason === "Please submit the original without text",
             ),
           );
           const correction = request([jpeg], {
             entryId: entry._id,
             expectedVersion: 1,
           });
-          revision = await alice.mutation("photos:submit", correction);
+          revision = await alice.mutation(
+            makeFunctionReference<"mutation">("photos:submit"),
+            correction,
+          );
           assert.equal(revision._id, entry._id);
           assert.equal(revision.version, 2);
           assert.equal(revision.status, "pending");
-          const after = await alice.query("photos:entry", {
-            ...scope,
-            entryId: entry._id,
-          });
+          const after = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: entry._id,
+            },
+          );
           assert.equal(after.trackedPath, before.trackedPath);
           assert.equal(after.versions.length, 2);
           assert.equal(after.versions[0].photos[0], png._id);
           await assert.rejects(
-            manager.mutation("photos:review", {
-              ...review,
-              operationId: "stale-review",
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("photos:review"),
+              {
+                ...review,
+                operationId: "stale-review",
+              },
+            ),
             /STALE_VERSION/,
           );
           const racing = await Promise.allSettled([
             alice.mutation(
-              "photos:submit",
+              makeFunctionReference<"mutation">("photos:submit"),
               request([jpeg], {
                 entryId: entry._id,
                 expectedVersion: 2,
@@ -581,7 +690,7 @@ test(
               }),
             ),
             alice.mutation(
-              "photos:submit",
+              makeFunctionReference<"mutation">("photos:submit"),
               request([jpeg], {
                 entryId: entry._id,
                 expectedVersion: 2,
@@ -602,10 +711,13 @@ test(
       await t.test(
         "AC02 approval is public metadata eligibility only, exact review retries do not dispatch ads",
         async () => {
-          const current = await alice.query("photos:entry", {
-            ...scope,
-            entryId: entry._id,
-          });
+          const current = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: entry._id,
+            },
+          );
           const review = {
             ...scope,
             entryId: entry._id,
@@ -615,26 +727,41 @@ test(
             reason: "Original reviewed",
           };
           const results = await Promise.all([
-            manager.mutation("photos:review", review),
-            manager.mutation("photos:review", review),
+            manager.mutation(
+              makeFunctionReference<"mutation">("photos:review"),
+              review,
+            ),
+            manager.mutation(
+              makeFunctionReference<"mutation">("photos:review"),
+              review,
+            ),
           ]);
           assert.equal(results[0].status, "approved");
           assert.equal(results[0].firstApprovedAt, results[1].firstApprovedAt);
-          const publicEntry = await guest.query("photos:publicEntry", {
-            entryId: entry._id,
-          });
+          const publicEntry = await guest.query(
+            makeFunctionReference<"query">("photos:publicEntry"),
+            {
+              entryId: entry._id,
+            },
+          );
           assert.equal(publicEntry.id, entry._id);
           assert.ok(!("subject" in publicEntry));
           assert.ok(!("acceptanceId" in publicEntry));
-          const saved = await alice.query("photos:entry", {
-            ...scope,
-            entryId: entry._id,
-          });
+          const saved = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: entry._id,
+            },
+          );
           assert.equal(
-            saved.events.filter((e) => e.action === "approved").length,
+            saved.events.filter((e: any) => e.action === "approved").length,
             1,
           );
-          const state = await manager.query("reservations:state", scope);
+          const state = await manager.query(
+            makeFunctionReference<"query">("reservations:state"),
+            scope,
+          );
           assert.equal(state.reservedSlots, 0);
           assert.equal(state.reservedCents, 0);
         },
@@ -643,12 +770,15 @@ test(
         "AC03 same verified bytes and descriptive edits retain identity; changed approved media gets fresh entry",
         async () => {
           const same = await upload(await jpegBytes(), "image/jpeg");
-          let current = await alice.query("photos:entry", {
-            ...scope,
-            entryId: entry._id,
-          });
+          let current = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: entry._id,
+            },
+          );
           const unchanged = await alice.mutation(
-            "photos:submit",
+            makeFunctionReference<"mutation">("photos:submit"),
             request([same], {
               entryId: entry._id,
               expectedVersion: current.version,
@@ -658,20 +788,26 @@ test(
           assert.equal(unchanged._id, entry._id);
           assert.equal(unchanged.firstApprovedAt, current.firstApprovedAt);
           assert.equal(unchanged.status, "pending");
-          await manager.mutation("photos:review", {
-            ...scope,
-            entryId: entry._id,
-            expectedVersion: unchanged.version,
-            operationId: "approve-description",
-            decision: "approved",
-            reason: "",
-          });
-          current = await alice.query("photos:entry", {
-            ...scope,
-            entryId: entry._id,
-          });
+          await manager.mutation(
+            makeFunctionReference<"mutation">("photos:review"),
+            {
+              ...scope,
+              entryId: entry._id,
+              expectedVersion: unchanged.version,
+              operationId: "approve-description",
+              decision: "approved",
+              reason: "",
+            },
+          );
+          current = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: entry._id,
+            },
+          );
           replacement = await alice.mutation(
-            "photos:submit",
+            makeFunctionReference<"mutation">("photos:submit"),
             request([png], {
               entryId: entry._id,
               expectedVersion: current.version,
@@ -683,23 +819,31 @@ test(
           assert.equal(replacement.version, 1);
           assert.equal(replacement.status, "pending");
           assert.equal(replacement.firstApprovedAt, undefined);
-          const replacementDetail = await alice.query("photos:entry", {
-            ...scope,
-            entryId: replacement._id,
-          });
+          const replacementDetail = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: replacement._id,
+            },
+          );
           assert.notEqual(replacementDetail.trackedPath, current.trackedPath);
           assert.equal(replacementDetail.events.length, 1);
           assert.equal(
             (
-              await alice.query("photos:entry", {
-                ...scope,
-                entryId: entry._id,
-              })
+              await alice.query(
+                makeFunctionReference<"query">("photos:entry"),
+                {
+                  ...scope,
+                  entryId: entry._id,
+                },
+              )
             ).status,
             "approved",
           );
           await assert.rejects(
-            guest.query("photos:publicEntry", { entryId: replacement._id }),
+            guest.query(makeFunctionReference<"query">("photos:publicEntry"), {
+              entryId: replacement._id,
+            }),
             /FORBIDDEN/,
           );
           assert.ok(!("metrics" in replacement));
@@ -710,20 +854,23 @@ test(
         "AC03 concurrent approval and correction never approve unseen changed bytes",
         async () => {
           const original = await alice.mutation(
-            "photos:submit",
+            makeFunctionReference<"mutation">("photos:submit"),
             request([png], { title: "Approval race original" }),
           );
           const results = await Promise.allSettled([
-            manager.mutation("photos:review", {
-              ...scope,
-              entryId: original._id,
-              expectedVersion: 1,
-              operationId: "race-approve",
-              decision: "approved",
-              reason: "",
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("photos:review"),
+              {
+                ...scope,
+                entryId: original._id,
+                expectedVersion: 1,
+                operationId: "race-approve",
+                decision: "approved",
+                reason: "",
+              },
+            ),
             alice.mutation(
-              "photos:submit",
+              makeFunctionReference<"mutation">("photos:submit"),
               request([jpeg], {
                 entryId: original._id,
                 expectedVersion: 1,
@@ -734,10 +881,13 @@ test(
           assert.equal(results[1].status, "fulfilled");
           const correction = results[1].value;
           assert.equal(correction.status, "pending");
-          const saved = await alice.query("photos:entry", {
-            ...scope,
-            entryId: original._id,
-          });
+          const saved = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: original._id,
+            },
+          );
           if (results[0].status === "fulfilled") {
             assert.notEqual(correction._id, original._id);
             assert.equal(saved.status, "approved");
@@ -752,17 +902,23 @@ test(
       await t.test(
         "audit and exact bytes survive backend restart and second authorized session",
         async () => {
-          const before = await alice.query("photos:entry", {
-            ...scope,
-            entryId: entry._id,
-          });
+          const before = await alice.query(
+            makeFunctionReference<"query">("photos:entry"),
+            {
+              ...scope,
+              entryId: entry._id,
+            },
+          );
           await backend.restart();
           const reopened = backend.client("creator-a");
           assert.deepEqual(
-            await reopened.query("photos:entry", {
-              ...scope,
-              entryId: entry._id,
-            }),
+            await reopened.query(
+              makeFunctionReference<"query">("photos:entry"),
+              {
+                ...scope,
+                entryId: entry._id,
+              },
+            ),
             before,
           );
           assert.deepEqual(
@@ -795,7 +951,10 @@ test(
           await command("removeTerms", { campaignSlug: "adoption" });
           await assert.rejects(reserve(await pngBytes()), /TERMS_UNAVAILABLE/);
           await assert.rejects(
-            alice.mutation("photos:submit", originalRequest),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              originalRequest,
+            ),
             /TERMS_UNAVAILABLE/,
           );
           assert.equal(
@@ -805,10 +964,13 @@ test(
           );
           assert.equal(
             (
-              await alice.query("photos:entry", {
-                ...scope,
-                entryId: entry._id,
-              })
+              await alice.query(
+                makeFunctionReference<"query">("photos:entry"),
+                {
+                  ...scope,
+                  entryId: entry._id,
+                },
+              )
             )._id,
             entry._id,
           );
@@ -821,11 +983,17 @@ test(
             nonprofitId: "nonprofit-a",
           });
           await assert.rejects(
-            alice.mutation("photos:submit", originalRequest),
+            alice.mutation(
+              makeFunctionReference<"mutation">("photos:submit"),
+              originalRequest,
+            ),
             /FORBIDDEN/,
           );
           await assert.rejects(
-            alice.query("photos:entry", { ...scope, entryId: entry._id }),
+            alice.query(makeFunctionReference<"query">("photos:entry"), {
+              ...scope,
+              entryId: entry._id,
+            }),
             /FORBIDDEN/,
           );
           assert.equal((await route("resource", png._id)).status, 403);

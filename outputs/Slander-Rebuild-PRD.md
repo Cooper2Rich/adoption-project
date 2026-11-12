@@ -32,7 +32,7 @@ Slander occupies the intermediary role illustrated by Awin, impact.com, CJ, Part
 
 ## Current state and evidence
 
-The inspected checkout is the working `demo` application at commit `e5475b4bb1ac5cf20e8ccdf5a5180bf0b730a55e`. It uses React, TypeScript, Vite, Express, Zod, Multer, and Node's built-in SQLite. `package.json` requires Node 24 or later. `server/domain.js` contains submission eligibility, checks, review transitions, revisions, and export readiness; `server/access.js` scopes identities and public/private projections; `server/store.js` persists JSON workspace state under SQLite transactions. `server/app.js` exposes the API and uploads. `src/types.ts` and `src/useDemoWorkspace.ts` define the existing client models and scoped loading.
+The inspected checkout is the working `demo` application at commit `e5475b4bb1ac5cf20e8ccdf5a5180bf0b730a55e`. It uses React, TypeScript, Vite, Express, Zod, Multer, and Node's built-in SQLite. `package.json` requires Node 24 or later. `server/domain.ts` contains submission eligibility, checks, review transitions, revisions, and export readiness; `server/access.ts` scopes identities and public/private projections; `server/store.ts` persists JSON workspace state under SQLite transactions. `server/app.ts` exposes the API and uploads. `src/types.ts` and `src/useDemoWorkspace.ts` define the existing client models and scoped loading.
 
 The application supports project creation, creator submissions, revisions, nonprofit review, per-project Instagram username pairing, and manual JSON/media handoff. It has no implemented crowdfunding, commission ledger, ad buying, live publication, provider metrics, or creator payouts. Role/profile selectors model scope but are not production authentication. Upload URLs currently lack private ownership enforcement. Review history stores decisions, not full immutable prior creative content.
 
@@ -288,7 +288,7 @@ These checks cannot establish copyright ownership, truth of arbitrary spoken cla
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with the automatic-eligibility and exception scenarios covered; no routine owner decision is required.
 - **Evidence:** Focused test output and evaluation/event fixtures. These new expectations supersede the corresponding legacy manual-review tests; they are not implemented yet.
 
@@ -315,7 +315,7 @@ Retain legacy status names internally only as an adapter: pending = checking, ap
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with the automatic-eligibility and exception scenarios covered; no routine owner decision is required.
 - **Evidence:** Focused test output and evaluation/event fixtures. These new expectations supersede the corresponding legacy manual-review tests; they are not implemented yet.
 
@@ -340,7 +340,7 @@ Reevaluate immediately. A successful new snapshot is eligible without a human de
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with the automatic-eligibility and exception scenarios covered; no routine owner decision is required.
 - **Evidence:** Focused test output and evaluation/event fixtures. These new expectations supersede the corresponding legacy manual-review tests; they are not implemented yet.
 
@@ -391,7 +391,7 @@ Export establishes no external publication or platform approval. A new blocking 
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with the automatic-eligibility and exception scenarios covered; no routine owner decision is required.
 - **Evidence:** Focused test output and evaluation/event fixtures. These new expectations supersede the corresponding legacy manual-review tests; they are not implemented yet.
 
@@ -415,7 +415,7 @@ The Eligible library contains current eligible snapshots on visible projects. Cr
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with the automatic-eligibility and exception scenarios covered; no routine owner decision is required.
 - **Evidence:** Focused test output and evaluation/event fixtures. These new expectations supersede the corresponding legacy manual-review tests; they are not implemented yet.
 
@@ -436,7 +436,7 @@ Replace the approved-count label with Eligible creatives. Group visible current 
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with the automatic-eligibility and exception scenarios covered; no routine owner decision is required.
 - **Evidence:** Focused test output and evaluation/event fixtures. These new expectations supersede the corresponding legacy manual-review tests; they are not implemented yet.
 
@@ -504,7 +504,7 @@ Admin still creates/reassigns projects before opening. Owners manage their campa
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with all named scenarios covered, including refusal cases and unchanged balances on rejected mutations.
 - **Evidence:** Focused test output and resulting fixture records; the test is a future implementation deliverable.
 
@@ -528,7 +528,7 @@ Opening freezes a version. Later changes create prospective versions and require
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with all named scenarios covered, including refusal cases and unchanged balances on rejected mutations.
 - **Evidence:** Focused test output and resulting fixture records; the test is a future implementation deliverable.
 
@@ -550,7 +550,7 @@ Requested may remain transient while checking. Return needs-fix for missing fiel
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with the automatic-eligibility and exception scenarios covered; no routine owner decision is required.
 - **Evidence:** Focused test output and evaluation/event fixtures. These new expectations supersede the corresponding legacy manual-review tests; they are not implemented yet.
 
@@ -574,7 +574,7 @@ New marketplace distribution requires an active project, open in-window offer, a
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with the automatic-eligibility and exception scenarios covered; no routine owner decision is required.
 - **Evidence:** Focused test output and evaluation/event fixtures. These new expectations supersede the corresponding legacy manual-review tests; they are not implemented yet.
 
@@ -599,7 +599,7 @@ Ambiguous, expired, or missing attribution retains the money event in visible su
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0 with all named scenarios covered, including refusal cases and unchanged balances on rejected mutations.
 - **Evidence:** Focused test output and resulting fixture records; the test is a future implementation deliverable.
 
@@ -623,7 +623,7 @@ Record purpose consent with each contribution. Seed allocations identify guarant
 
 #### Verification
 
-- **Command:** `node --test tests/finance.test.js`
+- **Command:** `node --test tests/finance.test.ts`
 - **Pass condition:** Exit 0; every financial scenario conserves funds and rejected mutations leave prior state intact.
 - **Evidence:** Focused test output and journal/statement fixtures; this test is a future implementation deliverable.
 
@@ -647,7 +647,7 @@ The creator and nonprofit allocations sum to gross before fees. The defined cent
 
 #### Verification
 
-- **Command:** `node --test tests/finance.test.js`
+- **Command:** `node --test tests/finance.test.ts`
 - **Pass condition:** Exit 0; every financial scenario conserves funds and rejected mutations leave prior state intact.
 - **Evidence:** Focused test output and journal/statement fixtures; this test is a future implementation deliverable.
 
@@ -672,7 +672,7 @@ Partial refunds recompute cumulative entitlement using the remaining gross base,
 
 #### Verification
 
-- **Command:** `node --test tests/finance.test.js`
+- **Command:** `node --test tests/finance.test.ts`
 - **Pass condition:** Exit 0; every financial scenario conserves funds and rejected mutations leave prior state intact.
 - **Evidence:** Focused test output and journal/statement fixtures; this test is a future implementation deliverable.
 
@@ -697,7 +697,7 @@ Cancellation releases unused reserved capacity only; incurred spend remains. Pau
 
 #### Verification
 
-- **Command:** `node --test tests/finance.test.js`
+- **Command:** `node --test tests/finance.test.ts`
 - **Pass condition:** Exit 0; every financial scenario conserves funds and rejected mutations leave prior state intact.
 - **Evidence:** Focused test output and journal/statement fixtures; this test is a future implementation deliverable.
 
@@ -721,7 +721,7 @@ Unsettled/held commission defers top-up computation rather than causing an extra
 
 #### Verification
 
-- **Command:** `node --test tests/finance.test.js`
+- **Command:** `node --test tests/finance.test.ts`
 - **Pass condition:** Exit 0; every financial scenario conserves funds and rejected mutations leave prior state intact.
 - **Evidence:** Focused test output and journal/statement fixtures; this test is a future implementation deliverable.
 
@@ -746,7 +746,7 @@ Export is not paid. Only local fixtures can set `simulated_paid`; live paid requ
 
 #### Verification
 
-- **Command:** `node --test tests/finance.test.js`
+- **Command:** `node --test tests/finance.test.ts`
 - **Pass condition:** Exit 0; every financial scenario conserves funds and rejected mutations leave prior state intact.
 - **Evidence:** Focused test output and journal/statement fixtures; this test is a future implementation deliverable.
 
@@ -771,7 +771,7 @@ Creator reports use credited base commission and creator-borne ad costs; campaig
 
 #### Verification
 
-- **Command:** `node --test tests/analytics.test.js`
+- **Command:** `node --test tests/analytics.test.ts`
 - **Pass condition:** Exit 0; named scenarios pass with isolated storage and no external credentials.
 - **Evidence:** Focused report, fixture outputs, and browser screenshots where applicable; these tests are future implementation deliverables.
 
@@ -798,7 +798,7 @@ Back up the full existing data directory before migration. Migration failure rol
 
 #### Verification
 
-- **Command:** `node --test tests/finance.test.js`
+- **Command:** `node --test tests/finance.test.ts`
 - **Pass condition:** Exit 0; named scenarios pass with isolated storage and no external credentials.
 - **Evidence:** Focused report, fixture outputs, and browser screenshots where applicable; these tests are future implementation deliverables.
 
@@ -823,7 +823,7 @@ Only Admin injects simulated financial/metric fixtures, adjudicates attribution,
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0; named scenarios pass with isolated storage and no external credentials.
 - **Evidence:** Focused report, fixture outputs, and browser screenshots where applicable; these tests are future implementation deliverables.
 
@@ -867,7 +867,7 @@ Use evidence to exclude or hold fraudulent/invalid traffic and reversed/disputed
 
 #### Verification
 
-- **Command:** `node --test tests/analytics.test.js`
+- **Command:** `node --test tests/analytics.test.ts`
 - **Pass condition:** Exit 0; weight/formula boundaries, reproducibility, evidence/configuration gates, abuse fixtures, refund correction, and financial independence scenarios pass.
 - **Evidence:** Grading configuration/input/component snapshots and focused test report. This is a future implementation deliverable, not a passing application claim.
 
@@ -891,7 +891,7 @@ Define narrow future boundaries: distribute a deterministically evaluated eligib
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0; named scenarios pass with isolated storage and no external credentials.
 - **Evidence:** Focused report, fixture outputs, and browser screenshots where applicable; these tests are future implementation deliverables.
 
@@ -941,7 +941,7 @@ The queue makes no aesthetic prediction and does not require an owner to pick cr
 
 #### Verification
 
-- **Command:** `node --test tests/marketplace.test.js`
+- **Command:** `node --test tests/marketplace.test.ts`
 - **Pass condition:** Exit 0; deterministic ordering, creator fairness, retry, budget, and invalidation cases pass.
 - **Evidence:** Queue/receipt fixtures and focused test output; no provider calls or impressions are inferred.
 
@@ -1022,9 +1022,9 @@ For a separately authorized Phase A/B implementation, establish the named tests 
 | Order | Requirements proved | Command |
 | --- | --- | --- |
 | 1 | REQ-101, REQ-102, REQ-103, REQ-104, REQ-105, REQ-106, REQ-107, REQ-108, REQ-109, REQ-110, REQ-111, REQ-112, REQ-113, REQ-114 retained compatibility, intentional eligibility-workflow changes, types, and HTTP regression | `npm run check` |
-| 2 | REQ-201, REQ-202, REQ-203, REQ-204, REQ-205, REQ-214, REQ-216, REQ-218 | `node --test tests/marketplace.test.js` |
-| 3 | REQ-206, REQ-207, REQ-208, REQ-209, REQ-210, REQ-211, REQ-213 | `node --test tests/finance.test.js` |
-| 4 | REQ-212, REQ-215 | `node --test tests/analytics.test.js` |
+| 2 | REQ-201, REQ-202, REQ-203, REQ-204, REQ-205, REQ-214, REQ-216, REQ-218 | `node --test tests/marketplace.test.ts` |
+| 3 | REQ-206, REQ-207, REQ-208, REQ-209, REQ-210, REQ-211, REQ-213 | `node --test tests/finance.test.ts` |
+| 4 | REQ-212, REQ-215 | `node --test tests/analytics.test.ts` |
 | 5 | REQ-101, REQ-102, REQ-112, REQ-217 plus baseline browser regression | `npm run test:e2e` including the new `tests/browser/marketplace.spec.ts` |
 | 6 | All changed application sources and configured formatting paths | `npm run format:check` |
 

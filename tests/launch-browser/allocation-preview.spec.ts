@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("manager saves a real persisted preview and retrieves it in a fresh session", async ({
   page,

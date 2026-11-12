@@ -1,13 +1,15 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { rulesValidator } from "./campaignRules.ts";
 import {
   authorityValidator,
   inputValidator,
   resultValidator,
 } from "./allocation/validators.ts";
+import { rulesValidator } from "./campaignRules.ts";
+import { videoTables } from "./videoSchema.ts";
 
 export default defineSchema({
+  ...videoTables,
   photoUploads: defineTable({
     campaignSlug: v.string(),
     nonprofitId: v.string(),
@@ -48,6 +50,7 @@ export default defineSchema({
     title: v.string(),
     description: v.string(),
     photos: v.array(v.id("photoUploads")),
+    video: v.optional(v.id("videoUploads")),
     acceptanceId: v.id("participationAcceptances"),
     actor: v.string(),
     source: v.string(),

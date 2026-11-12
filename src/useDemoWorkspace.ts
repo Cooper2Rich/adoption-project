@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { api } from "./api";
-import { PUBLIC_DEMO } from "./runtime";
-import { DemoUpdateRequiredError } from "./public-demo/update-recovery";
-import type { DemoAccess, DemoOptions, Role, Workspace } from "./types";
+import { api } from "./api.ts";
+import { DemoUpdateRequiredError } from "./public-demo/update-recovery.ts";
+import { PUBLIC_DEMO } from "./runtime.ts";
+import type { DemoAccess, DemoOptions, Role, Workspace } from "./types.ts";
 
 export function useDemoWorkspace() {
   const [access, setAccess] = useState<DemoAccess>(() => {

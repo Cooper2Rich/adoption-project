@@ -4,11 +4,11 @@ import {
   Inbox,
   Layers3,
   Megaphone,
-  Wallet,
   UserRound,
+  Wallet,
   type LucideIcon,
 } from "lucide-react";
-import type { Role } from "../types";
+import type { Role } from "../types.ts";
 
 export type RoleTab = {
   key: string;

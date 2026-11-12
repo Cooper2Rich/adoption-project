@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   ArrowDown,
   ArrowRight,
@@ -9,19 +8,20 @@ import {
   Play,
   Trophy,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { PublicAd, PublicCampaign } from "./catalog";
-import { AdCard } from "./AdCard";
-import { AdMedia } from "./AdMedia";
+import { AdCard } from "./AdCard.tsx";
+import { AdMedia } from "./AdMedia.tsx";
+import type { PublicAd, PublicCampaign } from "./catalog.ts";
+import { MissionVisual, StepVisual } from "./HomeStoryVisuals.tsx";
 import {
   loadPastResults,
   pastPeriods,
   type PastResult,
-} from "./leaderboard-history";
-import { leaderboardWindow } from "./leaderboard-periods";
-import { rankPublicAds } from "./ranking";
-import { useLeaderSimulation } from "./useLeaderSimulation";
-import { MissionVisual, StepVisual } from "./HomeStoryVisuals";
+} from "./leaderboard-history.ts";
+import { leaderboardWindow } from "./leaderboard-periods.ts";
+import { rankPublicAds } from "./ranking.ts";
+import { useLeaderSimulation } from "./useLeaderSimulation.ts";
 
 const shortDate = (date: string) =>
   new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
@@ -135,8 +135,8 @@ export function PublicHome({
         <div>
           <h2 id="mission-title">Our mission.</h2>
           <p>
-            [Mission statement placeholder — share adoption.is’s purpose, who
-            we serve, and how we make a difference.]
+            [Mission statement placeholder — share adoption.is’s purpose, who we
+            serve, and how we make a difference.]
           </p>
           <h3 id="vision-title">Our vision.</h3>
           <p>

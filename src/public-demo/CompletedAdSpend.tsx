@@ -1,13 +1,13 @@
 import { CheckCircle2 } from "lucide-react";
-import { useWorkspace } from "../context";
-import { completedAdSpendReport } from "./completed-ad-spend";
+import { useWorkspace } from "../context.tsx";
+import "./ad-platforms.css";
+import { platformNames } from "./ad-platforms.ts";
+import { money } from "./catalog.ts";
+import { completedAdSpendReport } from "./completed-ad-spend.ts";
 import {
   FinancialSampleControl,
   useFinancialSamples,
-} from "./FinancialSamples";
-import { money } from "./catalog";
-import { platformNames } from "./ad-platforms";
-import "./ad-platforms.css";
+} from "./FinancialSamples.tsx";
 
 export function CompletedAdSpend() {
   const { projects } = useWorkspace();

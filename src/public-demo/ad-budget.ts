@@ -1,8 +1,12 @@
-import { currentEligibility } from "../../server/eligibility.js";
-import type { Post, Project } from "../types";
-import type { AdPlatform, AdSpendRules, CampaignAdSetup } from "./ad-platforms";
-import type { CompletedAdSpend } from "./completed-ad-spend";
+import { currentEligibility } from "../../server/eligibility.ts";
+import type { Post, Project } from "../types.ts";
+import type {
+  AdPlatform,
+  AdSpendRules,
+  CampaignAdSetup,
+} from "./ad-platforms.ts";
 import { campaignBudgetBreakdown } from "./campaign-budget.ts";
+import type { CompletedAdSpend } from "./completed-ad-spend.ts";
 
 const platforms = ["meta", "tiktok"] as const;
 type Amounts = {

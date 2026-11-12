@@ -1,5 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-import { selectCreator, selectOwner } from "./helpers";
+import { expect, test, type Page } from "@playwright/test";
+import { selectCreator, selectOwner } from "./helpers.ts";
 
 function primary(page: Page, mobile: boolean) {
   return page.getByRole("navigation", {

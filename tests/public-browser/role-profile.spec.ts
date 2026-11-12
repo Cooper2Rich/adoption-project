@@ -1,5 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-import { openWorkspaceMenu, selectCreator, selectOwner } from "./helpers";
+import { expect, test, type Page } from "@playwright/test";
+import { openWorkspaceMenu, selectCreator, selectOwner } from "./helpers.ts";
 
 async function openProfile(page: Page, mobile: boolean) {
   const main = page.getByRole("navigation", {

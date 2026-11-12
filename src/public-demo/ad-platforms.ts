@@ -1,6 +1,6 @@
-import type { ManagedCampaign, Post, Project } from "../types";
-import { completedAdSpendReport } from "./completed-ad-spend.ts";
+import type { ManagedCampaign, Post, Project } from "../types.ts";
 import { adBudgetBreakdown, splitAdBudget } from "./ad-budget.ts";
+import { completedAdSpendReport } from "./completed-ad-spend.ts";
 
 export const adPlatforms = ["meta", "tiktok"] as const;
 export type AdPlatform = (typeof adPlatforms)[number];

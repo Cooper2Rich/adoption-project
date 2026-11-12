@@ -1,15 +1,15 @@
+import { Waves } from "lucide-react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
-import { Waves } from "lucide-react";
-import PublicApp from "./PublicApp";
-import { ThemePicker } from "./ThemePicker";
-import { initializeTheme } from "../theme";
 import "../styles.css";
+import { initializeTheme } from "../theme.ts";
 import "./styles.css";
 import "./night-theme.css";
+import PublicApp from "./PublicApp.tsx";
 import "./refinements.css";
 import "./ripple-ui.css";
+import { ThemePicker } from "./ThemePicker.tsx";
 import "./themes.css";
 import "../adoption-is.css";
 

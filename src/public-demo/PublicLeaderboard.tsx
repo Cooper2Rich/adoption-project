@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
 import { TrendingUp, Trophy } from "lucide-react";
-import { count, money, type PublicAd, type PublicCampaign } from "./catalog";
-import { DEMO_TARGETS, rankPublicAds, scorePublicAd } from "./ranking";
-import {
-  leaderboardWindow,
-  type LeaderboardPeriod,
-} from "./leaderboard-periods";
+import { useEffect, useState } from "react";
+import { count, money, type PublicAd, type PublicCampaign } from "./catalog.ts";
 import {
   completedWindow,
   loadPastResults,
   pastPeriods,
   type PastResult,
-} from "./leaderboard-history";
-import { useLeaderSimulation } from "./useLeaderSimulation";
-import { LeaderRow } from "./LeaderRow";
+} from "./leaderboard-history.ts";
+import {
+  leaderboardWindow,
+  type LeaderboardPeriod,
+} from "./leaderboard-periods.ts";
+import { LeaderRow } from "./LeaderRow.tsx";
+import { DEMO_TARGETS, rankPublicAds, scorePublicAd } from "./ranking.ts";
+import { useLeaderSimulation } from "./useLeaderSimulation.ts";
 
 function LeaderTabs<T extends string>({
   items,

@@ -55,7 +55,7 @@ jobs:
           path: pages-archive
           fetch-depth: 0
       - name: Retain assets used by older open tabs
-        run: node scripts/stage-public.mjs --destination pages-archive
+        run: node scripts/stage-public.ts --destination pages-archive
       - name: Save the generated asset archive
         run: |
           git -C pages-archive config user.name 'github-actions[bot]'

@@ -1,29 +1,29 @@
-import { submissionsOpen } from "../calendar";
-import { useState } from "react";
 import {
-  Download,
   ArrowRight,
-  CircleAlert,
+  Bookmark,
   CheckCircle2,
+  CircleAlert,
+  Download,
   Heart,
   MessageCircle,
-  Send,
-  Bookmark,
   MoreHorizontal,
+  Send,
 } from "lucide-react";
-import { api, downloadPost, downloadMedia } from "../api";
-import { useWorkspace } from "../context";
-import type { Post } from "../types";
+import { useState } from "react";
+import { api, downloadMedia, downloadPost } from "../api.ts";
+import { submissionsOpen } from "../calendar.ts";
+import { useWorkspace } from "../context.tsx";
+import type { Post } from "../types.ts";
+import { SubmissionForm } from "./SubmissionForm.tsx";
 import {
-  Modal,
-  Media,
-  StatusBadge,
-  FormatLabel,
-  relativeTime,
-  Instagram,
   Avatar,
-} from "./ui";
-import { SubmissionForm } from "./SubmissionForm";
+  FormatLabel,
+  Instagram,
+  Media,
+  Modal,
+  relativeTime,
+  StatusBadge,
+} from "./ui.tsx";
 
 export function ReviewDialog({
   post: initialPost,

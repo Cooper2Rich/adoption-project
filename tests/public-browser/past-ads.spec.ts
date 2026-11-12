@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, selectCreator } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, selectCreator } from "./helpers.ts";
 
 test("creators retain their withdrawn, ended, archived and unpublished ads without seeing another creator's history", async ({
   page,

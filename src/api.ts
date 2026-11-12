@@ -1,6 +1,6 @@
-import type { DemoAccess } from "./types";
-import { APP_NAME, demoAsset } from "./runtime";
-import { DemoUpdateRequiredError } from "./public-demo/update-recovery";
+import { DemoUpdateRequiredError } from "./public-demo/update-recovery.ts";
+import { APP_NAME, demoAsset } from "./runtime.ts";
+import type { DemoAccess } from "./types.ts";
 
 export function accessHeaders(access?: DemoAccess) {
   return access
@@ -23,7 +23,7 @@ export async function mediaResponse(
   signal?: AbortSignal,
 ) {
   if (import.meta.env.MODE === "public" && path.startsWith("/api/media/")) {
-    const { previewMedia } = await import("./public-demo/workspace.js");
+    const { previewMedia } = await import("./public-demo/workspace.ts");
     return previewMedia(path, access);
   }
   return fetch(path.startsWith("/images/") ? demoAsset(path) : path, {

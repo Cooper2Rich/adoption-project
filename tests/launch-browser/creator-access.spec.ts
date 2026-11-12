@@ -1,6 +1,7 @@
-import { test, expect, type BrowserContext } from "@playwright/test";
+import { expect, test, type BrowserContext } from "@playwright/test";
 import { ConvexHttpClient } from "convex/browser";
-import { campaignRules as rules } from "../launch/fixtures";
+import { makeFunctionReference } from "convex/server";
+import { campaignRules as rules } from "../launch/fixtures.ts";
 
 async function creatorIdentity(context: BrowserContext, identity: string) {
   await context.route("**/__allocation/session", async (route) => {
@@ -22,11 +23,14 @@ test("T02 manager dispatch failure retry and creator blocked terms acceptance re
   const manager = new ConvexHttpClient(session.url);
   manager.setAuth(session.token);
   try {
-    await manager.mutation("campaignSetup:create", {
-      campaignId: "adoption",
-      operationId: "t02-browser-rules",
-      rules,
-    });
+    await manager.mutation(
+      makeFunctionReference<"mutation">("campaignSetup:create"),
+      {
+        campaignId: "adoption",
+        operationId: "t02-browser-rules",
+        rules,
+      },
+    );
   } catch (error) {
     expect(String(error)).toMatch(/RULES_LOCKED/);
   }

@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, selectCreator } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, selectCreator } from "./helpers.ts";
 
 test("finished coffee collection has three playable films over 15 seconds, with sound and scoped creator access", async ({
   page,

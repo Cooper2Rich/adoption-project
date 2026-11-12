@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { selectCreator, selectOwner } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { selectCreator, selectOwner } from "./helpers.ts";
 
 test("adoption.is branding and themes follow every workspace", async ({
   page,

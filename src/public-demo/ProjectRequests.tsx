@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { api } from "../api";
-import { useWorkspace } from "../context";
-import { EmptyState, Modal, dateLabel } from "../components/ui";
-import type { ProjectRequest } from "../types";
+import { api } from "../api.ts";
+import { EmptyState, Modal, dateLabel } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import type { ProjectRequest } from "../types.ts";
 
 export function ProjectRequestForm({ onClose }: { onClose: () => void }) {
   const { access, refresh, notify } = useWorkspace();

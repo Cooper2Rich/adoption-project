@@ -1,6 +1,3 @@
-import { submissionsOpen } from "../calendar";
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
@@ -9,12 +6,15 @@ import {
   Plus,
   Settings2,
 } from "lucide-react";
-import { useWorkspace } from "../context";
-import { demoAsset } from "../runtime";
-import { dateLabel, EmptyState, Instagram } from "../components/ui";
-import { ProjectForm } from "../components/ProjectForm";
-import { SubmissionForm } from "../components/SubmissionForm";
-import { PostList } from "./Posts";
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { submissionsOpen } from "../calendar.ts";
+import { ProjectForm } from "../components/ProjectForm.tsx";
+import { SubmissionForm } from "../components/SubmissionForm.tsx";
+import { dateLabel, EmptyState, Instagram } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
+import { demoAsset } from "../runtime.ts";
+import { PostList } from "./Posts.tsx";
 
 export function ProjectDetail() {
   const { id } = useParams();

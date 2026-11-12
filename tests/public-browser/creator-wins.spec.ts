@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, selectCreator } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, selectCreator } from "./helpers.ts";
 
 test("Yakira sees her public daily and weekly win snapshots alongside earnings, including after her project is archived", async ({
   page,

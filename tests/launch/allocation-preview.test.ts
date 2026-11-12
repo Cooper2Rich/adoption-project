@@ -1,6 +1,7 @@
-import test from "node:test";
+import { makeFunctionReference } from "convex/server";
 import assert from "node:assert/strict";
-import { createLocalBackend } from "../../scripts/launch/local-backend.mjs";
+import test from "node:test";
+import { createLocalBackend } from "../../scripts/launch/local-backend.ts";
 import { allocationInput } from "./fixtures.ts";
 
 test(
@@ -21,24 +22,33 @@ test(
         };
         id: string;
       }[] = [];
-      const saved = await manager.mutation("preview:save", {
-        campaignId: "adoption",
-        operationId: "preview-1",
-        input,
-      });
+      const saved = await manager.mutation(
+        makeFunctionReference<"mutation">("preview:save"),
+        {
+          campaignId: "adoption",
+          operationId: "preview-1",
+          input,
+        },
+      );
       assert.equal(saved.result.status, "ready");
       assert.equal(saved.result.boostCents, 2000);
       assert.equal(saved.actor, "manager-a");
       const secondSession = backend.client("manager-a");
       assert.equal(
         (
-          await secondSession.query("preview:list", { campaignId: "adoption" })
+          await secondSession.query(
+            makeFunctionReference<"query">("preview:list"),
+            { campaignId: "adoption" },
+          )
         )[0]._id,
         saved._id,
       );
-      const state = await secondSession.query("reservations:state", {
-        campaignId: "adoption",
-      });
+      const state = await secondSession.query(
+        makeFunctionReference<"query">("reservations:state"),
+        {
+          campaignId: "adoption",
+        },
+      );
       assert.equal(state.reservedSlots, 0);
       assert.equal(state.reservedCents, 0);
 
@@ -48,28 +58,39 @@ test(
           for (const identity of [undefined, "creator-adoption", "manager-b"]) {
             const client = backend.client(identity);
             await assert.rejects(
-              client.query("preview:list", { campaignId: "adoption" }),
+              client.query(makeFunctionReference<"query">("preview:list"), {
+                campaignId: "adoption",
+              }),
               /FORBIDDEN/,
             );
             await assert.rejects(
-              client.mutation("preview:save", {
-                campaignId: "adoption",
-                operationId: "denied",
-                input,
-              }),
+              client.mutation(
+                makeFunctionReference<"mutation">("preview:save"),
+                {
+                  campaignId: "adoption",
+                  operationId: "denied",
+                  input,
+                },
+              ),
               /FORBIDDEN/,
             );
           }
           assert.equal(
-            (await manager.query("preview:list", { campaignId: "adoption" }))
-              .length,
+            (
+              await manager.query(
+                makeFunctionReference<"query">("preview:list"),
+                { campaignId: "adoption" },
+              )
+            ).length,
             1,
           );
           assert.equal(
             (
               await backend
                 .client("manager-b")
-                .query("preview:list", { campaignId: "other" })
+                .query(makeFunctionReference<"query">("preview:list"), {
+                  campaignId: "other",
+                })
             ).length,
             0,
           );
@@ -79,27 +100,36 @@ test(
       await t.test(
         "S1-02 duplicate requests return the same immutable result and changed content is rejected",
         async () => {
-          const retry = await secondSession.mutation("preview:save", {
-            campaignId: "adoption",
-            operationId: "preview-1",
-            input,
-          });
+          const retry = await secondSession.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
+              campaignId: "adoption",
+              operationId: "preview-1",
+              input,
+            },
+          );
           assert.equal(retry._id, saved._id);
           const changed = structuredClone(input);
           changed.settings.boostPercent = 25;
           await assert.rejects(
-            manager.mutation("preview:save", {
-              campaignId: "adoption",
-              operationId: "preview-1",
-              input: changed,
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("preview:save"),
+              {
+                campaignId: "adoption",
+                operationId: "preview-1",
+                input: changed,
+              },
+            ),
             /OPERATION_CONFLICT/,
           );
-          const revised = await manager.mutation("preview:save", {
-            campaignId: "adoption",
-            operationId: "preview-2",
-            input: changed,
-          });
+          const revised = await manager.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
+              campaignId: "adoption",
+              operationId: "preview-2",
+              input: changed,
+            },
+          );
           assert.equal(revised.result.boostCents, 1000);
           assert.equal(saved.result.boostCents, 2000);
           assert.notEqual(revised._id, saved._id);
@@ -112,15 +142,18 @@ test(
           const client = backend.client("manager-b");
           const invalid = structuredClone(input);
           invalid.finance.availableCents = NaN;
-          const blocked = await client.mutation("preview:save", {
-            campaignId: "other",
-            operationId: "invalid-source",
-            input: invalid,
-          });
+          const blocked = await client.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
+              campaignId: "other",
+              operationId: "invalid-source",
+              input: invalid,
+            },
+          );
           assert.equal(blocked.result.status, "blocked");
           invalid.finance.availableCents = Infinity;
           await assert.rejects(
-            client.mutation("preview:save", {
+            client.mutation(makeFunctionReference<"mutation">("preview:save"), {
               campaignId: "other",
               operationId: "invalid-source",
               input: invalid,
@@ -144,10 +177,16 @@ test(
             const contenders = await Promise.allSettled([
               backend
                 .client("manager-a")
-                .mutation("reservations:reserve", requests[0]),
+                .mutation(
+                  makeFunctionReference<"mutation">("reservations:reserve"),
+                  requests[0],
+                ),
               backend
                 .client("manager-a")
-                .mutation("reservations:reserve", requests[1]),
+                .mutation(
+                  makeFunctionReference<"mutation">("reservations:reserve"),
+                  requests[1],
+                ),
             ]);
             assert.equal(
               contenders.filter((value) => value.status === "fulfilled").length,
@@ -162,9 +201,12 @@ test(
                 String(rejected.reason),
                 /CAPACITY_OR_FUNDING_UNAVAILABLE/,
               );
-            const finalState = await manager.query("reservations:state", {
-              campaignId,
-            });
+            const finalState = await manager.query(
+              makeFunctionReference<"query">("reservations:state"),
+              {
+                campaignId,
+              },
+            );
             assert.equal(finalState.reservedSlots, 1);
             assert.equal(finalState.reservedCents, 1000);
             contenders.forEach((result, i) => {
@@ -188,7 +230,9 @@ test(
             await assert.rejects(
               backend
                 .client("manager-a", claims)
-                .query("preview:list", { campaignId: "adoption" }),
+                .query(makeFunctionReference<"query">("preview:list"), {
+                  campaignId: "adoption",
+                }),
               /auth|token|FORBIDDEN/i,
             );
           }
@@ -197,7 +241,9 @@ test(
           parts[2] = (parts[2][0] === "a" ? "b" : "a") + parts[2].slice(1);
           client.setAuth(parts.join("."));
           await assert.rejects(
-            client.query("preview:list", { campaignId: "adoption" }),
+            client.query(makeFunctionReference<"query">("preview:list"), {
+              campaignId: "adoption",
+            }),
             /auth|token|FORBIDDEN/i,
           );
         },
@@ -212,24 +258,38 @@ test(
             input,
           };
           const [first, second] = await Promise.all([
-            backend.client("manager-a").mutation("preview:save", request),
-            backend.client("manager-a").mutation("preview:save", request),
+            backend
+              .client("manager-a")
+              .mutation(
+                makeFunctionReference<"mutation">("preview:save"),
+                request,
+              ),
+            backend
+              .client("manager-a")
+              .mutation(
+                makeFunctionReference<"mutation">("preview:save"),
+                request,
+              ),
           ]);
           assert.equal(first._id, second._id);
           assert.equal(
             (
-              await manager.query("preview:list", { campaignId: "adoption" })
-            ).filter(
-              (row: { operationId: string }) =>
-                row.operationId === request.operationId,
-            ).length,
+              await manager.query(
+                makeFunctionReference<"query">("preview:list"),
+                { campaignId: "adoption" },
+              )
+            ).filter((row: any) => row.operationId === request.operationId)
+              .length,
             1,
           );
           assert.equal(
             (
-              await manager.query("reservations:state", {
-                campaignId: "adoption",
-              })
+              await manager.query(
+                makeFunctionReference<"query">("reservations:state"),
+                {
+                  campaignId: "adoption",
+                },
+              )
             ).reservedSlots,
             0,
           );
@@ -248,71 +308,96 @@ test(
             }),
           );
           await assert.rejects(
-            manager.mutation("preview:save", {
-              campaignId: "adoption",
-              operationId: "stale-authority",
-              input,
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("preview:save"),
+              {
+                campaignId: "adoption",
+                operationId: "stale-authority",
+                input,
+              },
+            ),
             /AUTHORITY_CHANGED/,
           );
           const refreshed = structuredClone(input);
           refreshed.authority.revision = "authority-2";
-          const record = await manager.mutation("preview:save", {
-            campaignId: "adoption",
-            operationId: "new-authority",
-            input: refreshed,
-          });
+          const record = await manager.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
+              campaignId: "adoption",
+              operationId: "new-authority",
+              input: refreshed,
+            },
+          );
           assert.equal(record.input.authority.revision, "authority-2");
           assert.equal(
             (
-              await manager.query("preview:list", { campaignId: "adoption" })
-            ).find((row: { _id: string }) => row._id === saved._id).input
-              .authority.revision,
+              await manager.query(
+                makeFunctionReference<"query">("preview:list"),
+                { campaignId: "adoption" },
+              )
+            ).find((row: any) => row._id === saved._id).input.authority
+              .revision,
             "authority-1",
           );
           // Model a committed operation whose successful response is discarded.
-          await manager.mutation("preview:save", {
-            campaignId: "adoption",
-            operationId: "response-lost",
-            input: refreshed,
-          });
+          await manager.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
+              campaignId: "adoption",
+              operationId: "response-lost",
+              input: refreshed,
+            },
+          );
           await backend.restart();
           const restarted = backend.client("manager-a");
-          const retry = await restarted.mutation("preview:save", {
-            campaignId: "adoption",
-            operationId: "response-lost",
-            input: refreshed,
-          });
+          const retry = await restarted.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
+              campaignId: "adoption",
+              operationId: "response-lost",
+              input: refreshed,
+            },
+          );
           assert.equal(
             (
-              await restarted.query("preview:list", { campaignId: "adoption" })
-            ).filter(
-              (row: { operationId: string }) =>
-                row.operationId === "response-lost",
-            ).length,
+              await restarted.query(
+                makeFunctionReference<"query">("preview:list"),
+                { campaignId: "adoption" },
+              )
+            ).filter((row: any) => row.operationId === "response-lost").length,
             1,
           );
           assert.equal(retry.input.authority.revision, "authority-2");
           for (const winner of winningReservations) {
             assert.equal(
-              (await restarted.mutation("reservations:reserve", winner.request))
-                ._id,
+              (
+                await restarted.mutation(
+                  makeFunctionReference<"mutation">("reservations:reserve"),
+                  winner.request,
+                )
+              )._id,
               winner.id,
             );
             assert.equal(
               (
-                await restarted.query("reservations:state", {
-                  campaignId: winner.request.campaignId,
-                })
+                await restarted.query(
+                  makeFunctionReference<"query">("reservations:state"),
+                  {
+                    campaignId: winner.request.campaignId,
+                  },
+                )
               ).reservedCents,
               1000,
             );
           }
           assert.equal(
             (
-              await restarted.query("reservations:state", {
-                campaignId: "adoption",
-              })
+              await restarted.query(
+                makeFunctionReference<"query">("reservations:state"),
+                {
+                  campaignId: "adoption",
+                },
+              )
             ).reservedCents,
             0,
           );
@@ -324,7 +409,10 @@ test(
         async () => {
           const currentInput = structuredClone(input);
           currentInput.authority = (
-            await manager.query("preview:campaign", { campaignId: "adoption" })
+            await manager.query(
+              makeFunctionReference<"query">("preview:campaign"),
+              { campaignId: "adoption" },
+            )
           ).authority;
           const incomplete = structuredClone(currentInput);
           incomplete.entries[3].metrics = {
@@ -332,20 +420,29 @@ test(
             clicks: null,
             raisedCents: null,
           };
-          const held = await manager.mutation("preview:save", {
-            campaignId: "adoption",
-            operationId: "incomplete-1",
-            input: incomplete,
-          });
+          const held = await manager.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
+              campaignId: "adoption",
+              operationId: "incomplete-1",
+              input: incomplete,
+            },
+          );
           assert.equal(held.result.status, "boosts-held");
-          await manager.mutation("preview:save", {
-            campaignId: "adoption",
-            operationId: "incomplete-2",
-            input: incomplete,
-          });
-          const incidents = await manager.query("preview:notifications", {
-            campaignId: "adoption",
-          });
+          await manager.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
+              campaignId: "adoption",
+              operationId: "incomplete-2",
+              input: incomplete,
+            },
+          );
+          const incidents = await manager.query(
+            makeFunctionReference<"query">("preview:notifications"),
+            {
+              campaignId: "adoption",
+            },
+          );
           assert.equal(incidents.length, 1);
           assert.deepEqual(incidents[0].recipients, [
             "administrator",
@@ -354,26 +451,34 @@ test(
           assert.deepEqual(incidents[0].incompleteEntryIds, ["d"]);
           assert.equal(incidents[0].simulated, true);
           assert.equal(incidents[0].status, "open");
-          await manager.mutation("preview:save", {
-            campaignId: "adoption",
-            operationId: "complete-after-hold",
-            input: currentInput,
-          });
-          const resolved = (
-            await manager.query("preview:notifications", {
+          await manager.mutation(
+            makeFunctionReference<"mutation">("preview:save"),
+            {
               campaignId: "adoption",
-            })
+              operationId: "complete-after-hold",
+              input: currentInput,
+            },
+          );
+          const resolved = (
+            await manager.query(
+              makeFunctionReference<"query">("preview:notifications"),
+              {
+                campaignId: "adoption",
+              },
+            )
           )[0];
           assert.equal(resolved.status, "resolved");
           assert.deepEqual(
-            resolved.history.map((event: { state: string }) => event.state),
+            resolved.history.map((event: any) => event.state),
             ["opened", "updated", "resolved"],
           );
           assert.equal(
             (
-              await manager.query("preview:list", { campaignId: "adoption" })
-            ).find((row: { _id: string }) => row._id === held._id).result
-              .status,
+              await manager.query(
+                makeFunctionReference<"query">("preview:list"),
+                { campaignId: "adoption" },
+              )
+            ).find((row: any) => row._id === held._id).result.status,
             "boosts-held",
           );
         },
@@ -390,15 +495,20 @@ test(
             }),
           );
           await assert.rejects(
-            manager.query("preview:list", { campaignId: "adoption" }),
+            manager.query(makeFunctionReference<"query">("preview:list"), {
+              campaignId: "adoption",
+            }),
             /FORBIDDEN/,
           );
           await assert.rejects(
-            manager.mutation("preview:save", {
-              campaignId: "adoption",
-              operationId: "preview-1",
-              input,
-            }),
+            manager.mutation(
+              makeFunctionReference<"mutation">("preview:save"),
+              {
+                campaignId: "adoption",
+                operationId: "preview-1",
+                input,
+              },
+            ),
             /FORBIDDEN/,
           );
         },
@@ -421,7 +531,9 @@ test(
       await assert.rejects(
         backend
           .client("manager-a")
-          .query("preview:list", { campaignId: "adoption" }),
+          .query(makeFunctionReference<"query">("preview:list"), {
+            campaignId: "adoption",
+          }),
         /auth|token|FORBIDDEN/i,
       );
     } finally {

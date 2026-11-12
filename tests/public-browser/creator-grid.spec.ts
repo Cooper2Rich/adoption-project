@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, selectCreator } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, selectCreator } from "./helpers.ts";
 
 test("compact creator cards adapt to the workspace and play private media in current ads and personal archives", async ({
   page,

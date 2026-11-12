@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 async function navigate(page: Page, name: string) {
   if (

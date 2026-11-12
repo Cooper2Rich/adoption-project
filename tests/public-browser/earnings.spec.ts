@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, selectCreator } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, selectCreator } from "./helpers.ts";
 
 test("creators see their earned commissions and retained past-ad earnings; Admin sees application fees separately from payments", async ({
   page,

@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useRef, useState } from "react";
 import { Heart, PenTool, Users } from "lucide-react";
-import { demoAsset } from "../runtime";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { demoAsset } from "../runtime.ts";
 
 const missionNodes = [
   {

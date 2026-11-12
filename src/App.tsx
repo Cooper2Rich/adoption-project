@@ -1,4 +1,30 @@
 import {
+  Activity,
+  Archive,
+  ArrowUpRight,
+  Bell,
+  Check,
+  CheckCheck,
+  ChevronDown,
+  ChevronRight,
+  CircleHelp,
+  FolderHeart,
+  Inbox,
+  Layers3,
+  Link2,
+  Megaphone,
+  Menu,
+  PanelLeftClose,
+  Search,
+  Settings2,
+  ShieldCheck,
+  Trophy,
+  UserRound,
+  Wallet,
+  X,
+  type LucideIcon,
+} from "lucide-react";
+import {
   useEffect,
   useLayoutEffect,
   useState,
@@ -12,56 +38,30 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import {
-  Activity,
-  Archive,
-  ArrowUpRight,
-  Check,
-  CheckCheck,
-  ChevronDown,
-  ChevronRight,
-  CircleHelp,
-  FolderHeart,
-  Inbox,
-  Layers3,
-  Menu,
-  PanelLeftClose,
-  Search,
-  ShieldCheck,
-  Megaphone,
-  X,
-  Trophy,
-  Wallet,
-  UserRound,
-  Settings2,
-  Bell,
-  Link2,
-  type LucideIcon,
-} from "lucide-react";
-import { WorkspaceContext } from "./context";
-import type { Role } from "./types";
-import { useDemoWorkspace } from "./useDemoWorkspace";
-import { IdentityPicker } from "./components/IdentityPicker";
-import { Avatar, Logo, Modal } from "./components/ui";
-import { ProjectsPage } from "./pages/Projects";
-import { ProfilePage } from "./pages/Profile";
-import { profileRoles, useRoleProfile } from "./role-profile";
-import { PostsPage } from "./pages/Posts";
-import { ProjectDetail } from "./pages/ProjectDetail";
-import { ActivityPage } from "./pages/Activity";
-import { CampaignsPage, GivingPage } from "./pages/Campaigns";
-import { APP_NAME, PUBLIC_DEMO } from "./runtime";
-import { reloadPublicDemo } from "./public-demo/update-recovery";
+import { IdentityPicker } from "./components/IdentityPicker.tsx";
 import {
   RoleMobileNavigation,
   WorkspaceRail,
-} from "./components/WorkspaceRail";
-import type { NavigationControls } from "./components/navigation-controls";
+} from "./components/WorkspaceRail.tsx";
+import type { NavigationControls } from "./components/navigation-controls.ts";
 import {
-  roleTabs,
-  roleTabKey,
   roleSecondaryActive,
-} from "./components/role-navigation";
+  roleTabKey,
+  roleTabs,
+} from "./components/role-navigation.ts";
+import { Avatar, Logo, Modal } from "./components/ui.tsx";
+import { WorkspaceContext } from "./context.tsx";
+import { ActivityPage } from "./pages/Activity.tsx";
+import { CampaignsPage, GivingPage } from "./pages/Campaigns.tsx";
+import { PostsPage } from "./pages/Posts.tsx";
+import { ProfilePage } from "./pages/Profile.tsx";
+import { ProjectDetail } from "./pages/ProjectDetail.tsx";
+import { ProjectsPage } from "./pages/Projects.tsx";
+import { reloadPublicDemo } from "./public-demo/update-recovery.ts";
+import { profileRoles, useRoleProfile } from "./role-profile.ts";
+import { APP_NAME, PUBLIC_DEMO } from "./runtime.ts";
+import type { Role } from "./types.ts";
+import { useDemoWorkspace } from "./useDemoWorkspace.ts";
 
 type WorkspaceNavItem = {
   to: string;

@@ -1,15 +1,15 @@
-import { useEffect, useState, type FormEvent } from "react";
 import { Bell, Check, Settings2, UserRound } from "lucide-react";
-import { useWorkspace } from "../context";
-import { Avatar } from "../components/ui";
-import { ProfileImageUpload } from "../components/ProfileImageUpload";
+import { useEffect, useState, type FormEvent } from "react";
+import { ProfileImageUpload } from "../components/ProfileImageUpload.tsx";
+import { Avatar } from "../components/ui.tsx";
+import { useWorkspace } from "../context.tsx";
 import {
   profileRoles,
   useRoleProfile,
   type RoleProfile,
-} from "../role-profile";
+} from "../role-profile.ts";
+import { useTheme } from "../theme.ts";
 import "./profile.css";
-import { useTheme } from "../theme";
 
 export function ProfilePage() {
   const { theme, setTheme } = useTheme();

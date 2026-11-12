@@ -1,5 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-import { navigate, selectOwner } from "./helpers";
+import { expect, test, type Page } from "@playwright/test";
+import { navigate, selectOwner } from "./helpers.ts";
 
 async function coffeeOverview(page: Page) {
   await page.goto("./#/explore");

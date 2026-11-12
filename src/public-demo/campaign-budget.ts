@@ -1,4 +1,4 @@
-import type { AdSpendRules } from "./ad-platforms";
+import type { AdSpendRules } from "./ad-platforms.ts";
 
 export function campaignBudgetBreakdown(
   rules: Pick<AdSpendRules, "campaignLimitCents" | "metaPercent">,

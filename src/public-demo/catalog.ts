@@ -1,6 +1,6 @@
-import { workspaceRequest } from "./workspace.js";
-import type { DailyMetrics } from "./leaderboard-periods";
-import { allocateAdFund, type AdFundAllocation } from "./ad-fund-policy";
+import { allocateAdFund, type AdFundAllocation } from "./ad-fund-policy.ts";
+import type { DailyMetrics } from "./leaderboard-periods.ts";
+import { workspaceRequest } from "./workspace.ts";
 export type PublicCampaign = { id: string; name: string };
 export async function loadPublicCampaigns(): Promise<PublicCampaign[]> {
   const result = await workspaceRequest("/public/campaigns");

@@ -1,8 +1,8 @@
 import { ArrowUpRight, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
-import { AdMedia } from "./AdMedia";
-import { AdStats } from "./AdStats";
-import { durationLabel, type PublicAd } from "./catalog";
+import { AdMedia } from "./AdMedia.tsx";
+import { AdStats } from "./AdStats.tsx";
+import { durationLabel, type PublicAd } from "./catalog.ts";
 
 export function AdCard({
   ad,

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("Yakira has completed daily and weekly sample wins, including in older browsers with empty captures", async ({
   page,

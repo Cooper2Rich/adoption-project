@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { navigate, selectCreator, selectOwner } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { navigate, selectCreator, selectOwner } from "./helpers.ts";
 
 test("full site: project settings, scoped profiles, upload, failed checks, revision, handoff and activity", async ({
   page,

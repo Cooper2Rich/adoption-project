@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("guest home explains the mission, shows weekly campaign leaders and links to frozen past results", async ({
   page,

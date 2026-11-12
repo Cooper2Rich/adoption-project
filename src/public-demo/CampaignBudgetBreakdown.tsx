@@ -1,19 +1,19 @@
 import { PieChart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { api } from "../api";
-import { useWorkspace } from "../context";
-import { campaignBudgetBreakdown } from "./campaign-budget";
-import { completedAdSpendReport } from "./completed-ad-spend";
-import { useFinancialSamples } from "./FinancialSamples";
-import { money } from "./catalog";
+import { api } from "../api.ts";
+import { useWorkspace } from "../context.tsx";
+import { adBudgetBreakdown } from "./ad-budget.ts";
+import "./ad-platforms.css";
 import {
   platformNames,
   type AdSpendRules,
   type CampaignAdSetup,
-} from "./ad-platforms";
-import "./ad-platforms.css";
-import { adBudgetBreakdown } from "./ad-budget";
-import { AdBudgetBreakdown } from "./AdBudgetBreakdown";
+} from "./ad-platforms.ts";
+import { AdBudgetBreakdown } from "./AdBudgetBreakdown.tsx";
+import { campaignBudgetBreakdown } from "./campaign-budget.ts";
+import { money } from "./catalog.ts";
+import { completedAdSpendReport } from "./completed-ad-spend.ts";
+import { useFinancialSamples } from "./FinancialSamples.tsx";
 
 export function CampaignBudgetPanel() {
   const { access, role, campaignScope } = useWorkspace();

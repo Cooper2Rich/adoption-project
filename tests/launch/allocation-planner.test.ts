@@ -1,5 +1,5 @@
-import test from "node:test";
 import assert from "node:assert/strict";
+import test from "node:test";
 import { planAllocation } from "../../convex/allocation/planner.ts";
 import { allocationInput } from "./fixtures.ts";
 

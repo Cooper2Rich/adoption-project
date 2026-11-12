@@ -32,85 +32,85 @@ No command below is claimed runnable today. Designated test files are absent. Mi
 
 | Requirement | Source | Designated future command | Every criterion to exercise |
 | --- | --- | --- | --- |
-| REQ-101 - Single-campaign launch | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-101.test.js` | REQ-101.1, REQ-101.2, REQ-101.3 |
-| REQ-102 - Public homepage | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-102.test.js` | REQ-102.1, REQ-102.2 |
-| REQ-103 - Public viewer experience | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-103.test.js` | REQ-103.1, REQ-103.2, REQ-103.3 |
-| REQ-104 - Public competition standings | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-104.test.js` | REQ-104.1, REQ-104.2, REQ-104.3 |
-| REQ-105 - Email-invited creator access | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-105.test.js` | REQ-105.1, REQ-105.2, REQ-105.3 |
-| REQ-106 - Campaign manager and platform-administrator permissions | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-106.test.js` | REQ-106.1, REQ-106.2, REQ-106.3, REQ-106.4 |
-| REQ-107 - Versioned participation acceptance | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-107.test.js` | REQ-107.1, REQ-107.2, REQ-107.3 |
-| REQ-108 - Creative submissions | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-108.test.js` | REQ-108.1, REQ-108.2, REQ-108.3 |
-| REQ-109 - Manager creative review | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-109.test.js` | REQ-109.1, REQ-109.2 |
-| REQ-110 - Ad-specific fundraising link | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-110.test.js` | REQ-110.1, REQ-110.2 |
-| REQ-111 - Confirmed Stripe fundraising | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-111.test.js` | REQ-111.1, REQ-111.2 |
-| REQ-112 - Attribution earning window | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-112.test.js` | REQ-112.1, REQ-112.2, REQ-112.3, REQ-112.4 |
-| REQ-113 - Locked competition rules and versioned advertising controls | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-113.test.js` | REQ-113.1, REQ-113.2, REQ-113.3, REQ-113.4, REQ-113.5 |
-| REQ-114 - Paid platform performance | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-114.test.js` | REQ-114.1, REQ-114.2 |
-| REQ-115 - Weighted competition score | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-115.test.js` | REQ-115.1, REQ-115.2 |
-| REQ-116 - Chicago competition periods | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-116.test.js` | REQ-116.1, REQ-116.2, REQ-116.3 |
-| REQ-117 - Complete data and empty periods | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-117.test.js` | REQ-117.1, REQ-117.2, REQ-117.3 |
-| REQ-118 - Ranks and shared prizes | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-118.test.js` | REQ-118.1, REQ-118.2, REQ-118.3 |
-| REQ-119 - Delayed winner finalization | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-119.test.js` | REQ-119.1, REQ-119.2, REQ-119.3 |
-| REQ-120 - Refunds and corrections | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-120.test.js` | REQ-120.1, REQ-120.2 |
-| REQ-121 - Fundraising commissions | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-121.test.js` | REQ-121.1, REQ-121.2 |
-| REQ-122 - Separate campaign funds | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-122.test.js` | REQ-122.1, REQ-122.2 |
-| REQ-123 - Fixed weekly prize replenishment | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-123.test.js` | REQ-123.1, REQ-123.2 |
-| REQ-124 - Replenishment shortfall warning | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-124.test.js` | REQ-124.1, REQ-124.2, REQ-124.3 |
-| REQ-125 - Thirty-second refresh | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-125.test.js` | REQ-125.1, REQ-125.2 |
-| REQ-126 - Import outage notification | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-126.test.js` | REQ-126.1, REQ-126.2, REQ-126.3, REQ-126.4 |
-| REQ-127 - Audited manual fallback | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-127.test.js` | REQ-127.1, REQ-127.2, REQ-127.3 |
-| REQ-128 - Approved weekly payments | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-128.test.js` | REQ-128.1, REQ-128.2, REQ-128.3, REQ-128.4 |
-| REQ-129 - Payment retries and reversals | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-129.test.js` | REQ-129.1, REQ-129.2 |
-| REQ-130 - Private creator status | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-130.test.js` | REQ-130.1, REQ-130.2 |
-| REQ-131 - Persistent records and traceability | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-131.test.js` | REQ-131.1, REQ-131.2 |
-| REQ-132 - Automated advertising boundary | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-132.test.js` | REQ-132.1, REQ-132.2 |
-| REQ-133 - Withdrawal and discretionary removal | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-133.test.js` | REQ-133.1, REQ-133.2, REQ-133.3 |
-| REQ-134 - Disqualification | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-134.test.js` | REQ-134.1, REQ-134.2 |
-| REQ-135 - Temporary fraud suspension | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-135.test.js` | REQ-135.1, REQ-135.2, REQ-135.3 |
-| REQ-136 - Finalized prize correction | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-136.test.js` | REQ-136.1, REQ-136.2, REQ-136.3 |
-| REQ-137 - Already-paid prize loss | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-137.test.js` | REQ-137.1, REQ-137.2, REQ-137.3 |
-| REQ-138 - Creative upload validation | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-138.test.js` | REQ-138.1, REQ-138.2, REQ-138.3 |
-| REQ-139 - Creator-owned submission fixes | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-139.test.js` | REQ-139.1, REQ-139.2 |
-| REQ-140 - Public ad outage diagnostics | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-140.test.js` | REQ-140.1, REQ-140.2 |
-| REQ-141 - Public ad outage recovery | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-141.test.js` | REQ-141.1, REQ-141.2 |
-| REQ-142 - Operational alert delivery | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-142.test.js` | REQ-142.1, REQ-142.2, REQ-142.3 |
-| REQ-143 - Blocked payment recipients | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-143.test.js` | REQ-143.1, REQ-143.2 |
-| REQ-144 - Nonprofit-scoped provider assets | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-144.test.js` | REQ-144.1, REQ-144.2 |
-| REQ-145 - Expansion and financial review authority | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-145.test.js` | REQ-145.1, REQ-145.2 |
-| REQ-146 - Initial advertising goals | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-146.test.js` | REQ-146.1, REQ-146.2 |
-| REQ-147 - Explicit external-ad enrollment | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-147.test.js` | REQ-147.1, REQ-147.2 |
-| REQ-148 - Shared admission queue | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-148.test.js` | REQ-148.1, REQ-148.2 |
-| REQ-149 - Expandable funded capacity | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-149.test.js` | REQ-149.1, REQ-149.2 |
-| REQ-150 - Reserved slot lifecycle | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-150.test.js` | REQ-150.1, REQ-150.2 |
-| REQ-151 - Funded-run baseline coverage | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-151.test.js` | REQ-151.1, REQ-151.2, REQ-151.3 |
-| REQ-152 - Partial first-day baseline | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-152.test.js` | REQ-152.1, REQ-152.2 |
-| REQ-153 - Baseline-first boost pool | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-153.test.js` | REQ-153.1, REQ-153.2 |
-| REQ-154 - Ranked boost selection | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-154.test.js` | REQ-154.1, REQ-154.2, REQ-154.3 |
-| REQ-155 - Startup boost allocation | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-155.test.js` | REQ-155.1, REQ-155.2 |
-| REQ-156 - Meta/TikTok spending shares | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-156.test.js` | REQ-156.1, REQ-156.2 |
-| REQ-157 - Unavailable provider share | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-157.test.js` | REQ-157.1, REQ-157.2 |
-| REQ-158 - Spending exclusions | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-158.test.js` | REQ-158.1, REQ-158.2 |
-| REQ-159 - Admission-bound performance policy | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-159.test.js` | REQ-159.1, REQ-159.2 |
-| REQ-160 - Initial trial clock | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-160.test.js` | REQ-160.1, REQ-160.2, REQ-160.3 |
-| REQ-161 - Fixed daily continuation windows | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-161.test.js` | REQ-161.1, REQ-161.2, REQ-161.3 |
-| REQ-162 - Confirmed placement stopping | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-162.test.js` | REQ-162.1, REQ-162.2 |
-| REQ-163 - Explicit advertising retrial | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-163.test.js` | REQ-163.1, REQ-163.2 |
-| REQ-164 - Validated spending edits | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-164.test.js` | REQ-164.1, REQ-164.2 |
-| REQ-165 - Unreliable financial evidence | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-165.test.js` | REQ-165.1, REQ-165.2 |
-| REQ-166 - Distinct funds and obligations | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-166.test.js` | REQ-166.1, REQ-166.2 |
-| REQ-167 - Financial shortfall and recovery | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-167.test.js` | REQ-167.1, REQ-167.2 |
-| REQ-168 - Actual advertising provider fees | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-168.test.js` | REQ-168.1, REQ-168.2 |
-| REQ-169 - Advertising contribution classification | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-169.test.js` | REQ-169.1, REQ-169.2 |
-| REQ-170 - Reviewed contributor refunds | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-170.test.js` | REQ-170.1, REQ-170.2 |
-| REQ-171 - Closure-only campaign returns | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-171.test.js` | REQ-171.1, REQ-171.2 |
-| REQ-172 - Disputed-fund exclusion | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-172.test.js` | REQ-172.1, REQ-172.2 |
-| REQ-173 - Approved numeric safety policy | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-173.test.js` | REQ-173.1, REQ-173.2 |
-| REQ-174 - Immediate operator incidents | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-174.test.js` | REQ-174.1, REQ-174.2 |
-| REQ-175 - Provider and production launch gates | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-175.test.js` | REQ-175.1, REQ-175.2 |
-| REQ-176 - Durable reproducible allocation plans | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-176.test.js` | REQ-176.1, REQ-176.2 |
-| REQ-177 - Atomic admissions and reservations | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-177.test.js` | REQ-177.1, REQ-177.2 |
-| REQ-178 - Reconciled external write outcomes | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-178.test.js` | REQ-178.1, REQ-178.2 |
-| REQ-179 - Verified financial recovery | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-179.test.js` | REQ-179.1, REQ-179.2 |
+| REQ-101 - Single-campaign launch | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-101.test.ts` | REQ-101.1, REQ-101.2, REQ-101.3 |
+| REQ-102 - Public homepage | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-102.test.ts` | REQ-102.1, REQ-102.2 |
+| REQ-103 - Public viewer experience | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-103.test.ts` | REQ-103.1, REQ-103.2, REQ-103.3 |
+| REQ-104 - Public competition standings | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-104.test.ts` | REQ-104.1, REQ-104.2, REQ-104.3 |
+| REQ-105 - Email-invited creator access | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-105.test.ts` | REQ-105.1, REQ-105.2, REQ-105.3 |
+| REQ-106 - Campaign manager and platform-administrator permissions | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-106.test.ts` | REQ-106.1, REQ-106.2, REQ-106.3, REQ-106.4 |
+| REQ-107 - Versioned participation acceptance | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-107.test.ts` | REQ-107.1, REQ-107.2, REQ-107.3 |
+| REQ-108 - Creative submissions | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-108.test.ts` | REQ-108.1, REQ-108.2, REQ-108.3 |
+| REQ-109 - Manager creative review | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-109.test.ts` | REQ-109.1, REQ-109.2 |
+| REQ-110 - Ad-specific fundraising link | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-110.test.ts` | REQ-110.1, REQ-110.2 |
+| REQ-111 - Confirmed Stripe fundraising | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-111.test.ts` | REQ-111.1, REQ-111.2 |
+| REQ-112 - Attribution earning window | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-112.test.ts` | REQ-112.1, REQ-112.2, REQ-112.3, REQ-112.4 |
+| REQ-113 - Locked competition rules and versioned advertising controls | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-113.test.ts` | REQ-113.1, REQ-113.2, REQ-113.3, REQ-113.4, REQ-113.5 |
+| REQ-114 - Paid platform performance | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-114.test.ts` | REQ-114.1, REQ-114.2 |
+| REQ-115 - Weighted competition score | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-115.test.ts` | REQ-115.1, REQ-115.2 |
+| REQ-116 - Chicago competition periods | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-116.test.ts` | REQ-116.1, REQ-116.2, REQ-116.3 |
+| REQ-117 - Complete data and empty periods | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-117.test.ts` | REQ-117.1, REQ-117.2, REQ-117.3 |
+| REQ-118 - Ranks and shared prizes | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-118.test.ts` | REQ-118.1, REQ-118.2, REQ-118.3 |
+| REQ-119 - Delayed winner finalization | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-119.test.ts` | REQ-119.1, REQ-119.2, REQ-119.3 |
+| REQ-120 - Refunds and corrections | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-120.test.ts` | REQ-120.1, REQ-120.2 |
+| REQ-121 - Fundraising commissions | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-121.test.ts` | REQ-121.1, REQ-121.2 |
+| REQ-122 - Separate campaign funds | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-122.test.ts` | REQ-122.1, REQ-122.2 |
+| REQ-123 - Fixed weekly prize replenishment | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-123.test.ts` | REQ-123.1, REQ-123.2 |
+| REQ-124 - Replenishment shortfall warning | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-124.test.ts` | REQ-124.1, REQ-124.2, REQ-124.3 |
+| REQ-125 - Thirty-second refresh | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-125.test.ts` | REQ-125.1, REQ-125.2 |
+| REQ-126 - Import outage notification | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-126.test.ts` | REQ-126.1, REQ-126.2, REQ-126.3, REQ-126.4 |
+| REQ-127 - Audited manual fallback | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-127.test.ts` | REQ-127.1, REQ-127.2, REQ-127.3 |
+| REQ-128 - Approved weekly payments | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-128.test.ts` | REQ-128.1, REQ-128.2, REQ-128.3, REQ-128.4 |
+| REQ-129 - Payment retries and reversals | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-129.test.ts` | REQ-129.1, REQ-129.2 |
+| REQ-130 - Private creator status | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-130.test.ts` | REQ-130.1, REQ-130.2 |
+| REQ-131 - Persistent records and traceability | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-131.test.ts` | REQ-131.1, REQ-131.2 |
+| REQ-132 - Automated advertising boundary | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-132.test.ts` | REQ-132.1, REQ-132.2 |
+| REQ-133 - Withdrawal and discretionary removal | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-133.test.ts` | REQ-133.1, REQ-133.2, REQ-133.3 |
+| REQ-134 - Disqualification | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-134.test.ts` | REQ-134.1, REQ-134.2 |
+| REQ-135 - Temporary fraud suspension | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-135.test.ts` | REQ-135.1, REQ-135.2, REQ-135.3 |
+| REQ-136 - Finalized prize correction | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-136.test.ts` | REQ-136.1, REQ-136.2, REQ-136.3 |
+| REQ-137 - Already-paid prize loss | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-137.test.ts` | REQ-137.1, REQ-137.2, REQ-137.3 |
+| REQ-138 - Creative upload validation | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-138.test.ts` | REQ-138.1, REQ-138.2, REQ-138.3 |
+| REQ-139 - Creator-owned submission fixes | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-139.test.ts` | REQ-139.1, REQ-139.2 |
+| REQ-140 - Public ad outage diagnostics | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-140.test.ts` | REQ-140.1, REQ-140.2 |
+| REQ-141 - Public ad outage recovery | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-141.test.ts` | REQ-141.1, REQ-141.2 |
+| REQ-142 - Operational alert delivery | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-142.test.ts` | REQ-142.1, REQ-142.2, REQ-142.3 |
+| REQ-143 - Blocked payment recipients | [PRD-adoption-is-launch.md](PRD-adoption-is-launch.md) | `node --test tests/launch/REQ-143.test.ts` | REQ-143.1, REQ-143.2 |
+| REQ-144 - Nonprofit-scoped provider assets | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-144.test.ts` | REQ-144.1, REQ-144.2 |
+| REQ-145 - Expansion and financial review authority | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-145.test.ts` | REQ-145.1, REQ-145.2 |
+| REQ-146 - Initial advertising goals | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-146.test.ts` | REQ-146.1, REQ-146.2 |
+| REQ-147 - Explicit external-ad enrollment | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-147.test.ts` | REQ-147.1, REQ-147.2 |
+| REQ-148 - Shared admission queue | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-148.test.ts` | REQ-148.1, REQ-148.2 |
+| REQ-149 - Expandable funded capacity | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-149.test.ts` | REQ-149.1, REQ-149.2 |
+| REQ-150 - Reserved slot lifecycle | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-150.test.ts` | REQ-150.1, REQ-150.2 |
+| REQ-151 - Funded-run baseline coverage | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-151.test.ts` | REQ-151.1, REQ-151.2, REQ-151.3 |
+| REQ-152 - Partial first-day baseline | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-152.test.ts` | REQ-152.1, REQ-152.2 |
+| REQ-153 - Baseline-first boost pool | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-153.test.ts` | REQ-153.1, REQ-153.2 |
+| REQ-154 - Ranked boost selection | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-154.test.ts` | REQ-154.1, REQ-154.2, REQ-154.3 |
+| REQ-155 - Startup boost allocation | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-155.test.ts` | REQ-155.1, REQ-155.2 |
+| REQ-156 - Meta/TikTok spending shares | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-156.test.ts` | REQ-156.1, REQ-156.2 |
+| REQ-157 - Unavailable provider share | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-157.test.ts` | REQ-157.1, REQ-157.2 |
+| REQ-158 - Spending exclusions | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-158.test.ts` | REQ-158.1, REQ-158.2 |
+| REQ-159 - Admission-bound performance policy | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-159.test.ts` | REQ-159.1, REQ-159.2 |
+| REQ-160 - Initial trial clock | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-160.test.ts` | REQ-160.1, REQ-160.2, REQ-160.3 |
+| REQ-161 - Fixed daily continuation windows | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-161.test.ts` | REQ-161.1, REQ-161.2, REQ-161.3 |
+| REQ-162 - Confirmed placement stopping | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-162.test.ts` | REQ-162.1, REQ-162.2 |
+| REQ-163 - Explicit advertising retrial | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-163.test.ts` | REQ-163.1, REQ-163.2 |
+| REQ-164 - Validated spending edits | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-164.test.ts` | REQ-164.1, REQ-164.2 |
+| REQ-165 - Unreliable financial evidence | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-165.test.ts` | REQ-165.1, REQ-165.2 |
+| REQ-166 - Distinct funds and obligations | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-166.test.ts` | REQ-166.1, REQ-166.2 |
+| REQ-167 - Financial shortfall and recovery | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-167.test.ts` | REQ-167.1, REQ-167.2 |
+| REQ-168 - Actual advertising provider fees | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-168.test.ts` | REQ-168.1, REQ-168.2 |
+| REQ-169 - Advertising contribution classification | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-169.test.ts` | REQ-169.1, REQ-169.2 |
+| REQ-170 - Reviewed contributor refunds | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-170.test.ts` | REQ-170.1, REQ-170.2 |
+| REQ-171 - Closure-only campaign returns | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-171.test.ts` | REQ-171.1, REQ-171.2 |
+| REQ-172 - Disputed-fund exclusion | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-172.test.ts` | REQ-172.1, REQ-172.2 |
+| REQ-173 - Approved numeric safety policy | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-173.test.ts` | REQ-173.1, REQ-173.2 |
+| REQ-174 - Immediate operator incidents | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-174.test.ts` | REQ-174.1, REQ-174.2 |
+| REQ-175 - Provider and production launch gates | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-175.test.ts` | REQ-175.1, REQ-175.2 |
+| REQ-176 - Durable reproducible allocation plans | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-176.test.ts` | REQ-176.1, REQ-176.2 |
+| REQ-177 - Atomic admissions and reservations | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-177.test.ts` | REQ-177.1, REQ-177.2 |
+| REQ-178 - Reconciled external write outcomes | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-178.test.ts` | REQ-178.1, REQ-178.2 |
+| REQ-179 - Verified financial recovery | [adoption-launch-advertising-contract.md](adoption-launch-advertising-contract.md) | `node --test tests/launch/REQ-179.test.ts` | REQ-179.1, REQ-179.2 |
 
 ## First credential-free slice
 
@@ -139,6 +139,6 @@ CT mechanics and unaffected Q89–Q94 preview behavior remain accepted. Q95–Q1
 
 ## Historical baseline — 2026-11-07, not rerun
 
-- `node --test tests/public-ranking.test.js`: exit 0; six demo formula tests passed, without production integration.
+- `node --test tests/public-ranking.test.ts`: exit 0; six demo formula tests passed, without production integration.
 - `npm test`: exit 1; 17 passed and 12 test files failed to load because installed `zod` is incomplete (`ERR_MODULE_NOT_FOUND`). This is a dependency failure, not evidence of correctness or a launch regression.
-- `node --test tests/launch/REQ-117.test.js`: exit 1, file absent. All designated launch files are absent; the command did not exercise production behavior.
+- `node --test tests/launch/REQ-117.test.ts`: exit 1, file absent. All designated launch files are absent; the command did not exercise production behavior.

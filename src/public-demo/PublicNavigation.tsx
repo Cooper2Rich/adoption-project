@@ -13,13 +13,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import { Avatar, Logo } from "../components/ui";
-import { activeViewer, viewerState, type PublicCampaign } from "./catalog";
-import { publicArea, publicAreaNames } from "./navigation";
 import {
   selectNavigationTab,
   type NavigationControls,
-} from "../components/navigation-controls";
+} from "../components/navigation-controls.ts";
+import { Avatar, Logo } from "../components/ui.tsx";
+import { activeViewer, viewerState, type PublicCampaign } from "./catalog.ts";
+import { publicArea, publicAreaNames } from "./navigation.ts";
 
 type NavigationProps = {
   campaigns: PublicCampaign[];

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Role, Workspace, DemoAccess, Identity } from "./types";
+import type { DemoAccess, Identity, Role, Workspace } from "./types.ts";
 
 export interface WorkspaceContextValue extends Workspace {
   role: Role;

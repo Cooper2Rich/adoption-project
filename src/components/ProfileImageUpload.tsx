@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { Upload } from "lucide-react";
-import { Avatar } from "./ui";
-import { prepareProfileImage } from "../profile-image";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { prepareProfileImage } from "../profile-image.ts";
+import { Avatar } from "./ui.tsx";
 
 export function ProfileImageUpload({
   image,

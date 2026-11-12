@@ -29,6 +29,7 @@ export const photoApi = {
       title: string;
       description: string;
       photos: Doc<"photoUploads">["_id"][];
+      video?: Doc<"videoUploads">["_id"];
     },
     Doc<"photoEntries">
   >("photos:submit"),

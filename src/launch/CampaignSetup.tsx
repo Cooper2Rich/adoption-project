@@ -1,9 +1,9 @@
-import { useRef, useState, type FormEvent } from "react";
 import { useMutation, useQuery } from "convex/react";
-import { setupApi } from "./api";
-import { dollars, money, timestamp } from "./format";
+import { useRef, useState, type FormEvent } from "react";
 import type { CampaignRules } from "../../convex/campaignRules.ts";
-import { chicagoInstant } from "./campaign-dates";
+import { setupApi } from "./api.ts";
+import { chicagoInstant } from "./campaign-dates.ts";
+import { dollars, money, timestamp } from "./format.ts";
 
 const days = [
   "Sunday",
