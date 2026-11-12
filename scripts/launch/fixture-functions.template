@@ -237,3 +237,41 @@ export const restoreFixtureScope = mutation({
     await ctx.db.patch(campaign._id, { fixtureRunId: runId });
   },
 });
+
+// T06 boundary controls only; these functions are never deployed with the app.
+export const archiveBoundary = mutation({
+  args: {
+    uploadId: v.optional(v.id("videoUploads")),
+    grantId: v.optional(v.id("originalDownloadGrants")),
+    administratorActive: v.optional(v.boolean()),
+    managerRole: v.optional(
+      v.union(v.literal("manager"), v.literal("creator")),
+    ),
+  },
+  handler: async (ctx, args) => {
+    if (!process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID)
+      throw new Error("Owned run required");
+    if (args.uploadId)
+      await ctx.db.patch(args.uploadId, { expiresAt: Date.now() - 86_400_000 });
+    if (args.grantId)
+      await ctx.db.patch(args.grantId, { expiresAt: Date.now() - 1 });
+    if (args.administratorActive !== undefined) {
+      const operator = await ctx.db
+        .query("operators")
+        .withIndex("by_subject", (q) => q.eq("subject", "administrator"))
+        .unique();
+      if (!operator) throw new Error("Fixture operator missing");
+      await ctx.db.patch(operator._id, { active: args.administratorActive });
+    }
+    if (args.managerRole !== undefined) {
+      const member = await ctx.db
+        .query("memberships")
+        .withIndex("by_subject_nonprofit", (q) =>
+          q.eq("subject", "manager-a").eq("nonprofitId", "nonprofit-a"),
+        )
+        .unique();
+      if (!member) throw new Error("Fixture manager missing");
+      await ctx.db.patch(member._id, { role: args.managerRole });
+    }
+  },
+});

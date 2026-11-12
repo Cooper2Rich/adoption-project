@@ -239,6 +239,65 @@ export function createVideoService({
           ),
         );
       };
+      if (action === "original-download" && request.method === "GET") {
+        const encoded = target.searchParams.get("grant") ?? "";
+        if (encoded.length > 2048)
+          throw new Error("FORBIDDEN: Original download grant invalid");
+        let parsed;
+        try {
+          parsed = JSON.parse(Buffer.from(encoded, "base64url").toString());
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
+            throw new Error();
+        } catch {
+          throw new Error("FORBIDDEN: Original download grant invalid");
+        }
+        const { signature, ...value } = parsed;
+        const expected = sign(value, secret);
+        if (
+          value.purpose !== "original-download" ||
+          !Number.isFinite(value.expiresAt) ||
+          value.expiresAt <= Date.now() ||
+          typeof signature !== "string" ||
+          !/^[a-f0-9]{64}$/.test(signature) ||
+          !timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+        )
+          throw new Error(
+            "FORBIDDEN: Original download grant expired or invalid",
+          );
+        const receipt = { grantId: value.grantId, at: Date.now() };
+        const record = checkScope(
+          await client.query(
+            makeFunctionReference<"query">("originalDownloads:delivery"),
+            {
+              ...receipt,
+              signature: sign(
+                { purpose: "original-download-delivery", ...receipt },
+                secret,
+              ),
+            },
+          ),
+        );
+        if (value.expiresAt !== record.expiresAt)
+          throw new Error("FORBIDDEN: Original download grant invalid");
+        const filename = encodeURIComponent(record.filename).replace(
+          /['()*]/g,
+          (character) =>
+            `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
+        );
+        // Stream the immutable private object; never buffer a multi-GB archive
+        // or redirect to a storage URL. Expiry is checked before transfer starts.
+        return new Response(await store.read(record.pathname), {
+          headers: {
+            "Content-Type": "video/mp4",
+            "Content-Length": String(record.size),
+            "Content-Disposition": `attachment; filename="original.mp4"; filename*=UTF-8''${filename}`,
+            "Content-Digest": `sha-256=:${Buffer.from(record.sha256, "hex").toString("base64")}:`,
+            "Cache-Control": "private, no-store",
+            "Referrer-Policy": "no-referrer",
+            "X-Content-Type-Options": "nosniff",
+          },
+        });
+      }
       if (action === "public" && request.method === "GET") {
         const entryId = target.searchParams.get("entryId");
         const record = await publicRecord(entryId);
@@ -401,6 +460,26 @@ export function createVideoService({
       }
       if (!authorization?.startsWith("Bearer "))
         throw new Error("FORBIDDEN: Sign in to access private videos");
+      if (action === "original-ticket" && request.method === "POST") {
+        const input = await request.json();
+        const grant = await client.mutation(
+          makeFunctionReference<"mutation">("originalDownloads:issue"),
+          {
+            campaignId,
+            uploadId,
+            ...(input.entryId !== undefined ? { entryId: input.entryId } : {}),
+            ...(input.version !== undefined ? { version: input.version } : {}),
+            operationId: input.operationId,
+          },
+        );
+        // Scope is verified on redemption too. The response contains only a
+        // short-lived app capability, never a private Blob URL or credential.
+        const value = { purpose: "original-download", ...grant };
+        return json({
+          url: `/api/videos?action=original-download&grant=${Buffer.from(JSON.stringify({ ...value, signature: sign(value, secret) })).toString("base64url")}`,
+          expiresAt: grant.expiresAt,
+        });
+      }
       if (action === "token" && request.method === "POST")
         return json(
           await store.token(request, await request.json(), authorize),

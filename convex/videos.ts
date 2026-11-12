@@ -18,7 +18,10 @@ const uploadId = v.id("videoUploads"),
 const denied = () => {
   throw new Error("FORBIDDEN: Private video access denied");
 };
-function proof(value: Parameters<typeof stableRequest>[0], signature: string) {
+export function proof(
+  value: Parameters<typeof stableRequest>[0],
+  signature: string,
+) {
   const secret = process.env.VIDEO_RECEIPT_SECRET;
   if (!secret || secret.length < 32)
     throw new Error(
@@ -36,7 +39,7 @@ function proof(value: Parameters<typeof stableRequest>[0], signature: string) {
     difference |= expected.charCodeAt(i) ^ (signature.charCodeAt(i) || 0);
   if (difference) denied();
 }
-function fresh(at: number) {
+export function fresh(at: number) {
   if (at > Date.now() + 1000 || at < Date.now() - 300_000) denied();
 }
 export async function videoReader(
