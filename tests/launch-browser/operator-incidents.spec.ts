@@ -76,6 +76,21 @@ test("T08 manager dashboard keeps failed incidents, durable history and one reco
   await scenario("exhaust");
   await expect(card.getByText(/Email delivery failed/)).toHaveCount(2);
   await expect(card.getByText("Open", { exact: true })).toBeVisible();
+  if (info.project.name === "mobile") {
+    // Font fallback varies across platforms. Keep the long verification badge
+    // inside the layout viewport even with wider glyphs, without bypassing the
+    // ordinary history disclosure pointer interaction below.
+    await page.addStyleTag({
+      content: ".operator-incident .tag { font-family: monospace; }",
+    });
+  }
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
   await card
     .getByText("Source and incident history (1)", { exact: true })
     .click();
@@ -131,7 +146,9 @@ test("T08 manager dashboard keeps failed incidents, durable history and one reco
     });
     expect(
       await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
       ),
     ).toBe(true);
     const snapshot = await manager.query(

@@ -728,3 +728,7 @@ small.held {
 .operator-incident details {
   margin: 12px 0;
 }
+.operator-incident .tag {
+  max-width: 100%;
+  white-space: normal;
+}
