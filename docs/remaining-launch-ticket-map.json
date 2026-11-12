@@ -1,0 +1,4555 @@
+{
+  "date": "2026-11-12",
+  "revised": "2026-11-12",
+  "repository": "Cooper2Rich/adoption-project",
+  "parent": 64,
+  "planningMap": 9,
+  "approvedTickets": 40,
+  "currentTickets": 45,
+  "sourceCriteria": 191,
+  "issues": [
+    {
+      "number": 65,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/65",
+      "title": "[Launch T00] Land the S1 preview baseline on main",
+      "label": "ready-for-agent",
+      "dependencies": [],
+      "id": "T00",
+      "sourceCriteria": [],
+      "parent": 64
+    },
+    {
+      "number": 24,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/24",
+      "title": "[Launch T01] Clerk manager sign-in and locked campaign setup",
+      "label": "ready-for-agent",
+      "dependencies": [
+        65
+      ],
+      "id": "T01",
+      "sourceCriteria": [
+        "REQ-101.1",
+        "REQ-101.2",
+        "REQ-101.3",
+        "REQ-106.1",
+        "REQ-106.2",
+        "REQ-113.1",
+        "REQ-113.2",
+        "REQ-131.1",
+        "REQ-131.2",
+        "REQ-144.1"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 25,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/25",
+      "title": "[Launch T02] Invited creator access and participation acceptance",
+      "label": "ready-for-agent",
+      "dependencies": [
+        24
+      ],
+      "id": "T02",
+      "sourceCriteria": [
+        "REQ-101.1",
+        "REQ-105.1",
+        "REQ-105.2",
+        "REQ-105.3",
+        "REQ-106.1",
+        "REQ-107.1",
+        "REQ-107.2",
+        "REQ-107.3",
+        "REQ-130.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 26,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/26",
+      "title": "[Launch T03] Photo submission, creator corrections and manager review",
+      "label": "ready-for-agent",
+      "dependencies": [
+        25
+      ],
+      "id": "T03",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-108.1",
+        "REQ-108.2",
+        "REQ-108.3",
+        "REQ-109.1",
+        "REQ-109.2",
+        "REQ-130.1",
+        "REQ-130.2",
+        "REQ-138.1",
+        "REQ-138.3",
+        "REQ-139.1",
+        "REQ-139.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 27,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/27",
+      "title": "[Launch T04] Original-video upload and processed playback",
+      "label": "ready-for-agent",
+      "dependencies": [
+        26
+      ],
+      "id": "T04",
+      "sourceCriteria": [
+        "REQ-108.1",
+        "REQ-108.2",
+        "REQ-138.2",
+        "REQ-138.3"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 28,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/28",
+      "title": "[Launch T05] Public campaign, approved viewer and tracked links",
+      "label": "ready-for-agent",
+      "dependencies": [
+        26
+      ],
+      "id": "T05",
+      "sourceCriteria": [
+        "REQ-101.1",
+        "REQ-102.1",
+        "REQ-102.2",
+        "REQ-103.1",
+        "REQ-103.2",
+        "REQ-103.3",
+        "REQ-110.1",
+        "REQ-110.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 29,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/29",
+      "title": "[Launch T06] Authorized original downloads and indefinite retention",
+      "label": "ready-for-agent",
+      "dependencies": [
+        27
+      ],
+      "id": "T06",
+      "sourceCriteria": [],
+      "parent": 64
+    },
+    {
+      "number": 30,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/30",
+      "title": "[Launch T07] Confirmed original deletion with recovery",
+      "label": "ready-for-agent",
+      "dependencies": [
+        29
+      ],
+      "id": "T07",
+      "sourceCriteria": [],
+      "parent": 64
+    },
+    {
+      "number": 31,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/31",
+      "title": "[Launch T08] Persistent operator incidents and email delivery",
+      "label": "ready-for-agent",
+      "dependencies": [
+        24
+      ],
+      "id": "T08",
+      "sourceCriteria": [
+        "REQ-131.1",
+        "REQ-131.2",
+        "REQ-142.1",
+        "REQ-142.2",
+        "REQ-142.3",
+        "REQ-174.1",
+        "REQ-174.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 32,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/32",
+      "title": "[Launch T09] Visible launch readiness and unresolved gates",
+      "label": "ready-for-agent",
+      "dependencies": [
+        31
+      ],
+      "id": "T09",
+      "sourceCriteria": [
+        "REQ-142.3",
+        "REQ-175.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 33,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/33",
+      "title": "[Launch T10] Confirmed fundraising and creator commission ledger",
+      "label": "ready-for-agent",
+      "dependencies": [
+        28
+      ],
+      "id": "T10",
+      "sourceCriteria": [
+        "REQ-111.1",
+        "REQ-111.2",
+        "REQ-112.1",
+        "REQ-112.2",
+        "REQ-112.3",
+        "REQ-112.4",
+        "REQ-121.1",
+        "REQ-121.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 34,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/34",
+      "title": "[Launch T11] Fundraising refunds and commission reversals",
+      "label": "ready-for-agent",
+      "dependencies": [
+        31,
+        33
+      ],
+      "id": "T11",
+      "sourceCriteria": [
+        "REQ-120.1",
+        "REQ-120.2",
+        "REQ-129.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 35,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/35",
+      "title": "[Launch T12] Paid metric imports, coverage and source health",
+      "label": "ready-for-agent",
+      "dependencies": [
+        24,
+        31
+      ],
+      "id": "T12",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-114.1",
+        "REQ-114.2",
+        "REQ-117.1",
+        "REQ-117.2",
+        "REQ-125.2",
+        "REQ-126.1",
+        "REQ-126.2",
+        "REQ-126.3",
+        "REQ-126.4"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 36,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/36",
+      "title": "[Launch T13] Audited fallback and certified metric corrections",
+      "label": "ready-for-agent",
+      "dependencies": [
+        35
+      ],
+      "id": "T13",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-127.1",
+        "REQ-127.2",
+        "REQ-127.3"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 37,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/37",
+      "title": "[Launch T14] Public daily/weekly standings and exact shared ranks",
+      "label": "ready-for-agent",
+      "dependencies": [
+        28,
+        33,
+        35
+      ],
+      "id": "T14",
+      "sourceCriteria": [
+        "REQ-104.1",
+        "REQ-104.3",
+        "REQ-115.1",
+        "REQ-115.2",
+        "REQ-116.1",
+        "REQ-116.2",
+        "REQ-116.3",
+        "REQ-118.1",
+        "REQ-118.2",
+        "REQ-118.3",
+        "REQ-125.1",
+        "REQ-125.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 38,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/38",
+      "title": "[Launch T15] Protected prize funds and scheduled replenishment",
+      "label": "ready-for-agent",
+      "dependencies": [
+        24,
+        31,
+        33
+      ],
+      "id": "T15",
+      "sourceCriteria": [
+        "REQ-122.1",
+        "REQ-122.2",
+        "REQ-123.1",
+        "REQ-123.2",
+        "REQ-124.1",
+        "REQ-124.2",
+        "REQ-124.3"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 39,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/39",
+      "title": "[Launch T16] Complete-period prize finalization and history",
+      "label": "ready-for-agent",
+      "dependencies": [
+        37,
+        38
+      ],
+      "id": "T16",
+      "sourceCriteria": [
+        "REQ-104.2",
+        "REQ-117.1",
+        "REQ-117.3",
+        "REQ-119.1",
+        "REQ-119.2",
+        "REQ-119.3"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 40,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/40",
+      "title": "[Launch T17] Weekly creator batch preparation and exact approval",
+      "label": "ready-for-agent",
+      "dependencies": [
+        31,
+        33,
+        34,
+        38,
+        39
+      ],
+      "id": "T17",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-113.5",
+        "REQ-128.1",
+        "REQ-128.2",
+        "REQ-128.3",
+        "REQ-128.4",
+        "REQ-130.1",
+        "REQ-130.2",
+        "REQ-143.1",
+        "REQ-143.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 41,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/41",
+      "title": "[Launch T18] Creator payout settlement and uncertain-outcome recovery",
+      "label": "ready-for-agent",
+      "dependencies": [
+        40,
+        66
+      ],
+      "id": "T18",
+      "sourceCriteria": [
+        "REQ-129.1",
+        "REQ-143.1",
+        "REQ-143.2",
+        "REQ-178.1",
+        "REQ-178.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 42,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/42",
+      "title": "[Launch T19] Dated disqualification without implicit final-result edits",
+      "label": "ready-for-agent",
+      "dependencies": [
+        31,
+        37
+      ],
+      "id": "T19",
+      "sourceCriteria": [
+        "REQ-134.1",
+        "REQ-134.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 43,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/43",
+      "title": "[Launch T20] Confirmed finalized-prize corrections and paid losses",
+      "label": "ready-for-agent",
+      "dependencies": [
+        39,
+        41
+      ],
+      "id": "T20",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-136.1",
+        "REQ-136.2",
+        "REQ-136.3",
+        "REQ-137.1",
+        "REQ-137.2",
+        "REQ-137.3"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 44,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/44",
+      "title": "[Launch T21] Withdrawal, manager removal and fraud holds",
+      "label": "ready-for-agent",
+      "dependencies": [
+        26,
+        28,
+        31,
+        33
+      ],
+      "id": "T21",
+      "sourceCriteria": [
+        "REQ-133.1",
+        "REQ-133.2",
+        "REQ-135.1",
+        "REQ-135.2",
+        "REQ-135.3"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 45,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/45",
+      "title": "[Launch T22] Scoped advertising connections and validated goals",
+      "label": "ready-for-agent",
+      "dependencies": [
+        24,
+        32
+      ],
+      "id": "T22",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-144.1",
+        "REQ-144.2",
+        "REQ-146.1",
+        "REQ-146.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 46,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/46",
+      "title": "[Launch T23] Campaign advertising contributions and actual-fee accounting",
+      "label": "ready-for-agent",
+      "dependencies": [
+        28,
+        31
+      ],
+      "id": "T23",
+      "sourceCriteria": [
+        "REQ-168.1",
+        "REQ-168.2",
+        "REQ-169.1",
+        "REQ-169.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 47,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/47",
+      "title": "[Launch T24] Trusted advertising financial evidence and safety policy",
+      "label": "ready-for-agent",
+      "dependencies": [
+        24,
+        31,
+        46
+      ],
+      "id": "T24",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-122.1",
+        "REQ-122.2",
+        "REQ-165.1",
+        "REQ-165.2",
+        "REQ-166.1",
+        "REQ-166.2",
+        "REQ-173.1",
+        "REQ-173.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 48,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/48",
+      "title": "[Launch T25] Explicit enrollment of externally created ads",
+      "label": "ready-for-agent",
+      "dependencies": [
+        26,
+        28,
+        35,
+        45,
+        47
+      ],
+      "id": "T25",
+      "sourceCriteria": [
+        "REQ-147.1",
+        "REQ-147.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 49,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/49",
+      "title": "[Launch T26a] Validated spending controls and continuation policies",
+      "label": "ready-for-agent",
+      "dependencies": [
+        32,
+        47
+      ],
+      "id": "T26a",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-113.3",
+        "REQ-159.1",
+        "REQ-164.1",
+        "REQ-164.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 67,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/67",
+      "title": "[Launch T26b] Trusted advisory allocation plans and cent-exact allocation math",
+      "label": "ready-for-agent",
+      "dependencies": [
+        37,
+        49
+      ],
+      "id": "T26b",
+      "sourceCriteria": [
+        "REQ-122.1",
+        "REQ-122.2",
+        "REQ-151.2",
+        "REQ-152.1",
+        "REQ-152.2",
+        "REQ-153.1",
+        "REQ-153.2",
+        "REQ-154.1",
+        "REQ-154.2",
+        "REQ-154.3",
+        "REQ-155.1",
+        "REQ-155.2",
+        "REQ-156.1",
+        "REQ-156.2",
+        "REQ-176.1",
+        "REQ-176.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 50,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/50",
+      "title": "[Launch T27] Funded admission queue and capacity expansion",
+      "label": "ready-for-agent",
+      "dependencies": [
+        26,
+        31,
+        42,
+        44,
+        67
+      ],
+      "id": "T27",
+      "sourceCriteria": [
+        "REQ-106.3",
+        "REQ-113.4",
+        "REQ-145.1",
+        "REQ-145.2",
+        "REQ-148.1",
+        "REQ-148.2",
+        "REQ-149.1",
+        "REQ-149.2",
+        "REQ-150.1",
+        "REQ-151.1",
+        "REQ-159.2",
+        "REQ-177.1",
+        "REQ-177.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 51,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/51",
+      "title": "[Launch T28] Managed publication, delivery confirmation and safe stopping",
+      "label": "ready-for-agent",
+      "dependencies": [
+        12,
+        45,
+        48,
+        50
+      ],
+      "id": "T28",
+      "sourceCriteria": [
+        "REQ-132.1",
+        "REQ-132.2",
+        "REQ-150.1",
+        "REQ-150.2",
+        "REQ-162.1",
+        "REQ-162.2",
+        "REQ-178.1",
+        "REQ-178.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 52,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/52",
+      "title": "[Launch T29a] Daily allocation commitment and provider-share dispatch",
+      "label": "ready-for-agent",
+      "dependencies": [
+        35,
+        51,
+        67
+      ],
+      "id": "T29a",
+      "sourceCriteria": [
+        "REQ-153.1",
+        "REQ-153.2",
+        "REQ-154.1",
+        "REQ-154.2",
+        "REQ-154.3",
+        "REQ-155.1",
+        "REQ-155.2",
+        "REQ-156.1",
+        "REQ-156.2",
+        "REQ-157.1",
+        "REQ-158.1",
+        "REQ-158.2",
+        "REQ-176.1",
+        "REQ-176.2",
+        "REQ-177.1",
+        "REQ-177.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 68,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/68",
+      "title": "[Launch T29b] Elapsed-unused allocation reconciliation and release",
+      "label": "ready-for-agent",
+      "dependencies": [
+        52
+      ],
+      "id": "T29b",
+      "sourceCriteria": [
+        "REQ-151.3",
+        "REQ-177.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 53,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/53",
+      "title": "[Launch T30] Admission-bound initial trial evaluation",
+      "label": "ready-for-agent",
+      "dependencies": [
+        52
+      ],
+      "id": "T30",
+      "sourceCriteria": [
+        "REQ-113.4",
+        "REQ-159.1",
+        "REQ-159.2",
+        "REQ-160.1",
+        "REQ-160.2",
+        "REQ-160.3"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 54,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/54",
+      "title": "[Launch T31] Chronological continuation windows and explicit retrials",
+      "label": "ready-for-agent",
+      "dependencies": [
+        53
+      ],
+      "id": "T31",
+      "sourceCriteria": [
+        "REQ-113.4",
+        "REQ-159.2",
+        "REQ-161.1",
+        "REQ-161.2",
+        "REQ-161.3",
+        "REQ-163.1",
+        "REQ-163.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 55,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/55",
+      "title": "[Launch T32] Provider interruption, financial pause and verified recovery",
+      "label": "ready-for-agent",
+      "dependencies": [
+        53
+      ],
+      "id": "T32",
+      "sourceCriteria": [
+        "REQ-157.1",
+        "REQ-157.2",
+        "REQ-165.1",
+        "REQ-165.2",
+        "REQ-167.1",
+        "REQ-167.2",
+        "REQ-179.1",
+        "REQ-179.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 56,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/56",
+      "title": "[Launch T33] Participation holds connected to confirmed paid stops",
+      "label": "ready-for-agent",
+      "dependencies": [
+        51
+      ],
+      "id": "T33",
+      "sourceCriteria": [
+        "REQ-133.1",
+        "REQ-133.3",
+        "REQ-135.1",
+        "REQ-135.2",
+        "REQ-135.3",
+        "REQ-150.2",
+        "REQ-158.1",
+        "REQ-158.2",
+        "REQ-162.1",
+        "REQ-162.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 57,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/57",
+      "title": "[Launch T34] Reviewed advertising-contribution refunds",
+      "label": "ready-for-agent",
+      "dependencies": [
+        47
+      ],
+      "id": "T34",
+      "sourceCriteria": [
+        "REQ-106.4",
+        "REQ-145.1",
+        "REQ-145.2",
+        "REQ-170.1",
+        "REQ-170.2",
+        "REQ-178.1",
+        "REQ-178.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 58,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/58",
+      "title": "[Launch T35] Disputes, forced reversals and funding-shortfall response",
+      "label": "ready-for-agent",
+      "dependencies": [
+        55,
+        57
+      ],
+      "id": "T35",
+      "sourceCriteria": [
+        "REQ-172.1",
+        "REQ-172.2",
+        "REQ-179.1",
+        "REQ-179.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 59,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/59",
+      "title": "[Launch T36] Reconciled campaign closure and nonprofit returns",
+      "label": "ready-for-agent",
+      "dependencies": [
+        58
+      ],
+      "id": "T36",
+      "sourceCriteria": [
+        "REQ-106.4",
+        "REQ-145.1",
+        "REQ-145.2",
+        "REQ-171.1",
+        "REQ-171.2",
+        "REQ-178.1",
+        "REQ-178.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 60,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/60",
+      "title": "[Launch T37] Confirmed public-media outage and recovery",
+      "label": "ready-for-agent",
+      "dependencies": [
+        27,
+        44
+      ],
+      "id": "T37",
+      "sourceCriteria": [
+        "REQ-140.1",
+        "REQ-140.2",
+        "REQ-141.1",
+        "REQ-141.2"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 61,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/61",
+      "title": "[Launch T38] Real Clerk invitation, access and recovery evidence",
+      "label": "ready-for-human",
+      "dependencies": [
+        24,
+        25
+      ],
+      "id": "T38",
+      "sourceCriteria": [],
+      "parent": 64
+    },
+    {
+      "number": 69,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/69",
+      "title": "[Launch T39a] Real Blob/Mux original upload and processed playback evidence",
+      "label": "ready-for-human",
+      "dependencies": [
+        27
+      ],
+      "id": "T39a",
+      "sourceCriteria": [
+        "REQ-138.2",
+        "REQ-138.3"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 62,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/62",
+      "title": "[Launch T39b] Real original download, deletion/recovery and notification delivery evidence",
+      "label": "ready-for-human",
+      "dependencies": [
+        30,
+        60
+      ],
+      "id": "T39b",
+      "sourceCriteria": [],
+      "parent": 64
+    },
+    {
+      "number": 63,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/63",
+      "title": "[Launch T40a] Whole-launch requirement-mapped verification suite",
+      "label": "ready-for-agent",
+      "dependencies": [
+        36,
+        43,
+        54,
+        56,
+        59,
+        68
+      ],
+      "id": "T40a",
+      "sourceCriteria": [
+        "REQ-106.1",
+        "REQ-106.2",
+        "REQ-131.1",
+        "REQ-131.2",
+        "REQ-175.1"
+      ],
+      "parent": 64
+    },
+    {
+      "number": 70,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/70",
+      "title": "[Launch T40b] Paid-activation release gate sign-off",
+      "label": "ready-for-human",
+      "dependencies": [
+        12,
+        20,
+        21,
+        22,
+        61,
+        62,
+        63,
+        66,
+        69
+      ],
+      "id": "T40b",
+      "sourceCriteria": [
+        "REQ-175.1"
+      ],
+      "parent": 64
+    }
+  ],
+  "evidenceIssues": [
+    {
+      "number": 12,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/12",
+      "title": "Validate Meta and TikTok advertising access and delivery contracts",
+      "labels": [
+        "ready-for-human",
+        "wayfinder:task"
+      ],
+      "dependencies": [
+        10,
+        11
+      ],
+      "parent": 9
+    },
+    {
+      "number": 20,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/20",
+      "title": "Confirm Stripe nonprofit crowdfunding and Issuing program eligibility",
+      "labels": [
+        "ready-for-human",
+        "wayfinder:task"
+      ],
+      "dependencies": [],
+      "parent": 9
+    },
+    {
+      "number": 21,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/21",
+      "title": "Choose the approved Stripe advertising balance funding route",
+      "labels": [
+        "ready-for-human",
+        "wayfinder:grilling"
+      ],
+      "dependencies": [
+        20
+      ],
+      "parent": 9
+    },
+    {
+      "number": 22,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/22",
+      "title": "Approve evidence-backed advertising safety settings",
+      "labels": [
+        "ready-for-human",
+        "wayfinder:grilling"
+      ],
+      "dependencies": [
+        12,
+        20,
+        21
+      ],
+      "parent": 9
+    },
+    {
+      "number": 66,
+      "url": "https://github.com/Cooper2Rich/adoption-project/issues/66",
+      "title": "Confirm Stripe donation collection and creator payout contract",
+      "labels": [
+        "ready-for-human",
+        "wayfinder:task"
+      ],
+      "dependencies": [],
+      "parent": 9
+    }
+  ],
+  "criterionOwnership": [
+    {
+      "id": "REQ-101.1",
+      "requirement": "REQ-101",
+      "title": "Single-campaign launch",
+      "text": "Given public or creator navigation, when a user opens the application, then the adoption.is campaign is available without a campaign selector or another organization's campaign.",
+      "owners": [
+        "T01",
+        "T02",
+        "T05"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        },
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        },
+        {
+          "id": "T05",
+          "number": 28,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/28"
+        }
+      ]
+    },
+    {
+      "id": "REQ-101.2",
+      "requirement": "REQ-101",
+      "title": "Single-campaign launch",
+      "text": "Given a manager preparing the launch, when campaign settings are saved, then the resulting campaign belongs to adoption.is; generic marketplace onboarding is not needed.",
+      "owners": [
+        "T01"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        }
+      ]
+    },
+    {
+      "id": "REQ-101.3",
+      "requirement": "REQ-101",
+      "title": "Single-campaign launch",
+      "text": "Given a second nonprofit represented in isolated verification records, when its records, permissions, provider connections or financial mappings are accessed, then they cannot be confused with or accessed through an unauthorized adoption.is campaign scope. The reusable boundaries must not require exposing a second campaign in the first public rollout.",
+      "owners": [
+        "T01"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        }
+      ]
+    },
+    {
+      "id": "REQ-102.1",
+      "requirement": "REQ-102",
+      "title": "Public homepage",
+      "text": "Given an unauthenticated visitor, when the homepage opens, then the visitor can understand the campaign and reach the public viewer experience.",
+      "owners": [
+        "T05"
+      ],
+      "issues": [
+        {
+          "id": "T05",
+          "number": 28,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/28"
+        }
+      ]
+    },
+    {
+      "id": "REQ-102.2",
+      "requirement": "REQ-102",
+      "title": "Public homepage",
+      "text": "Given the launch homepage, when it displays approved ads or standings, then they refer to the same campaign records as the viewer pages rather than separate fictional fixtures.",
+      "owners": [
+        "T05"
+      ],
+      "issues": [
+        {
+          "id": "T05",
+          "number": 28,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/28"
+        }
+      ]
+    },
+    {
+      "id": "REQ-103.1",
+      "requirement": "REQ-103",
+      "title": "Public viewer experience",
+      "text": "Given an approved public ad, when a guest browses or opens its detail page, then its media, creator attribution, campaign context, and tracked fundraising action are accessible without sign-in.",
+      "owners": [
+        "T05"
+      ],
+      "issues": [
+        {
+          "id": "T05",
+          "number": 28,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/28"
+        }
+      ]
+    },
+    {
+      "id": "REQ-103.2",
+      "requirement": "REQ-103",
+      "title": "Public viewer experience",
+      "text": "Given a pending or rejected submission, when a guest requests it through a direct route, then its private submission content is not exposed.",
+      "owners": [
+        "T05"
+      ],
+      "issues": [
+        {
+          "id": "T05",
+          "number": 28,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/28"
+        }
+      ]
+    },
+    {
+      "id": "REQ-103.3",
+      "requirement": "REQ-103",
+      "title": "Public viewer experience",
+      "text": "With no approved public entries, show \"No approved ads yet\" without fictional substitutes. Failed media shows \"This ad's media is unavailable\" with retry and otherwise-valid fundraising access; follow REQ-140/REQ-141 for outages.",
+      "owners": [
+        "T05"
+      ],
+      "issues": [
+        {
+          "id": "T05",
+          "number": 28,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/28"
+        }
+      ]
+    },
+    {
+      "id": "REQ-104.1",
+      "requirement": "REQ-104",
+      "title": "Public competition standings",
+      "text": "Given a visitor without an account, when daily or weekly standings are opened from the public viewer experience, then the selected period, ranked ads, provisional or final status, and source-update information are visible.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-104.2",
+      "requirement": "REQ-104",
+      "title": "Public competition standings",
+      "text": "Given finalized past results, when the visitor opens the corresponding completed period, then confirmed winners are shown without donor identities, creator payment-account details, or private financial records.",
+      "owners": [
+        "T16"
+      ],
+      "issues": [
+        {
+          "id": "T16",
+          "number": 39,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/39"
+        }
+      ]
+    },
+    {
+      "id": "REQ-104.3",
+      "requirement": "REQ-104",
+      "title": "Public competition standings",
+      "text": "When required data is missing, retain last-known standings with update time and \"Some results are delayed\" labeling. Never replace missing data with zero or label incomplete results final; without prior standings, do not fabricate them.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-105.1",
+      "requirement": "REQ-105",
+      "title": "Email-invited creator access",
+      "text": "Given an invitation to one email address, when its owner authenticates with that invited identity through Clerk, then creator access is granted.",
+      "owners": [
+        "T02"
+      ],
+      "issues": [
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        }
+      ]
+    },
+    {
+      "id": "REQ-105.2",
+      "requirement": "REQ-105",
+      "title": "Email-invited creator access",
+      "text": "Given another authenticated identity or a revoked creator, when it uses a forwarded invitation or requests a protected creator operation, then access is denied on the server.",
+      "owners": [
+        "T02"
+      ],
+      "issues": [
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        }
+      ]
+    },
+    {
+      "id": "REQ-105.3",
+      "requirement": "REQ-105",
+      "title": "Email-invited creator access",
+      "text": "Authentication and access recovery use Clerk-supported flows, not an internal recovery system. Provider-supported identity matching, expiry/replay, revocation and sole-manager recovery require O-07 investigation.",
+      "owners": [
+        "T02"
+      ],
+      "issues": [
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        }
+      ]
+    },
+    {
+      "id": "REQ-106.1",
+      "requirement": "REQ-106",
+      "title": "Campaign manager and platform-administrator permissions",
+      "text": "Given the authenticated campaign manager, when management functions are requested, then the person can configure the campaign, invite or revoke creators, review ads, map placements, inspect funds, enter fallback data, make auditable corrections, and approve payment batches.",
+      "owners": [
+        "T01",
+        "T02",
+        "T03",
+        "T12",
+        "T13",
+        "T17",
+        "T20",
+        "T22",
+        "T24",
+        "T26a",
+        "T40a"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        },
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        },
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        },
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        },
+        {
+          "id": "T13",
+          "number": 36,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/36"
+        },
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        },
+        {
+          "id": "T20",
+          "number": 43,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/43"
+        },
+        {
+          "id": "T22",
+          "number": 45,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/45"
+        },
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        },
+        {
+          "id": "T26a",
+          "number": 49,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/49"
+        },
+        {
+          "id": "T40a",
+          "number": 63,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/63"
+        }
+      ]
+    },
+    {
+      "id": "REQ-106.2",
+      "requirement": "REQ-106",
+      "title": "Campaign manager and platform-administrator permissions",
+      "text": "Given an ordinary creator or guest, when the same functions are requested directly, then authorization is denied. A campaign manager without platform-administrator permission cannot approve capacity expansion. Later nonprofit managers receive only their authorized campaign scope, without automatic platform-administrator privileges.",
+      "owners": [
+        "T01",
+        "T40a"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        },
+        {
+          "id": "T40a",
+          "number": 63,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/63"
+        }
+      ]
+    },
+    {
+      "id": "REQ-106.3",
+      "requirement": "REQ-106",
+      "title": "Campaign manager and platform-administrator permissions",
+      "text": "Given a capacity-expansion request, when an authorized platform administrator approves it after funding and spending-limit checks, then the request and approval are separately recorded with actor, role and time. One person may perform both actions if assigned both roles; a second human is not mandatory. Creator-payment batches do not acquire a second-approver requirement.",
+      "owners": [
+        "T27"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        }
+      ]
+    },
+    {
+      "id": "REQ-106.4",
+      "requirement": "REQ-106",
+      "title": "Campaign manager and platform-administrator permissions",
+      "text": "Contributor refunds and closure-only nonprofit balance returns require separately recorded manager request and administrator review/approval. Manager authority alone cannot approve execution; creator-payment approval remains unchanged. Accepted beneficiary/amount limits are consolidated in the supplement; actual provider execution and release evidence remain validation gates.",
+      "owners": [
+        "T34",
+        "T36"
+      ],
+      "issues": [
+        {
+          "id": "T34",
+          "number": 57,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/57"
+        },
+        {
+          "id": "T36",
+          "number": 59,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/59"
+        }
+      ]
+    },
+    {
+      "id": "REQ-107.1",
+      "requirement": "REQ-107",
+      "title": "Versioned participation acceptance",
+      "text": "An invited creator must accept the versioned use agreement before campaign signup completes; submission is blocked without acceptance.",
+      "owners": [
+        "T02"
+      ],
+      "issues": [
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        }
+      ]
+    },
+    {
+      "id": "REQ-107.2",
+      "requirement": "REQ-107",
+      "title": "Versioned participation acceptance",
+      "text": "Given accepted terms, when the acceptance record is inspected, then it identifies the creator, accepted version, and acceptance time, covering commission, prizes, score, cutoffs, refunds, and creative use.",
+      "owners": [
+        "T02"
+      ],
+      "issues": [
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        }
+      ]
+    },
+    {
+      "id": "REQ-107.3",
+      "requirement": "REQ-107",
+      "title": "Versioned participation acceptance",
+      "text": "The signup agreement grants permission for public display and advertising of campaign submissions without further creator approvals per submission or placement. Creators retain ownership and confirm permission to authorize included content. New advertising use ends on withdrawal or campaign completion; private records remain available to explain results and payments. Other creator legal matters belong in the pre-signup use agreement.",
+      "owners": [
+        "T02"
+      ],
+      "issues": [
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        }
+      ]
+    },
+    {
+      "id": "REQ-108.1",
+      "requirement": "REQ-108",
+      "title": "Creative submissions",
+      "text": "Given a participating creator, when an allowed video or still image is submitted, then the saved version includes its media, title, description, creator, and reference to the accepted campaign-use agreement; no per-submission permission approval is requested.",
+      "owners": [
+        "T03",
+        "T04"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        },
+        {
+          "id": "T04",
+          "number": 27,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/27"
+        }
+      ]
+    },
+    {
+      "id": "REQ-108.2",
+      "requirement": "REQ-108",
+      "title": "Creative submissions",
+      "text": "Given a revision, when submitted, then its prior version and evidence remain identifiable and the changed creative requires fresh review; successful upload alone never promises platform placement.",
+      "owners": [
+        "T03",
+        "T04"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        },
+        {
+          "id": "T04",
+          "number": 27,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/27"
+        }
+      ]
+    },
+    {
+      "id": "REQ-108.3",
+      "requirement": "REQ-108",
+      "title": "Creative submissions",
+      "text": "Before first approval, corrected files retain the entry and tracked link, preserve earlier submissions and require review. Media replacement after approval creates a new entry and link requiring fresh approval; it inherits none of the old approval, metrics or earnings. The original entry and history remain intact. Title/description-only edits retain identity; unchanged creative across platforms remains one entry.",
+      "owners": [
+        "T03"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        }
+      ]
+    },
+    {
+      "id": "REQ-109.1",
+      "requirement": "REQ-109",
+      "title": "Manager creative review",
+      "text": "Given pending, rejected, or newly revised content, when public display or advertising-use eligibility is evaluated, then that version is excluded until approved.",
+      "owners": [
+        "T03"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        }
+      ]
+    },
+    {
+      "id": "REQ-109.2",
+      "requirement": "REQ-109",
+      "title": "Manager creative review",
+      "text": "Given rejection, when the creator views the submission, then the rejection reason is available and the creator can submit a revision; approving a version does not launch an external ad.",
+      "owners": [
+        "T03"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        }
+      ]
+    },
+    {
+      "id": "REQ-110.1",
+      "requirement": "REQ-110",
+      "title": "Ad-specific fundraising link",
+      "text": "Given creation of an ad, when its saved record is returned, then it has a tracked fundraising link bound to that ad, distinct from a Clerk sign-in magic link.",
+      "owners": [
+        "T05"
+      ],
+      "issues": [
+        {
+          "id": "T05",
+          "number": 28,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/28"
+        }
+      ]
+    },
+    {
+      "id": "REQ-110.2",
+      "requirement": "REQ-110",
+      "title": "Ad-specific fundraising link",
+      "text": "Given the same creative mapped to multiple platform placements or its tracked link shared with another person, when an attributed donation is recorded, then the original ad identity is retained rather than creating another competition entry.",
+      "owners": [
+        "T05"
+      ],
+      "issues": [
+        {
+          "id": "T05",
+          "number": 28,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/28"
+        }
+      ]
+    },
+    {
+      "id": "REQ-111.1",
+      "requirement": "REQ-111",
+      "title": "Confirmed Stripe fundraising",
+      "text": "Given a donation checkout started through an ad's tracked link, when the provider confirms a successful payment, then its amount, completion time, financial identity, and ad association are recorded once.",
+      "owners": [
+        "T10"
+      ],
+      "issues": [
+        {
+          "id": "T10",
+          "number": 33,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/33"
+        }
+      ]
+    },
+    {
+      "id": "REQ-111.2",
+      "requirement": "REQ-111",
+      "title": "Confirmed Stripe fundraising",
+      "text": "Given an abandoned, pending, failed, or duplicate financial event, when fundraising totals are updated, then no unconfirmed or duplicate donation is counted; a browser return alone is not payment proof.",
+      "owners": [
+        "T10"
+      ],
+      "issues": [
+        {
+          "id": "T10",
+          "number": 33,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/33"
+        }
+      ]
+    },
+    {
+      "id": "REQ-112.1",
+      "requirement": "REQ-112",
+      "title": "Attribution earning window",
+      "text": "Given a valid tracked-link checkout, when a qualifying donation completes inside the configured earning window, then exactly its originating ad receives fundraising credit and its creator receives the applicable commission.",
+      "owners": [
+        "T10"
+      ],
+      "issues": [
+        {
+          "id": "T10",
+          "number": 33,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/33"
+        }
+      ]
+    },
+    {
+      "id": "REQ-112.2",
+      "requirement": "REQ-112",
+      "title": "Attribution earning window",
+      "text": "Given earlier browsing, a donation without a valid ad identifier, or completion after the earning cutoff, when attribution is calculated, then browsing does not reassign credit and no campaign commission or competition fundraising credit is generated for the latter cases; the donation still supports adoption.is.",
+      "owners": [
+        "T10"
+      ],
+      "issues": [
+        {
+          "id": "T10",
+          "number": 33,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/33"
+        }
+      ]
+    },
+    {
+      "id": "REQ-112.3",
+      "requirement": "REQ-112",
+      "title": "Attribution earning window",
+      "text": "Use provider-authoritative successful-payment time, not notification receipt time. The earning window includes its start and excludes its end, including delayed/reordered events. Qualifying donations inside the earning window but outside eligible prize periods earn commission without competition fundraising credit.",
+      "owners": [
+        "T10"
+      ],
+      "issues": [
+        {
+          "id": "T10",
+          "number": 33,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/33"
+        }
+      ]
+    },
+    {
+      "id": "REQ-112.4",
+      "requirement": "REQ-112",
+      "title": "Attribution earning window",
+      "text": "Otherwise-valid old tracked links continue account-free checkout after cutoff, withdrawal or ordinary manager removal. Later donations support adoption.is without campaign commission or competition credit.",
+      "owners": [
+        "T10"
+      ],
+      "issues": [
+        {
+          "id": "T10",
+          "number": 33,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/33"
+        }
+      ]
+    },
+    {
+      "id": "REQ-113.1",
+      "requirement": "REQ-113",
+      "title": "Locked competition rules and versioned advertising controls",
+      "text": "Campaign creation requires USD currency, campaign dates and earning window, commission rate, daily and weekly targets, fixed prize amounts and schedule, fixed weekly replenishment amount and time, and weekly creator-payment batch schedule.",
+      "owners": [
+        "T01"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        }
+      ]
+    },
+    {
+      "id": "REQ-113.2",
+      "requirement": "REQ-113",
+      "title": "Locked competition rules and versioned advertising controls",
+      "text": "Once created, any edit to these campaign rules is rejected, even before invitations or creator acceptance. Historical rules and accepted terms versions remain available; no post-creation rules amendment process is approved.",
+      "owners": [
+        "T01"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        }
+      ]
+    },
+    {
+      "id": "REQ-113.3",
+      "requirement": "REQ-113",
+      "title": "Locked competition rules and versioned advertising controls",
+      "text": "Campaign-manager changes to daily/total advertising limits, daily baseline amount, boost percentage and top count are recorded and govern future uncommitted spending only, subject to verified funding. They cannot overwrite past allocations, cancel incurred charges or alter competition/earnings rules. Capacity expansion requires its separately recorded administrator approval; precise activation timing and lower-limit handling remain U6 contract work.",
+      "owners": [
+        "T26a"
+      ],
+      "issues": [
+        {
+          "id": "T26a",
+          "number": 49,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/49"
+        }
+      ]
+    },
+    {
+      "id": "REQ-113.4",
+      "requirement": "REQ-113",
+      "title": "Locked competition rules and versioned advertising controls",
+      "text": "Each paid admission records its continuation weights, targets, passing score and trial duration policy version. Both initial and ongoing evaluations use that version. Revised policies apply to new admissions and newly authorized retrials, not retroactively to existing ads or results.",
+      "owners": [
+        "T27",
+        "T30",
+        "T31"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        },
+        {
+          "id": "T30",
+          "number": 53,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/53"
+        },
+        {
+          "id": "T31",
+          "number": 54,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/54"
+        }
+      ]
+    },
+    {
+      "id": "REQ-113.5",
+      "requirement": "REQ-113",
+      "title": "Locked competition rules and versioned advertising controls",
+      "text": "Weekly creator-payment preparation occurs Wednesday at noon America/Chicago, separate from the campaign-configured weekly prize-replenishment schedule.",
+      "owners": [
+        "T17"
+      ],
+      "issues": [
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        }
+      ]
+    },
+    {
+      "id": "REQ-114.1",
+      "requirement": "REQ-114",
+      "title": "Paid platform performance",
+      "text": "Given authorized Instagram, Facebook, and TikTok campaign placements mapped to an approved ad, when metrics are imported, then eligible impressions and total link clicks are combined for that entry with a platform breakdown and no duplicate placement or overlapping-report count.",
+      "owners": [
+        "T12"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        }
+      ]
+    },
+    {
+      "id": "REQ-114.2",
+      "requirement": "REQ-114",
+      "title": "Paid platform performance",
+      "text": "Given unpaid posts, unrelated paid ads, public viewer activity, public fundraising-link clicks, or platform-estimated donation conversions, when scoring inputs are produced, then those sources do not substitute for qualified paid impressions/clicks or confirmed Stripe fundraising.",
+      "owners": [
+        "T12"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        }
+      ]
+    },
+    {
+      "id": "REQ-115.1",
+      "requirement": "REQ-115",
+      "title": "Weighted competition score",
+      "text": "Given complete nonnegative metrics and positive period targets, when scored, then the result follows the formula in Agreed policy summary, with maximum contributions of 40, 30, and 30 and a maximum total of 100.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-115.2",
+      "requirement": "REQ-115",
+      "title": "Weighted competition score",
+      "text": "Given impressions 25, clicks 36, and fundraising 64 against targets 100 for each, when scored, then the result is 62; values above targets cannot exceed their component caps and CTR or donation-count votes cannot replace total clicks or dollars.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-116.1",
+      "requirement": "REQ-116",
+      "title": "Chicago competition periods",
+      "text": "Given activity around a Chicago midnight or Monday boundary, when bucketed, then it belongs to exactly the applicable local day and week rather than the UTC calendar date.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-116.2",
+      "requirement": "REQ-116",
+      "title": "Chicago competition periods",
+      "text": "Given daily versus weekly calculation or a daylight-saving transition, when the period is evaluated, then its actual Chicago calendar boundaries and selected daily/weekly targets are used; a calendar day is not assumed to be exactly 24 elapsed hours.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-116.3",
+      "requirement": "REQ-116",
+      "title": "Chicago competition periods",
+      "text": "Competition periods include their start and exclude their end. Only full Chicago calendar days and complete Monday-Sunday weeks wholly contained within competition dates award prizes; partial opening/closing periods have no prize. Otherwise-eligible donations in partial periods can still earn commission.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-117.1",
+      "requirement": "REQ-117",
+      "title": "Complete data and empty periods",
+      "text": "Missing required metrics remain identified as incomplete, are not replaced with zero, and hold finalization rather than silently excluding an otherwise eligible entry.",
+      "owners": [
+        "T12",
+        "T16"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        },
+        {
+          "id": "T16",
+          "number": 39,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/39"
+        }
+      ]
+    },
+    {
+      "id": "REQ-117.2",
+      "requirement": "REQ-117",
+      "title": "Complete data and empty periods",
+      "text": "Track completeness separately for each required entry, source, metric and competition period. A successful request, an unchanged value, or a partial response alone does not establish complete period coverage. A known zero requires affirmative complete coverage; an absent field, unavailable page, missing placement or unknown coverage remains missing. REQ-127 certification satisfies only its exact covered scope. O-01 must establish which source evidence can prove coverage before a period can be finalized.",
+      "owners": [
+        "T12"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        }
+      ]
+    },
+    {
+      "id": "REQ-117.3",
+      "requirement": "REQ-117",
+      "title": "Complete data and empty periods",
+      "text": "A fully known all-zero period produces no winner or prize obligation; unused money stays in the campaign prize fund.",
+      "owners": [
+        "T16"
+      ],
+      "issues": [
+        {
+          "id": "T16",
+          "number": 39,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/39"
+        }
+      ]
+    },
+    {
+      "id": "REQ-118.1",
+      "requirement": "REQ-118",
+      "title": "Ranks and shared prizes",
+      "text": "Displayed score rounding cannot change rank. Equal scores are resolved using the specified tie-breakers in order.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-118.2",
+      "requirement": "REQ-118",
+      "title": "Ranks and shared prizes",
+      "text": "An exact remaining tie has shared rank and splits one fixed USD prize, not a full prize per winner. Divide its whole cents equally; allocate remaining cents one per tied entry in ascending entry-creation time, then ascending stable entry ID, until exhausted. The allocated amounts sum exactly to the fixed prize.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-118.3",
+      "requirement": "REQ-118",
+      "title": "Ranks and shared prizes",
+      "text": "Each ad competes independently. Multiple ads per creator, repeated daily wins and daily-plus-weekly wins are allowed.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-119.1",
+      "requirement": "REQ-119",
+      "title": "Delayed winner finalization",
+      "text": "Before the 48-hour delay ends, standings remain provisional and no finalized prize obligation is created.",
+      "owners": [
+        "T16"
+      ],
+      "issues": [
+        {
+          "id": "T16",
+          "number": 39,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/39"
+        }
+      ]
+    },
+    {
+      "id": "REQ-119.2",
+      "requirement": "REQ-119",
+      "title": "Delayed winner finalization",
+      "text": "After the delay, missing required data holds finalization with the missing source visible to the manager and an alert sent to the manager. Once the delay has elapsed and required data is complete, automatically finalize within five minutes without manager action, recording the source snapshot, rules, winners and awards exactly once. Recovery from an outage processes ready overdue periods within five minutes of recovery; concurrent or repeated execution cannot create duplicate awards.",
+      "owners": [
+        "T16"
+      ],
+      "issues": [
+        {
+          "id": "T16",
+          "number": 39,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/39"
+        }
+      ]
+    },
+    {
+      "id": "REQ-119.3",
+      "requirement": "REQ-119",
+      "title": "Delayed winner finalization",
+      "text": "Finalized unpaid prizes enter the next weekly payment batch. Public history distinguishes finalized winners from provisional standings.",
+      "owners": [
+        "T16"
+      ],
+      "issues": [
+        {
+          "id": "T16",
+          "number": 39,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/39"
+        }
+      ]
+    },
+    {
+      "id": "REQ-120.1",
+      "requirement": "REQ-120",
+      "title": "Refunds and corrections",
+      "text": "A confirmed refund or reversal reduces eligible attributed fundraising and recalculates affected provisional standings for the original donation period without applying the event twice. Recompute commission on the remaining eligible donation amount at the original locked rate using whole-cent, half-up rounding; record only the difference from commission already recognized. Cumulative reversals cannot exceed the original commission.",
+      "owners": [
+        "T11"
+      ],
+      "issues": [
+        {
+          "id": "T11",
+          "number": 34,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/34"
+        }
+      ]
+    },
+    {
+      "id": "REQ-120.2",
+      "requirement": "REQ-120",
+      "title": "Refunds and corrections",
+      "text": "An ordinary refund does not automatically reopen a finalized prize. Later imported reports or manual corrections preserve finalized winners and prize obligations, retain the discrepancy and notify the manager. Exceptional finalized-prize corrections require the explicit manager action in REQ-136; already-paid mistakes follow REQ-137.",
+      "owners": [
+        "T11"
+      ],
+      "issues": [
+        {
+          "id": "T11",
+          "number": 34,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/34"
+        }
+      ]
+    },
+    {
+      "id": "REQ-121.1",
+      "requirement": "REQ-121",
+      "title": "Fundraising commissions",
+      "text": "An eligible donation earns the configured commission on gross fundraising before processing fees; gross donations, refunds, fees and commissions remain separate ledger amounts. All monetary accounting uses whole USD cents. Calculate each donation commission at the locked rate and round to the nearest cent, with exact half-cent amounts rounded up.",
+      "owners": [
+        "T10"
+      ],
+      "issues": [
+        {
+          "id": "T10",
+          "number": 33,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/33"
+        }
+      ]
+    },
+    {
+      "id": "REQ-121.2",
+      "requirement": "REQ-121",
+      "title": "Fundraising commissions",
+      "text": "Unattributed and post-cutoff donations support adoption.is but create no campaign creator commission or competition fundraising credit.",
+      "owners": [
+        "T10"
+      ],
+      "issues": [
+        {
+          "id": "T10",
+          "number": 33,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/33"
+        }
+      ]
+    },
+    {
+      "id": "REQ-122.1",
+      "requirement": "REQ-122",
+      "title": "Separate campaign funds",
+      "text": "The full promised daily/weekly prize schedule and funded-run baseline coverage must be funded before paid advertising/competition starts. Prelaunch setup, creator invitation/submission/review, approved-provider crowdfunding and public waiting ads are permitted. A shortage cannot rewrite locked competition/earnings rules. Advertising coverage and related gates are specified by supplemental REQ-151 and REQ-173 through REQ-175.",
+      "owners": [
+        "T15",
+        "T24",
+        "T26b"
+      ],
+      "issues": [
+        {
+          "id": "T15",
+          "number": 38,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/38"
+        },
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        },
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        }
+      ]
+    },
+    {
+      "id": "REQ-122.2",
+      "requirement": "REQ-122",
+      "title": "Separate campaign funds",
+      "text": "Separately account for fundraising, reserved creator earnings, advertising funding and prize funds. Advertising contributions primarily fund the selected campaign, supplemented by nonprofit/client contributions, without per-ad earmarking, creator commission, prize replenishment or fundraising-score credit. Advertising reserves, fees, refunds, returns, disputes and reconciliation follow supplemental REQ-165 through REQ-173; prize obligations cannot consume advertising allocations or reserved creator earnings.",
+      "owners": [
+        "T15",
+        "T24",
+        "T26b"
+      ],
+      "issues": [
+        {
+          "id": "T15",
+          "number": 38,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/38"
+        },
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        },
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        }
+      ]
+    },
+    {
+      "id": "REQ-123.1",
+      "requirement": "REQ-123",
+      "title": "Fixed weekly prize replenishment",
+      "text": "The campaign-configured amount, weekday and Chicago time determine the transfer. With sufficient available funds, execute that fixed amount exactly once for each scheduled occurrence.",
+      "owners": [
+        "T15"
+      ],
+      "issues": [
+        {
+          "id": "T15",
+          "number": 38,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/38"
+        }
+      ]
+    },
+    {
+      "id": "REQ-123.2",
+      "requirement": "REQ-123",
+      "title": "Fixed weekly prize replenishment",
+      "text": "Replenishment does not change promised daily or weekly prize values, use a donation percentage, or fund another campaign.",
+      "owners": [
+        "T15"
+      ],
+      "issues": [
+        {
+          "id": "T15",
+          "number": 38,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/38"
+        }
+      ]
+    },
+    {
+      "id": "REQ-124.1",
+      "requirement": "REQ-124",
+      "title": "Replenishment shortfall warning",
+      "text": "A shortfall at the advance check immediately creates an in-app warning and email to the campaign manager identifying scheduled amount, time, available amount and shortfall. This original prize event notifies the campaign manager; it does not collapse the distinct platform-administrator role.",
+      "owners": [
+        "T15"
+      ],
+      "issues": [
+        {
+          "id": "T15",
+          "number": 38,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/38"
+        }
+      ]
+    },
+    {
+      "id": "REQ-124.2",
+      "requirement": "REQ-124",
+      "title": "Replenishment shortfall warning",
+      "text": "If execution cannot fund the entire fixed replenishment amount, transfer nothing, preserve reserved creator earnings and nonnegative balances, record the shortfall, and notify the manager. Retry hourly until that scheduled obligation is fulfilled; never duplicate a completed transfer or retry an unknown outcome as a new transfer without reconciliation.",
+      "owners": [
+        "T15"
+      ],
+      "issues": [
+        {
+          "id": "T15",
+          "number": 38,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/38"
+        }
+      ]
+    },
+    {
+      "id": "REQ-124.3",
+      "requirement": "REQ-124",
+      "title": "Replenishment shortfall warning",
+      "text": "Retain the original advance funding check 24 elapsed hours before the scheduled replenishment and recheck at execution. The proposed 48-hour check and separate next-two-days coverage check are withdrawn. For a scheduled midnight execution, the advance check occurs 24 elapsed hours earlier; on ordinary non-DST dates this is midnight the prior day in America/Chicago. An advance check does not guarantee that execution-time funds remain available.",
+      "owners": [
+        "T15"
+      ],
+      "issues": [
+        {
+          "id": "T15",
+          "number": 38,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/38"
+        }
+      ]
+    },
+    {
+      "id": "REQ-125.1",
+      "requirement": "REQ-125",
+      "title": "Thirty-second refresh",
+      "text": "An open public standings page displays newly stored results on its next 30-second refresh without page reload or login.",
+      "owners": [
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-125.2",
+      "requirement": "REQ-125",
+      "title": "Thirty-second refresh",
+      "text": "Provider rate limits and reporting delays are respected. Display last successful import and reporting delay; polling is not presented as guaranteed new measurements every 30 seconds. Never fabricate metric changes.",
+      "owners": [
+        "T12",
+        "T14"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        },
+        {
+          "id": "T14",
+          "number": 37,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/37"
+        }
+      ]
+    },
+    {
+      "id": "REQ-126.1",
+      "requirement": "REQ-126",
+      "title": "Import outage notification",
+      "text": "An outage exceeding five minutes creates an in-app warning and immediate email once per incident, identifying the source and last successful import.",
+      "owners": [
+        "T12"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        }
+      ]
+    },
+    {
+      "id": "REQ-126.2",
+      "requirement": "REQ-126",
+      "title": "Import outage notification",
+      "text": "Start monitoring when a source first becomes required for an eligible placement, including before its first successful import. Until the first success, measure elapsed time from that activation and display that no successful import has occurred. At exactly five minutes do not open the incident; after five minutes open one, including across restarts. When no longer required, stop monitoring that source for that scope without concealing existing history.",
+      "owners": [
+        "T12"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        }
+      ]
+    },
+    {
+      "id": "REQ-126.3",
+      "requirement": "REQ-126",
+      "title": "Import outage notification",
+      "text": "A successful import means the requested import operation completed without transport, authorization, pagination or processing failure; a response that lacks complete period coverage can be a successful import but does not clear the separate completeness hold in REQ-117. Failed or incomplete operations do not reset the last-success clock. Record the operation outcome and coverage separately.",
+      "owners": [
+        "T12"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        }
+      ]
+    },
+    {
+      "id": "REQ-126.4",
+      "requirement": "REQ-126",
+      "title": "Import outage notification",
+      "text": "Successful imports of unchanged values do not trigger this warning. Recovery sends one recovery notice and resolves the incident.",
+      "owners": [
+        "T12"
+      ],
+      "issues": [
+        {
+          "id": "T12",
+          "number": 35,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/35"
+        }
+      ]
+    },
+    {
+      "id": "REQ-127.1",
+      "requirement": "REQ-127",
+      "title": "Audited manual fallback",
+      "text": "A manual entry records manager, time, source, period, prior/new values and reason, and uses the same scoring formulas as imported metrics.",
+      "owners": [
+        "T13"
+      ],
+      "issues": [
+        {
+          "id": "T13",
+          "number": 36,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/36"
+        }
+      ]
+    },
+    {
+      "id": "REQ-127.2",
+      "requirement": "REQ-127",
+      "title": "Audited manual fallback",
+      "text": "A later import covering manually recorded activity does not double-count it; reconciliation preserves correction history and source provenance.",
+      "owners": [
+        "T13"
+      ],
+      "issues": [
+        {
+          "id": "T13",
+          "number": 36,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/36"
+        }
+      ]
+    },
+    {
+      "id": "REQ-127.3",
+      "requirement": "REQ-127",
+      "title": "Audited manual fallback",
+      "text": "An evidence-backed, manager-certified correction overrides imports for its exact entry, metric and time range until explicit manager release. Certification satisfies completeness only for its covered scope. Preserve matching imports without double counting, retain conflicting later imports and notify the manager rather than silently replacing the correction; retain certification/release history. This evidence requirement does not apply to discretionary removal or disqualification.",
+      "owners": [
+        "T13"
+      ],
+      "issues": [
+        {
+          "id": "T13",
+          "number": 36,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/36"
+        }
+      ]
+    },
+    {
+      "id": "REQ-128.1",
+      "requirement": "REQ-128",
+      "title": "Approved weekly payments",
+      "text": "A batch itemizes each creator's payable commissions, finalized unpaid prizes and adjustments; provisional prizes are excluded.",
+      "owners": [
+        "T17"
+      ],
+      "issues": [
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        }
+      ]
+    },
+    {
+      "id": "REQ-128.2",
+      "requirement": "REQ-128",
+      "title": "Approved weekly payments",
+      "text": "An unapproved batch sends no payment. Approval authorizes only its reviewed contents; automated payment exposes success/failure per recipient. Provider payment capability remains O-02 investigation work; Q16 fixes the preparation schedule.",
+      "owners": [
+        "T17"
+      ],
+      "issues": [
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        }
+      ]
+    },
+    {
+      "id": "REQ-128.3",
+      "requirement": "REQ-128",
+      "title": "Approved weekly payments",
+      "text": "Prepare batches Wednesday at noon America/Chicago for the preceding Monday-Sunday's eligible commissions and finalized prizes plus unpaid eligible carryover. Notify the sole manager when ready for approval. Late approval delays execution; outage recovery prepares one catch-up batch without duplicate obligations or payments.",
+      "owners": [
+        "T17"
+      ],
+      "issues": [
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        }
+      ]
+    },
+    {
+      "id": "REQ-128.4",
+      "requirement": "REQ-128",
+      "title": "Approved weekly payments",
+      "text": "Approval binds exact reviewed recipients and amounts. Refunds, prize corrections or other changes invalidate approval of the changed batch and require fresh approval. Completed payments remain unchanged; reconcile unknown outcomes before retry.",
+      "owners": [
+        "T17"
+      ],
+      "issues": [
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        }
+      ]
+    },
+    {
+      "id": "REQ-129.1",
+      "requirement": "REQ-129",
+      "title": "Payment retries and reversals",
+      "text": "Repeated jobs, timeouts and provider callbacks produce at most one payment per obligation. Preserve provider references and pending/failed/settled states; unknown outcomes cannot become new payments.",
+      "owners": [
+        "T18"
+      ],
+      "issues": [
+        {
+          "id": "T18",
+          "number": 41,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/41"
+        }
+      ]
+    },
+    {
+      "id": "REQ-129.2",
+      "requirement": "REQ-129",
+      "title": "Payment retries and reversals",
+      "text": "An already-paid commission reversal creates a negative commission balance offset only against future commissions and flagged for manager review. Do not deduct it from fixed prizes or debit the creator's bank account automatically. An erroneous prize already paid is instead a loss under REQ-137, not a commission reversal.",
+      "owners": [
+        "T11"
+      ],
+      "issues": [
+        {
+          "id": "T11",
+          "number": 34,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/34"
+        }
+      ]
+    },
+    {
+      "id": "REQ-130.1",
+      "requirement": "REQ-130",
+      "title": "Private creator status",
+      "text": "The authenticated workspace shows the creator's review status, rejection reasons, platform breakdown, freshness, attributed fundraising, commissions, finalized prizes and payment states.",
+      "owners": [
+        "T03",
+        "T17"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        },
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        }
+      ]
+    },
+    {
+      "id": "REQ-130.2",
+      "requirement": "REQ-130",
+      "title": "Private creator status",
+      "text": "Public viewers and other creators cannot retrieve private earnings, invitations or payment setup records; approved public ads and standings remain accessible.",
+      "owners": [
+        "T02",
+        "T03",
+        "T17"
+      ],
+      "issues": [
+        {
+          "id": "T02",
+          "number": 25,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/25"
+        },
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        },
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        }
+      ]
+    },
+    {
+      "id": "REQ-131.1",
+      "requirement": "REQ-131",
+      "title": "Persistent records and traceability",
+      "text": "Two authorized sessions and a process restart retrieve the same saved records; localStorage, fixtures and simulated demo changes cannot originate live scores or financial transactions.",
+      "owners": [
+        "T01",
+        "T08",
+        "T40a"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        },
+        {
+          "id": "T08",
+          "number": 31,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/31"
+        },
+        {
+          "id": "T40a",
+          "number": 63,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/63"
+        }
+      ]
+    },
+    {
+      "id": "REQ-131.2",
+      "requirement": "REQ-131",
+      "title": "Persistent records and traceability",
+      "text": "Corrections, approvals, payments and donation reconciliation retain actor/source, time, affected records and resulting changes. Unauthorized mutations are denied; public clients and audit evidence do not expose provider credentials.",
+      "owners": [
+        "T01",
+        "T08",
+        "T40a"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        },
+        {
+          "id": "T08",
+          "number": 31,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/31"
+        },
+        {
+          "id": "T40a",
+          "number": 63,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/63"
+        }
+      ]
+    },
+    {
+      "id": "REQ-132.1",
+      "requirement": "REQ-132",
+      "title": "Automated advertising boundary",
+      "text": "Automate paid advertising for approved entries admitted within verified capacity, funding and authority, without another per-entry opt-in. Public waiting creatives receive no paid spending or started trial. Expanded goals, admissions, baseline/boost/provider allocation, continuation, edits and stopping are atomically specified in supplemental REQ-146 through REQ-164, with actual provider capability still gated.",
+      "owners": [
+        "T28"
+      ],
+      "issues": [
+        {
+          "id": "T28",
+          "number": 51,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/51"
+        }
+      ]
+    },
+    {
+      "id": "REQ-132.2",
+      "requirement": "REQ-132",
+      "title": "Automated advertising boundary",
+      "text": "Map the same unchanged approved creative across Facebook/Instagram/TikTok as one competition entry with provider breakdown and no duplicate metrics. Platform-native ads can be mapped for reporting, but require explicit enrollment and validated control rights before automated management; follow supplemental REQ-147. Stripe remains financial, not an advertising-metrics source.",
+      "owners": [
+        "T28"
+      ],
+      "issues": [
+        {
+          "id": "T28",
+          "number": 51,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/51"
+        }
+      ]
+    },
+    {
+      "id": "REQ-133.1",
+      "requirement": "REQ-133",
+      "title": "Withdrawal and discretionary removal",
+      "text": "The campaign manager can remove an ad for any reason with a recorded stated reason, without evidence uploads or another approver. Hide the public entry and end future participation at the recorded effective time. Immediately block new advertising allocations and request pauses through selected supported provider controls. Keep its funded slot occupied and show \"Stopping advertising\" until every relevant paid placement is confirmed stopped; preserve incurred and outstanding obligations before funding a replacement.",
+      "owners": [
+        "T21",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T21",
+          "number": 44,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/44"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-133.2",
+      "requirement": "REQ-133",
+      "title": "Withdrawal and discretionary removal",
+      "text": "Preserve history and eligibility of activity before the effective withdrawal/removal time. Activity at or after that time earns neither commission nor competition credit. The tracked link continues supporting adoption.is. Removal does not silently disqualify past activity.",
+      "owners": [
+        "T21"
+      ],
+      "issues": [
+        {
+          "id": "T21",
+          "number": 44,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/44"
+        }
+      ]
+    },
+    {
+      "id": "REQ-133.3",
+      "requirement": "REQ-133",
+      "title": "Withdrawal and discretionary removal",
+      "text": "A failed or uncertain provider pause immediately alerts the campaign manager and platform administrator with the affected placements, retaining unresolved status. A manager may use native platform controls as fallback; reconcile provider state before reporting completion or freeing capacity. This stopping protocol also applies to performance cuts, which do not hide the public ad or establish withdrawal/disqualification.",
+      "owners": [
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-134.1",
+      "requirement": "REQ-134",
+      "title": "Disqualification",
+      "text": "Record the selected entries, dates, manager, time and stated reason. No evidence upload or second approver is required. Preserve affected records and unrelated valid activity.",
+      "owners": [
+        "T19"
+      ],
+      "issues": [
+        {
+          "id": "T19",
+          "number": 42,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/42"
+        }
+      ]
+    },
+    {
+      "id": "REQ-134.2",
+      "requirement": "REQ-134",
+      "title": "Disqualification",
+      "text": "Exclude selected activity from unfinalized results. Changes to finalized awards require REQ-136/REQ-137, never silent revision. Ad removal alone does not establish a fraud finding.",
+      "owners": [
+        "T19"
+      ],
+      "issues": [
+        {
+          "id": "T19",
+          "number": 42,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/42"
+        }
+      ]
+    },
+    {
+      "id": "REQ-135.1",
+      "requirement": "REQ-135",
+      "title": "Temporary fraud suspension",
+      "text": "Require a recorded manager reason, hide the entry, stop new placements, hold its unpaid earnings and hold unfinalized prize periods in which it could affect the winner. Preserve incoming evidence and existing finalized records.",
+      "owners": [
+        "T21",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T21",
+          "number": 44,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/44"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-135.2",
+      "requirement": "REQ-135",
+      "title": "Temporary fraud suspension",
+      "text": "While fraud suspension applies, deny new baseline/boost allocations and use the temporary-pause protocol for existing paid placements, retaining the funded slot and operator alerts. Suspicion alone does not release the slot, confiscate earnings or rewrite finalized awards.",
+      "owners": [
+        "T21",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T21",
+          "number": 44,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/44"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-135.3",
+      "requirement": "REQ-135",
+      "title": "Temporary fraud suspension",
+      "text": "Require explicit manager resolution. Suspicion alone does not confiscate earnings or revise finalized awards. Preserve the resolution and any continued hold.",
+      "owners": [
+        "T21",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T21",
+          "number": 44,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/44"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-136.1",
+      "requirement": "REQ-136",
+      "title": "Finalized prize correction",
+      "text": "Before confirmation, show original winner, corrected winner and changed prize amounts. Without confirmation, no award or payment authorization changes.",
+      "owners": [
+        "T20"
+      ],
+      "issues": [
+        {
+          "id": "T20",
+          "number": 43,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/43"
+        }
+      ]
+    },
+    {
+      "id": "REQ-136.2",
+      "requirement": "REQ-136",
+      "title": "Finalized prize correction",
+      "text": "Preserve the original result and append a visible correction record with manager, time and financial changes. Show the corrected public winner without private financial details. Include corrected obligations in freshly approved batches without duplicate obligations or payments.",
+      "owners": [
+        "T20"
+      ],
+      "issues": [
+        {
+          "id": "T20",
+          "number": 43,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/43"
+        }
+      ]
+    },
+    {
+      "id": "REQ-136.3",
+      "requirement": "REQ-136",
+      "title": "Finalized prize correction",
+      "text": "Ordinary imports, refunds and removal actions cannot trigger this correction automatically. No correction initiates automatic bank debits. Already-paid mistakes follow REQ-137.",
+      "owners": [
+        "T20"
+      ],
+      "issues": [
+        {
+          "id": "T20",
+          "number": 43,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/43"
+        }
+      ]
+    },
+    {
+      "id": "REQ-137.1",
+      "requirement": "REQ-137",
+      "title": "Already-paid prize loss",
+      "text": "A confirmed correction of an erroneous prize already paid preserves the original payment and labels its erroneous paid amount as a loss, separate from commission-refund balances. Do not recover it through automatic bank debits or future-earnings offsets.",
+      "owners": [
+        "T20"
+      ],
+      "issues": [
+        {
+          "id": "T20",
+          "number": 43,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/43"
+        }
+      ]
+    },
+    {
+      "id": "REQ-137.2",
+      "requirement": "REQ-137",
+      "title": "Already-paid prize loss",
+      "text": "Record and pay the correct creator's prize through the approved-payment process. The original payment or loss does not satisfy the corrected obligation. If funding or recipient eligibility blocks execution, retain the amount owed visibly rather than marking it paid; do not consume unrelated reserved earnings or advertising allocations.",
+      "owners": [
+        "T20"
+      ],
+      "issues": [
+        {
+          "id": "T20",
+          "number": 43,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/43"
+        }
+      ]
+    },
+    {
+      "id": "REQ-137.3",
+      "requirement": "REQ-137",
+      "title": "Already-paid prize loss",
+      "text": "Notify the campaign manager of the loss and corrected-payment status, preserving the selected recipient for this prize event. Reprocessing cannot duplicate losses or corrected payments; this does not confer platform-administrator permissions.",
+      "owners": [
+        "T20"
+      ],
+      "issues": [
+        {
+          "id": "T20",
+          "number": 43,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/43"
+        }
+      ]
+    },
+    {
+      "id": "REQ-138.1",
+      "requirement": "REQ-138",
+      "title": "Creative upload validation",
+      "text": "Accept JPEG/PNG photos up to 100,000,000 bytes each, at most 10 photos per entry and up to 1,000,000,000 photo bytes total. The 100 MB allowance is per photo, not shared.",
+      "owners": [
+        "T03"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        }
+      ]
+    },
+    {
+      "id": "REQ-138.2",
+      "requirement": "REQ-138",
+      "title": "Creative upload validation",
+      "text": "Accept MP4 video with H.264 video and AAC audio or no audio track, up to 5,000,000,000 bytes and at most 60 seconds. Limits use decimal MB/GB.",
+      "owners": [
+        "T04",
+        "T39a"
+      ],
+      "issues": [
+        {
+          "id": "T04",
+          "number": 27,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/27"
+        },
+        {
+          "id": "T39a",
+          "number": 69,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/69"
+        }
+      ]
+    },
+    {
+      "id": "REQ-138.3",
+      "requirement": "REQ-138",
+      "title": "Creative upload validation",
+      "text": "Reject unsupported formats or excessive size, duration or photo count with an actionable explanation. Exact-limit files are not rejected solely for exceeding a limit. Disclose that submission acceptance does not guarantee platform acceptance.",
+      "owners": [
+        "T03",
+        "T04",
+        "T39a"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        },
+        {
+          "id": "T04",
+          "number": 27,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/27"
+        },
+        {
+          "id": "T39a",
+          "number": 69,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/69"
+        }
+      ]
+    },
+    {
+      "id": "REQ-139.1",
+      "requirement": "REQ-139",
+      "title": "Creator-owned submission fixes",
+      "text": "Staff do not fix, reformat or make micro changes to submitted media. Report submission/formatting problems to the creator rather than silently modifying files.",
+      "owners": [
+        "T03"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        }
+      ]
+    },
+    {
+      "id": "REQ-139.2",
+      "requirement": "REQ-139",
+      "title": "Creator-owned submission fixes",
+      "text": "Creator corrections follow the pre-first-approval and post-approval identity rules in REQ-108. Signup permission does not authorize staff editing or remove manager creative review.",
+      "owners": [
+        "T03"
+      ],
+      "issues": [
+        {
+          "id": "T03",
+          "number": 26,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/26"
+        }
+      ]
+    },
+    {
+      "id": "REQ-140.1",
+      "requirement": "REQ-140",
+      "title": "Public ad outage diagnostics",
+      "text": "Measure continuous unavailability from first detected failure. During the first minute show unavailable media and retry access. After confirmed failure exceeds 60 seconds, temporarily hide the public ad and start diagnostics to identify the failure point; exactly 60 seconds does not cross that threshold.",
+      "owners": [
+        "T37"
+      ],
+      "issues": [
+        {
+          "id": "T37",
+          "number": 60,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/60"
+        }
+      ]
+    },
+    {
+      "id": "REQ-140.2",
+      "requirement": "REQ-140",
+      "title": "Public ad outage diagnostics",
+      "text": "One visitor connection failure alone cannot hide a working ad. Retain incident/diagnostic results without editing creator media. Technical outages do not change approval, disqualify entries, cancel valid earnings or stop working external placements. Otherwise-valid tracked links remain usable.",
+      "owners": [
+        "T37"
+      ],
+      "issues": [
+        {
+          "id": "T37",
+          "number": 60,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/60"
+        }
+      ]
+    },
+    {
+      "id": "REQ-141.1",
+      "requirement": "REQ-141",
+      "title": "Public ad outage recovery",
+      "text": "Restore after two successful availability checks 30 seconds apart, not after one success or checks less than 30 seconds apart. Do not override separate removal, suspension, disqualification or approval restrictions.",
+      "owners": [
+        "T37"
+      ],
+      "issues": [
+        {
+          "id": "T37",
+          "number": 60,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/60"
+        }
+      ]
+    },
+    {
+      "id": "REQ-141.2",
+      "requirement": "REQ-141",
+      "title": "Public ad outage recovery",
+      "text": "Notify the sole manager of outage and recovery through REQ-142. Preserve incident history and original creative; recovery creates no new entry or tracked link.",
+      "owners": [
+        "T37"
+      ],
+      "issues": [
+        {
+          "id": "T37",
+          "number": 60,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/60"
+        }
+      ]
+    },
+    {
+      "id": "REQ-142.1",
+      "requirement": "REQ-142",
+      "title": "Operational alert delivery",
+      "text": "Attempt email immediately and retry failed delivery after 1, 5, 15 and 60 minutes. After exhaustion show \"Email delivery failed\" while retaining the problem on the manager dashboard. Email delivery does not resolve the underlying incident.",
+      "owners": [
+        "T08"
+      ],
+      "issues": [
+        {
+          "id": "T08",
+          "number": 31,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/31"
+        }
+      ]
+    },
+    {
+      "id": "REQ-142.2",
+      "requirement": "REQ-142",
+      "title": "Operational alert delivery",
+      "text": "Repeated checks update one incident instead of generating repeated alerts. Recovery produces one recovery notice. Existing import outages, prize-replenishment shortfalls, batch-ready notices, public-ad outage/recovery and prize-loss notices retain campaign-manager delivery. Capacity/waiting, failed or uncertain stopping, unavailable delivery providers, provider-interrupted evaluations, pause-reserved slots, financial safety pauses and insufficient initial baseline-trial coverage immediately notify both campaign manager and platform administrator on detection. These new financial/delivery/slot events do not wait for the separate more-than-five-minute import-liveness threshold. Monitor sampling intervals and delivery-latency bounds remain U6/U8 acceptance precision, not an implied instantaneous provider signal.",
+      "owners": [
+        "T08"
+      ],
+      "issues": [
+        {
+          "id": "T08",
+          "number": 31,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/31"
+        }
+      ]
+    },
+    {
+      "id": "REQ-142.3",
+      "requirement": "REQ-142",
+      "title": "Operational alert delivery",
+      "text": "Every detected launch blocker immediately alerts both operators, including the requesting user's designated operator identity, and remains visibly tracked with reason, resolution role and status until resolved. Missing required approval/configuration/funding/contracts and failed required verification are blockers even before live operation. Update the same unresolved incident without duplicate alerts and send a resolution notice. An email failure preserves dashboard visibility and uses the established retry policy. No claim of live monitoring or instantaneous provider detection follows from this requirement; exact monitor coverage/detection/dispatch verification remains U6/U8 work.",
+      "owners": [
+        "T08",
+        "T09"
+      ],
+      "issues": [
+        {
+          "id": "T08",
+          "number": 31,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/31"
+        },
+        {
+          "id": "T09",
+          "number": 32,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/32"
+        }
+      ]
+    },
+    {
+      "id": "REQ-143.1",
+      "requirement": "REQ-143",
+      "title": "Blocked payment recipients",
+      "text": "Retain a restricted recipient's earnings as reserved and visible with private setup/restriction guidance; allow other approved recipients to be paid. Provider onboarding and eligibility semantics remain O-02 investigation work.",
+      "owners": [
+        "T17",
+        "T18"
+      ],
+      "issues": [
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        },
+        {
+          "id": "T18",
+          "number": 41,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/41"
+        }
+      ]
+    },
+    {
+      "id": "REQ-143.2",
+      "requirement": "REQ-143",
+      "title": "Blocked payment recipients",
+      "text": "After resolution, require fresh approval of the held payment. Do not substitute another destination or retry an uncertain transfer as if it had failed.",
+      "owners": [
+        "T17",
+        "T18"
+      ],
+      "issues": [
+        {
+          "id": "T17",
+          "number": 40,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/40"
+        },
+        {
+          "id": "T18",
+          "number": 41,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/41"
+        }
+      ]
+    },
+    {
+      "id": "REQ-144.1",
+      "requirement": "REQ-144",
+      "title": "Nonprofit-scoped provider assets",
+      "text": "Two nonprofit fixtures cannot access each other's provider, campaign or finance mappings through a campaign-manager identity.",
+      "owners": [
+        "T01",
+        "T22"
+      ],
+      "issues": [
+        {
+          "id": "T01",
+          "number": 24,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/24"
+        },
+        {
+          "id": "T22",
+          "number": 45,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/45"
+        }
+      ]
+    },
+    {
+      "id": "REQ-144.2",
+      "requirement": "REQ-144",
+      "title": "Nonprofit-scoped provider assets",
+      "text": "First public rollout exposes adoption.is only; provider-supported guided setup is required before live automation. Slander owns its developer applications; nonprofit ownership and grants still require actual provider evidence.",
+      "owners": [
+        "T22"
+      ],
+      "issues": [
+        {
+          "id": "T22",
+          "number": 45,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/45"
+        }
+      ]
+    },
+    {
+      "id": "REQ-145.1",
+      "requirement": "REQ-145",
+      "title": "Expansion and financial review authority",
+      "text": "A manager-only identity cannot approve these actions; guest/creator identities cannot request or approve them.",
+      "owners": [
+        "T27",
+        "T34",
+        "T36"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        },
+        {
+          "id": "T34",
+          "number": 57,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/57"
+        },
+        {
+          "id": "T36",
+          "number": 59,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/59"
+        }
+      ]
+    },
+    {
+      "id": "REQ-145.2",
+      "requirement": "REQ-145",
+      "title": "Expansion and financial review authority",
+      "text": "A person with both roles may perform separately recorded request and approval actions. Creator payments retain their existing manager-only approval.",
+      "owners": [
+        "T27",
+        "T34",
+        "T36"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        },
+        {
+          "id": "T34",
+          "number": 57,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/57"
+        },
+        {
+          "id": "T36",
+          "number": 59,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/59"
+        }
+      ]
+    },
+    {
+      "id": "REQ-146.1",
+      "requirement": "REQ-146",
+      "title": "Initial advertising goals",
+      "text": "Goal selection leaves public scoring and assigned continuation policy unchanged.",
+      "owners": [
+        "T22"
+      ],
+      "issues": [
+        {
+          "id": "T22",
+          "number": 45,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/45"
+        }
+      ]
+    },
+    {
+      "id": "REQ-146.2",
+      "requirement": "REQ-146",
+      "title": "Initial advertising goals",
+      "text": "Live execution requires a validated objective/media/brand-identity contract; advanced donation-conversion optimization is deferred. Accepted upload formats alone do not certify provider placement.",
+      "owners": [
+        "T22"
+      ],
+      "issues": [
+        {
+          "id": "T22",
+          "number": 45,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/45"
+        }
+      ]
+    },
+    {
+      "id": "REQ-147.1",
+      "requirement": "REQ-147",
+      "title": "Explicit external-ad enrollment",
+      "text": "Enrollment verifies nonprofit/account, approved unchanged creative, tracked destination, control permissions and existing obligations; mere account discovery or reporting mapping cannot authorize writes.",
+      "owners": [
+        "T25"
+      ],
+      "issues": [
+        {
+          "id": "T25",
+          "number": 48,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/48"
+        }
+      ]
+    },
+    {
+      "id": "REQ-147.2",
+      "requirement": "REQ-147",
+      "title": "Explicit external-ad enrollment",
+      "text": "First managed trial uses future delivery after enrollment and its next confirmed paid delivery. Repeated enrollment cannot erase costs, reset an existing trial or rewrite eligible competition history.",
+      "owners": [
+        "T25"
+      ],
+      "issues": [
+        {
+          "id": "T25",
+          "number": 48,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/48"
+        }
+      ]
+    },
+    {
+      "id": "REQ-148.1",
+      "requirement": "REQ-148",
+      "title": "Shared admission queue",
+      "text": "New-entry queue time is approval time; retrial queue time is retrial authorization time, never original creative age.",
+      "owners": [
+        "T27"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        }
+      ]
+    },
+    {
+      "id": "REQ-148.2",
+      "requirement": "REQ-148",
+      "title": "Shared admission queue",
+      "text": "A blocked entry retains position but may be skipped for a later eligible funded entry. Its reason is visible and immediately notified; simultaneous admission cannot exceed verified slots/funding.",
+      "owners": [
+        "T27"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        }
+      ]
+    },
+    {
+      "id": "REQ-149.1",
+      "requirement": "REQ-149",
+      "title": "Expandable funded capacity",
+      "text": "Capacity counts ads, not creators; multiple entries by one creator consume multiple slots.",
+      "owners": [
+        "T27"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        }
+      ]
+    },
+    {
+      "id": "REQ-149.2",
+      "requirement": "REQ-149",
+      "title": "Expandable funded capacity",
+      "text": "Approval alone does not increase spending limits. Initial and added open slots require baseline coverage for their funded run before use.",
+      "owners": [
+        "T27"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        }
+      ]
+    },
+    {
+      "id": "REQ-150.1",
+      "requirement": "REQ-150",
+      "title": "Reserved slot lifecycle",
+      "text": "Trial, temporary pause, provider interruption and stopping states occupy/reserve slots; immediately notify pause-reserved slots.",
+      "owners": [
+        "T27",
+        "T28"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        },
+        {
+          "id": "T28",
+          "number": 51,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/51"
+        }
+      ]
+    },
+    {
+      "id": "REQ-150.2",
+      "requirement": "REQ-150",
+      "title": "Reserved slot lifecycle",
+      "text": "Cuts, withdrawals and explicit paid-participation endings release slots only after all relevant paid placements are confirmed stopped. Public display alone consumes no funded slot.",
+      "owners": [
+        "T28",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T28",
+          "number": 51,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/51"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-151.1",
+      "requirement": "REQ-151",
+      "title": "Funded-run baseline coverage",
+      "text": "Coverage uses daily baseline, open slots and funded days, with enough funded time for each admitted initial trial; added slots receive corresponding coverage.",
+      "owners": [
+        "T27"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        }
+      ]
+    },
+    {
+      "id": "REQ-151.2",
+      "requirement": "REQ-151",
+      "title": "Funded-run baseline coverage",
+      "text": "Existing prize schedule, fees, liabilities and safety reserves remain separately covered. Trial protection overlaps funded-run coverage and must not be added a second time. Prelaunch crowdfunding, creator review and public waiting ads are permitted.",
+      "owners": [
+        "T26b"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        }
+      ]
+    },
+    {
+      "id": "REQ-151.3",
+      "requirement": "REQ-151",
+      "title": "Funded-run baseline coverage",
+      "text": "Release an elapsed day's unused allocation only after delivery/liability reconciliation proves it free. Preserve future baseline coverage and uncertain obligations. Released money remains in the same campaign for future authorized allocations; it does not automatically refund/return money or redistribute a provider share within an old plan (Q89).",
+      "owners": [
+        "T29b"
+      ],
+      "issues": [
+        {
+          "id": "T29b",
+          "number": 68,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/68"
+        }
+      ]
+    },
+    {
+      "id": "REQ-152.1",
+      "requirement": "REQ-152",
+      "title": "Partial first-day baseline",
+      "text": "A 1,000-cent baseline admitted at noon on an ordinary day has a 500-cent first-day target; subsequent full days have a 1,000-cent target.",
+      "owners": [
+        "T26b"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        }
+      ]
+    },
+    {
+      "id": "REQ-152.2",
+      "requirement": "REQ-152",
+      "title": "Partial first-day baseline",
+      "text": "DST uses actual local-day boundaries; trial days remain 24 elapsed hours. Unsupported provider pacing/minimums block live execution and notify operators rather than inventing a workaround.",
+      "owners": [
+        "T26b"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        }
+      ]
+    },
+    {
+      "id": "REQ-153.1",
+      "requirement": "REQ-153",
+      "title": "Baseline-first boost pool",
+      "text": "Apply the manager boost percentage only to residual headroom; do not expose protected future baseline money or subtract today's embedded baseline twice.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-153.2",
+      "requirement": "REQ-153",
+      "title": "Baseline-first boost pool",
+      "text": "Baseline plus boosts cannot exceed daily/total authority or verified headroom. The nonboosted residual remains uncommitted. Extra funding does not automatically increase limits.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-154.1",
+      "requirement": "REQ-154",
+      "title": "Ranked boost selection",
+      "text": "Use unrounded score, then link clicks, attributed fundraising and impressions. Only a remaining exact tie expands the cutoff group beyond the selected count.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-154.2",
+      "requirement": "REQ-154",
+      "title": "Ranked boost selection",
+      "text": "Split the same boost pool across the actual group; stable cent ordering cannot alter shared rank. Boosted entries also receive baseline. Missing/stale required score coverage holds new boost commitments and immediately notifies both operators under accepted Q91.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-154.3",
+      "requirement": "REQ-154",
+      "title": "Ranked boost selection",
+      "text": "While required eligible-entry score coverage is missing or stale, financially safe baselines may continue but no new boosts are committed. Immediately notify campaign manager and administrator and show the missing scope. Do not create per-entry startup, zero or rank for unknown data; retain already committed spending and resume boosts only when complete usable coverage returns (Q91).",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-155.1",
+      "requirement": "REQ-155",
+      "title": "Startup boost allocation",
+      "text": "Each eligible funded entry retains its fixed baseline; the startup boost pool is equal across that group and other residual funds remain uncommitted.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-155.2",
+      "requirement": "REQ-155",
+      "title": "Startup boost allocation",
+      "text": "Missing/stale evidence cannot become ordinary no-performance startup or valid zero. Once usable daily results exist, use the ranked group.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-156.1",
+      "requirement": "REQ-156",
+      "title": "Meta/TikTok spending shares",
+      "text": "Shares total 100% and allow zero on either provider; count the competition entry once across placements.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-156.2",
+      "requirement": "REQ-156",
+      "title": "Meta/TikTok spending shares",
+      "text": "Meta covers Facebook/Instagram under a validated placement contract. Independent network-level enforcement is not promised. Weighted whole-cent splits must conserve their source amount.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-157.1",
+      "requirement": "REQ-157",
+      "title": "Unavailable provider share",
+      "text": "Healthy eligible placements may continue with their own authorized share and finance safeguards. Identify blocked placement and immediately notify both operators.",
+      "owners": [
+        "T29a",
+        "T32"
+      ],
+      "issues": [
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        },
+        {
+          "id": "T32",
+          "number": 55,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/55"
+        }
+      ]
+    },
+    {
+      "id": "REQ-157.2",
+      "requirement": "REQ-157",
+      "title": "Unavailable provider share",
+      "text": "Manager split changes are explicit. Before a provider-interrupted ad can fail continuation after recovery, require its complete normal-delivery evaluation window under the assigned policy; history and limits remain intact.",
+      "owners": [
+        "T32"
+      ],
+      "issues": [
+        {
+          "id": "T32",
+          "number": 55,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/55"
+        }
+      ]
+    },
+    {
+      "id": "REQ-158.1",
+      "requirement": "REQ-158",
+      "title": "Spending exclusions",
+      "text": "Withdrawn, performance-cut, paused, fraud-suspended and currently disqualified entries receive no new allocations, regardless of public rank.",
+      "owners": [
+        "T29a",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-158.2",
+      "requirement": "REQ-158",
+      "title": "Spending exclusions",
+      "text": "Past-only disqualification does not itself prohibit valid future participation. Respect separate fraud hold, public visibility, retrospective eligibility and prize-correction rules in the base PRD.",
+      "owners": [
+        "T29a",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-159.1",
+      "requirement": "REQ-159",
+      "title": "Admission-bound performance policy",
+      "text": "Policy defines impressions/clicks/fundraising targets, configurable nonnegative weights totaling 100%, passing score and trial duration. Zero weight ignores its metric; equality with passing score passes; public weights remain 40/30/30.",
+      "owners": [
+        "T26a",
+        "T30"
+      ],
+      "issues": [
+        {
+          "id": "T26a",
+          "number": 49,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/49"
+        },
+        {
+          "id": "T30",
+          "number": 53,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/53"
+        }
+      ]
+    },
+    {
+      "id": "REQ-159.2",
+      "requirement": "REQ-159",
+      "title": "Admission-bound performance policy",
+      "text": "Use the capped square-root method and unrounded score. Active admissions retain their policy for initial and later evaluations. New admissions/retrials can use revised policies; both new ads and queued retrials bind the published policy current at actual paid admission, disclosed and permanently recorded then. Authorization determines queue time, not an earlier policy lock (accepted Q92).",
+      "owners": [
+        "T27",
+        "T30",
+        "T31"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        },
+        {
+          "id": "T30",
+          "number": 53,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/53"
+        },
+        {
+          "id": "T31",
+          "number": 54,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/54"
+        }
+      ]
+    },
+    {
+      "id": "REQ-160.1",
+      "requirement": "REQ-160",
+      "title": "Initial trial clock",
+      "text": "One trial day is 24 elapsed hours. Waiting, approval and enrollment alone do not start its clock.",
+      "owners": [
+        "T30"
+      ],
+      "issues": [
+        {
+          "id": "T30",
+          "number": 53,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/53"
+        }
+      ]
+    },
+    {
+      "id": "REQ-160.2",
+      "requirement": "REQ-160",
+      "title": "Initial trial clock",
+      "text": "Evaluate the trial's own fixed activity window when complete reporting exists; no need to wait for midnight. Incomplete data is not failure. Provider interruption additionally uses its fresh-window protection; an overrun stops at the locked funded end as incomplete under accepted Q90.",
+      "owners": [
+        "T30"
+      ],
+      "issues": [
+        {
+          "id": "T30",
+          "number": 53,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/53"
+        }
+      ]
+    },
+    {
+      "id": "REQ-160.3",
+      "requirement": "REQ-160",
+      "title": "Initial trial clock",
+      "text": "If delayed delivery, pauses or required fresh-window recovery push completion beyond the locked funded end, stop paid delivery at that end and mark the trial incomplete rather than failed for performance. Preserve eligible history and immediately notify both operators; do not automatically extend campaign dates, funding or trial history (Q90).",
+      "owners": [
+        "T30"
+      ],
+      "issues": [
+        {
+          "id": "T30",
+          "number": 53,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/53"
+        }
+      ]
+    },
+    {
+      "id": "REQ-161.1",
+      "requirement": "REQ-161",
+      "title": "Fixed daily continuation windows",
+      "text": "After the initial pass, each daily window covers the assigned trial duration with confirmed pauses excluded; required data must be complete.",
+      "owners": [
+        "T31"
+      ],
+      "issues": [
+        {
+          "id": "T31",
+          "number": 54,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/54"
+        }
+      ]
+    },
+    {
+      "id": "REQ-161.2",
+      "requirement": "REQ-161",
+      "title": "Fixed daily continuation windows",
+      "text": "Persist the window identity/end and policy version. Delayed retries cannot slide it. Notify blocked evaluations immediately. Multiple overdue windows follow the accepted chronological order in Q93.",
+      "owners": [
+        "T31"
+      ],
+      "issues": [
+        {
+          "id": "T31",
+          "number": 54,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/54"
+        }
+      ]
+    },
+    {
+      "id": "REQ-161.3",
+      "requirement": "REQ-161",
+      "title": "Fixed daily continuation windows",
+      "text": "Process scheduled windows in chronological order; an incomplete earlier window holds the sequence. The first complete failure cuts spending at actual decision time, without retroactive cutoff. A later passing window cannot undo that cut automatically; further paid participation requires the selected manager-authorized retrial process (Q93).",
+      "owners": [
+        "T31"
+      ],
+      "issues": [
+        {
+          "id": "T31",
+          "number": 54,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/54"
+        }
+      ]
+    },
+    {
+      "id": "REQ-162.1",
+      "requirement": "REQ-162",
+      "title": "Confirmed placement stopping",
+      "text": "Cut/withdrawal immediately blocks new allocations and requests supported pauses. Failed/uncertain outcomes immediately identify affected placements and notify both operators.",
+      "owners": [
+        "T28",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T28",
+          "number": 51,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/51"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-162.2",
+      "requirement": "REQ-162",
+      "title": "Confirmed placement stopping",
+      "text": "Native-tool fallback requires reconciliation. Keep slot and liabilities until confirmed; performance cuts remain public, while withdrawal/removal keeps its public-hide and earning-cutoff effects.",
+      "owners": [
+        "T28",
+        "T33"
+      ],
+      "issues": [
+        {
+          "id": "T28",
+          "number": 51,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/51"
+        },
+        {
+          "id": "T33",
+          "number": 56,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/56"
+        }
+      ]
+    },
+    {
+      "id": "REQ-163.1",
+      "requirement": "REQ-163",
+      "title": "Explicit advertising retrial",
+      "text": "Improved public activity alone cannot restart paid spending. Require capacity/funding and retain earlier policy/trial/cutoff history.",
+      "owners": [
+        "T31"
+      ],
+      "issues": [
+        {
+          "id": "T31",
+          "number": 54,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/54"
+        }
+      ]
+    },
+    {
+      "id": "REQ-163.2",
+      "requirement": "REQ-163",
+      "title": "Explicit advertising retrial",
+      "text": "A retrial joins the shared queue by new authorization time. Capacity expansion still requires administrator approval; an otherwise in-capacity retrial does not create a new administrator gate.",
+      "owners": [
+        "T31"
+      ],
+      "issues": [
+        {
+          "id": "T31",
+          "number": 54,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/54"
+        }
+      ]
+    },
+    {
+      "id": "REQ-164.1",
+      "requirement": "REQ-164",
+      "title": "Validated spending edits",
+      "text": "Validate daily/total limits, baseline, boost percentage, top count and authorized share edits as an atomic version change; unfunded increases cannot activate.",
+      "owners": [
+        "T26a"
+      ],
+      "issues": [
+        {
+          "id": "T26a",
+          "number": 49,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/49"
+        }
+      ]
+    },
+    {
+      "id": "REQ-164.2",
+      "requirement": "REQ-164",
+      "title": "Validated spending edits",
+      "text": "Resize future baseline coverage without cancelling incurred/uncertain obligations. Below-obligation limits stop new spending, request needed pauses and notify operators. History and assigned performance rules remain intact.",
+      "owners": [
+        "T26a"
+      ],
+      "issues": [
+        {
+          "id": "T26a",
+          "number": 49,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/49"
+        }
+      ]
+    },
+    {
+      "id": "REQ-165.1",
+      "requirement": "REQ-165",
+      "title": "Unreliable financial evidence",
+      "text": "Retain slots and immediately notify both operators, including the user's designated operator identity. A last-known balance is not current authority.",
+      "owners": [
+        "T24",
+        "T32"
+      ],
+      "issues": [
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        },
+        {
+          "id": "T32",
+          "number": 55,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/55"
+        }
+      ]
+    },
+    {
+      "id": "REQ-165.2",
+      "requirement": "REQ-165",
+      "title": "Unreliable financial evidence",
+      "text": "Performance-score incompleteness alone follows its separate rules. Missing administrator-approved freshness/coverage settings are launch blockers, not permissive defaults.",
+      "owners": [
+        "T24",
+        "T32"
+      ],
+      "issues": [
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        },
+        {
+          "id": "T32",
+          "number": 55,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/55"
+        }
+      ]
+    },
+    {
+      "id": "REQ-166.1",
+      "requirement": "REQ-166",
+      "title": "Distinct funds and obligations",
+      "text": "Use correct nonprofit, USD and approved product/account. Distinguish contribution collection, Issuing availability, authorizations, posted charges, fees/transfers/refunds/disputes and unbilled platform delivery.",
+      "owners": [
+        "T24"
+      ],
+      "issues": [
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        }
+      ]
+    },
+    {
+      "id": "REQ-166.2",
+      "requirement": "REQ-166",
+      "title": "Distinct funds and obligations",
+      "text": "A provider-reflected hold/posted charge is not deducted again as the same local obligation. Released authorization is not proof of canceled debt. Unmatched/provisional credits cannot establish verified available funding. Actual matching/release contracts remain provider-gated.",
+      "owners": [
+        "T24"
+      ],
+      "issues": [
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        }
+      ]
+    },
+    {
+      "id": "REQ-167.1",
+      "requirement": "REQ-167",
+      "title": "Financial shortfall and recovery",
+      "text": "Stop new admissions/discretionary boosts first; if remaining baseline commitments/obligations lack verified funding, pause affected placements, reserve slots and immediately alert both operators.",
+      "owners": [
+        "T32"
+      ],
+      "issues": [
+        {
+          "id": "T32",
+          "number": 55,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/55"
+        }
+      ]
+    },
+    {
+      "id": "REQ-167.2",
+      "requirement": "REQ-167",
+      "title": "Financial shortfall and recovery",
+      "text": "Never silently dilute baseline or borrow prizes, creator earnings or another nonprofit's funds. Pauses retain slots, costs and incident history; the separately specified verified-recovery transition governs resumption.",
+      "owners": [
+        "T32"
+      ],
+      "issues": [
+        {
+          "id": "T32",
+          "number": 55,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/55"
+        }
+      ]
+    },
+    {
+      "id": "REQ-168.1",
+      "requirement": "REQ-168",
+      "title": "Actual advertising provider fees",
+      "text": "Record gross contributions, fees and net available amounts separately; baseline coverage remains funded after fees/reserves.",
+      "owners": [
+        "T23"
+      ],
+      "issues": [
+        {
+          "id": "T23",
+          "number": 46,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/46"
+        }
+      ]
+    },
+    {
+      "id": "REQ-168.2",
+      "requirement": "REQ-168",
+      "title": "Actual advertising provider fees",
+      "text": "Contributor disclosure explains fee reduction. No Slander application fee or creator commission is introduced; actual provider records determine fees.",
+      "owners": [
+        "T23"
+      ],
+      "issues": [
+        {
+          "id": "T23",
+          "number": 46,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/46"
+        }
+      ]
+    },
+    {
+      "id": "REQ-169.1",
+      "requirement": "REQ-169",
+      "title": "Advertising contribution classification",
+      "text": "No ad earmarking or cross-nonprofit routing. Baseline/boost policy controls spending.",
+      "owners": [
+        "T23"
+      ],
+      "issues": [
+        {
+          "id": "T23",
+          "number": 46,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/46"
+        }
+      ]
+    },
+    {
+      "id": "REQ-169.2",
+      "requirement": "REQ-169",
+      "title": "Advertising contribution classification",
+      "text": "The contribution creates no creator commission, prize replenishment or fundraising input in either public or continuation score. Tracked fundraising donations retain their separate rules.",
+      "owners": [
+        "T23"
+      ],
+      "issues": [
+        {
+          "id": "T23",
+          "number": 46,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/46"
+        }
+      ]
+    },
+    {
+      "id": "REQ-170.1",
+      "requirement": "REQ-170",
+      "title": "Reviewed contributor refunds",
+      "text": "Manager requests, administrator approves full/partial amount up to remaining unrefunded contribution; beneficiary is the original contributor through a supported route.",
+      "owners": [
+        "T34"
+      ],
+      "issues": [
+        {
+          "id": "T34",
+          "number": 57,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/57"
+        }
+      ]
+    },
+    {
+      "id": "REQ-170.2",
+      "requirement": "REQ-170",
+      "title": "Reviewed contributor refunds",
+      "text": "Preserve baselines/other obligations. Blocked approved execution stays visibly pending/unpaid and immediately alerts operators. No automatic entitlement or discretionary approval gate on forced provider reversals is implied.",
+      "owners": [
+        "T34"
+      ],
+      "issues": [
+        {
+          "id": "T34",
+          "number": 57,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/57"
+        }
+      ]
+    },
+    {
+      "id": "REQ-171.1",
+      "requirement": "REQ-171",
+      "title": "Closure-only campaign returns",
+      "text": "Require manager request/admin approval, confirmed stopped placements, returnable surplus after obligations/reserves and actual provider/purpose permission.",
+      "owners": [
+        "T36"
+      ],
+      "issues": [
+        {
+          "id": "T36",
+          "number": 59,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/59"
+        }
+      ]
+    },
+    {
+      "id": "REQ-171.2",
+      "requirement": "REQ-171",
+      "title": "Closure-only campaign returns",
+      "text": "No active-campaign return, cross-campaign transfer or unconditional whole-balance release. Preserve outstanding return and reserve evidence until actual settlement is verified.",
+      "owners": [
+        "T36"
+      ],
+      "issues": [
+        {
+          "id": "T36",
+          "number": 59,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/59"
+        }
+      ]
+    },
+    {
+      "id": "REQ-172.1",
+      "requirement": "REQ-172",
+      "title": "Disputed-fund exclusion",
+      "text": "Notify both operators immediately and recompute funding; shortages follow the financial pause policy.",
+      "owners": [
+        "T35"
+      ],
+      "issues": [
+        {
+          "id": "T35",
+          "number": 58,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/58"
+        }
+      ]
+    },
+    {
+      "id": "REQ-172.2",
+      "requirement": "REQ-172",
+      "title": "Disputed-fund exclusion",
+      "text": "Retain delivered-ad costs and earlier records. Dispute outcome, recovery, fees and mandatory reversal states reconcile once against the same contribution; actual program loss responsibility remains unvalidated.",
+      "owners": [
+        "T35"
+      ],
+      "issues": [
+        {
+          "id": "T35",
+          "number": 58,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/58"
+        }
+      ]
+    },
+    {
+      "id": "REQ-173.1",
+      "requirement": "REQ-173",
+      "title": "Approved numeric safety policy",
+      "text": "Require reserves for unbilled delivery/refunds/disputes/fees, maximum financial-data age and release evidence; manager cannot weaken them.",
+      "owners": [
+        "T24"
+      ],
+      "issues": [
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        }
+      ]
+    },
+    {
+      "id": "REQ-173.2",
+      "requirement": "REQ-173",
+      "title": "Approved numeric safety policy",
+      "text": "Missing settings cannot become zero reserve or unlimited age. Approved values identify provider/account applicability and evidence; no numerical defaults are selected in this document.",
+      "owners": [
+        "T24"
+      ],
+      "issues": [
+        {
+          "id": "T24",
+          "number": 47,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/47"
+        }
+      ]
+    },
+    {
+      "id": "REQ-174.1",
+      "requirement": "REQ-174",
+      "title": "Immediate operator incidents",
+      "text": "On detection, immediately persist visible reason/status/resolution role and attempt email to manager and administrator, including designated user recipient; deduplicate the same recipient when holding both roles.",
+      "owners": [
+        "T08"
+      ],
+      "issues": [
+        {
+          "id": "T08",
+          "number": 31,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/31"
+        }
+      ]
+    },
+    {
+      "id": "REQ-174.2",
+      "requirement": "REQ-174",
+      "title": "Immediate operator incidents",
+      "text": "No intentional grace threshold for these selected financial/delivery/capacity/evaluation/launch blocks. Repeated checks update one incident; resolution notifies recovery. Failed email retries at 1/5/15/60 minutes while the dashboard persists. Actual detection/dispatch bounds still require reviewed evidence.",
+      "owners": [
+        "T08"
+      ],
+      "issues": [
+        {
+          "id": "T08",
+          "number": 31,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/31"
+        }
+      ]
+    },
+    {
+      "id": "REQ-175.1",
+      "requirement": "REQ-175",
+      "title": "Provider and production launch gates",
+      "text": "Require actual Stripe program/funding/read/return eligibility, Meta/TikTok grant/objective/media/reporting/payer/instrument evidence, Clerk access evidence, funded prizes/baselines/safeguards and production behavior verification.",
+      "owners": [
+        "T40a",
+        "T40b"
+      ],
+      "issues": [
+        {
+          "id": "T40a",
+          "number": 63,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/63"
+        },
+        {
+          "id": "T40b",
+          "number": 70,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/70"
+        }
+      ]
+    },
+    {
+      "id": "REQ-175.2",
+      "requirement": "REQ-175",
+      "title": "Provider and production launch gates",
+      "text": "Every unmet gate is visible and immediately notified. A passing fixture, closed research ticket, paid balance, structural audit or user assent is not provider approval. Return unsupported routes for decision; never substitute pooled/manual-only models silently.",
+      "owners": [
+        "T09"
+      ],
+      "issues": [
+        {
+          "id": "T09",
+          "number": 32,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/32"
+        }
+      ]
+    },
+    {
+      "id": "REQ-176.1",
+      "requirement": "REQ-176",
+      "title": "Durable reproducible allocation plans",
+      "text": "Record nonprofit/campaign/day, actor/authority, settings/policy versions, ordered eligible entries, score coverage/as-of evidence, financial snapshot and obligation references, cent amounts and blocked reasons.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-176.2",
+      "requirement": "REQ-176",
+      "title": "Durable reproducible allocation plans",
+      "text": "Persist across sessions/restart. LocalStorage, demo roles/targets/money/simulated metrics cannot originate production plans. New snapshots/settings create new revisions without rewriting earlier plans.",
+      "owners": [
+        "T26b",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T26b",
+          "number": 67,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/67"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-177.1",
+      "requirement": "REQ-177",
+      "title": "Atomic admissions and reservations",
+      "text": "Reserve slot and funding against one validated revision atomically or reject/recompute on conflict. Repeating one operation identity cannot create another reservation/admission.",
+      "owners": [
+        "T27",
+        "T29a"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        }
+      ]
+    },
+    {
+      "id": "REQ-177.2",
+      "requirement": "REQ-177",
+      "title": "Atomic admissions and reservations",
+      "text": "A crash or uncertain provider result cannot free capacity or duplicate obligation coverage. CT-03 transaction/journal mechanics are confirmed in Q94 and must be verified by future implementation tests; publication remains separately authorized.",
+      "owners": [
+        "T27",
+        "T29a",
+        "T29b"
+      ],
+      "issues": [
+        {
+          "id": "T27",
+          "number": 50,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/50"
+        },
+        {
+          "id": "T29a",
+          "number": 52,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/52"
+        },
+        {
+          "id": "T29b",
+          "number": 68,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/68"
+        }
+      ]
+    },
+    {
+      "id": "REQ-178.1",
+      "requirement": "REQ-178",
+      "title": "Reconciled external write outcomes",
+      "text": "Persist intended provider object/action identity before dispatch and retain provider references/outcome evidence; uncertain create/change/pause/refund/return is pending reconciliation.",
+      "owners": [
+        "T18",
+        "T28",
+        "T34",
+        "T36"
+      ],
+      "issues": [
+        {
+          "id": "T18",
+          "number": 41,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/41"
+        },
+        {
+          "id": "T28",
+          "number": 51,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/51"
+        },
+        {
+          "id": "T34",
+          "number": 57,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/57"
+        },
+        {
+          "id": "T36",
+          "number": 59,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/59"
+        }
+      ]
+    },
+    {
+      "id": "REQ-178.2",
+      "requirement": "REQ-178",
+      "title": "Reconciled external write outcomes",
+      "text": "Do not create a replacement object/payment or release a reservation on timeout alone. Bind money-action approval to beneficiary/amount/destination; changed contents require renewed review under CT-04 confirmed in Q94. Provider-specific reconciliation remains gated.",
+      "owners": [
+        "T18",
+        "T28",
+        "T34",
+        "T36"
+      ],
+      "issues": [
+        {
+          "id": "T18",
+          "number": 41,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/41"
+        },
+        {
+          "id": "T28",
+          "number": 51,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/51"
+        },
+        {
+          "id": "T34",
+          "number": 57,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/57"
+        },
+        {
+          "id": "T36",
+          "number": 59,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/59"
+        }
+      ]
+    },
+    {
+      "id": "REQ-179.1",
+      "requirement": "REQ-179",
+      "title": "Verified financial recovery",
+      "text": "Required financial evidence is reliable, funding is restored, placement state is reconciled, existing approved limits suffice and no separate hold applies before resumption. Missing evidence or an unresolved provider outcome prevents resumption.",
+      "owners": [
+        "T32",
+        "T35"
+      ],
+      "issues": [
+        {
+          "id": "T32",
+          "number": 55,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/55"
+        },
+        {
+          "id": "T35",
+          "number": 58,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/58"
+        }
+      ]
+    },
+    {
+      "id": "REQ-179.2",
+      "requirement": "REQ-179",
+      "title": "Verified financial recovery",
+      "text": "Immediately notify both operators and preserve incident/obligation history. Recovery cannot approve expansion, reset trials, override fraud/removal holds or cancel incurred charges. Actual stability/freshness/release evidence remains provider-validated safety policy.",
+      "owners": [
+        "T32",
+        "T35"
+      ],
+      "issues": [
+        {
+          "id": "T32",
+          "number": 55,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/55"
+        },
+        {
+          "id": "T35",
+          "number": 58,
+          "url": "https://github.com/Cooper2Rich/adoption-project/issues/58"
+        }
+      ]
+    }
+  ],
+  "corrections": [
+    "T00 (#65) lands the S1 baseline on main; blocks T01 (#24).",
+    "Evidence issue #66 covers donation collection and creator payouts; blocks T18 (#41) and T40b (#70).",
+    "T26 split into T26a (#49) and T26b (#67); T29 split into T29a (#52) and T29b (#68).",
+    "T39 split into T39a (#69) and T39b (#62); T40 split into T40a (#63) and T40b (#70).",
+    "T28 (#51) blocked by #12. Launch tickets moved from #9 to #64 and lost wayfinder:task; #12/#20/#21/#22 gained ready-for-human."
+  ],
+  "existingRecords": "parent/provider issue title, body, state, labels and comments unchanged",
+  "verification": {
+    "readBackIssues": 40,
+    "exactBodies": true,
+    "exactLabels": true,
+    "nativeParentLinks": 40,
+    "nativeBlockingEdges": 87,
+    "requirements": 79,
+    "sourceCriteria": 191,
+    "agentTickets": 38,
+    "humanTickets": 2,
+    "existingParentProviderRecords": "title/body/state/labels/comments unchanged",
+    "applicationTestsRerun": false,
+    "servicesStarted": false,
+    "revisedReadBack": {
+      "launchTickets": 45,
+      "nativeParentLinksToLaunchBuild": 45,
+      "nativeBlockingEdges": 97,
+      "agentTickets": 41,
+      "humanTickets": 4,
+      "criteriaWithOwner": 191
+    }
+  }
+}

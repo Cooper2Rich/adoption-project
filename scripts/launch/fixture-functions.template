@@ -1,0 +1,112 @@
+import { internalMutation as mutation } from "./functions.ts";
+import { v } from "convex/values";
+
+// Copied only into a run-owned local deployment. Never part of application functions.
+export const seed = mutation({
+  args: { runId: v.string() },
+  handler: async (ctx, { runId }) => {
+    for (const [slug, nonprofitId, subject] of [
+      ["adoption", "nonprofit-a", "manager-a"],
+      ["other", "nonprofit-b", "manager-b"],
+    ]) {
+      const existing = await ctx.db
+        .query("campaigns")
+        .withIndex("by_slug", (q) => q.eq("slug", slug))
+        .unique();
+      if (existing)
+        throw new Error("Fixture data already exists; refuse to overwrite it");
+      await ctx.db.insert("campaigns", {
+        slug,
+        nonprofitId,
+        name: slug === "adoption" ? "adoption.is" : "Isolation control",
+        fixtureRunId: runId,
+        authority: {
+          revision: "authority-1",
+          dailyLimitCents: 10000,
+          totalLimitCents: 10000,
+          dailyCommittedCents: 0,
+          campaignCommittedCents: 0,
+          capacity: 4,
+        },
+        reservationFundingCents: 0,
+        reservedSlots: 0,
+        reservedCents: 0,
+        reservationFinanceRevision: "finance-1",
+      });
+      await ctx.db.insert("memberships", {
+        subject,
+        nonprofitId,
+        role: "manager",
+        active: true,
+      });
+      await ctx.db.insert("memberships", {
+        subject: `creator-${slug}`,
+        nonprofitId,
+        role: "creator",
+        active: true,
+      });
+    }
+    for (const control of [
+      { slug: "slot-control", capacity: 1, fundingCents: 2000 },
+      { slug: "fund-control", capacity: 2, fundingCents: 1000 },
+    ]) {
+      await ctx.db.insert("campaigns", {
+        slug: control.slug,
+        nonprofitId: "nonprofit-a",
+        name: "Reservation verification only",
+        fixtureRunId: runId,
+        authority: {
+          revision: "authority-1",
+          dailyLimitCents: control.fundingCents,
+          totalLimitCents: control.fundingCents,
+          dailyCommittedCents: 0,
+          campaignCommittedCents: 0,
+          capacity: control.capacity,
+        },
+        reservationFundingCents: control.fundingCents,
+        reservedSlots: 0,
+        reservedCents: 0,
+        reservationFinanceRevision: "finance-1",
+      });
+      for (const entryId of ["candidate-a", "candidate-b"])
+        await ctx.db.insert("reservationCandidates", {
+          campaignSlug: control.slug,
+          entryId,
+          authorized: true,
+          amountCents: 1000,
+        });
+    }
+    await ctx.db.insert("operators", {
+      subject: "administrator",
+      active: true,
+    });
+  },
+});
+
+export const changeAuthority = mutation({
+  args: { campaignSlug: v.string(), revision: v.string() },
+  handler: async (ctx, args) => {
+    const campaign = await ctx.db
+      .query("campaigns")
+      .withIndex("by_slug", (q) => q.eq("slug", args.campaignSlug))
+      .unique();
+    if (!campaign) throw new Error("Fixture campaign not found");
+    await ctx.db.patch(campaign._id, {
+      authority: { ...campaign.authority, revision: args.revision },
+    });
+  },
+});
+
+export const revoke = mutation({
+  args: { subject: v.string(), nonprofitId: v.string() },
+  handler: async (ctx, args) => {
+    const membership = await ctx.db
+      .query("memberships")
+      .withIndex("by_subject_nonprofit", (q) =>
+        q.eq("subject", args.subject).eq("nonprofitId", args.nonprofitId),
+      )
+      .unique();
+    if (!membership) throw new Error("Fixture membership not found");
+    await ctx.db.patch(membership._id, { active: false });
+  },
+});

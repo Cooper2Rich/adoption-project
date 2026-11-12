@@ -7,4 +7,8 @@ playwright-report/
 *.log
 .env
 *.tsbuildinfo
+launch-site/
+.convex/
+.env.*
+!.env.example
 outputs/coffee-footage/

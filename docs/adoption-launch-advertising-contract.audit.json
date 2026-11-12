@@ -1,0 +1,90 @@
+{
+  "prd": "docs/adoption-launch-advertising-contract.md",
+  "passed": true,
+  "summary": {
+    "sections": 11,
+    "requirements": 36,
+    "errors": 0,
+    "warnings": 13
+  },
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-144 — Nonprofit-scoped provider assets",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-145 — Expansion and financial review authority",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-149 — Expandable funded capacity",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-156 — Meta/TikTok spending shares",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-158 — Spending exclusions",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-165 — Unreliable financial evidence",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-166 — Distinct funds and obligations",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-167 — Financial shortfall and recovery",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-168 — Actual advertising provider fees",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-171 — Closure-only campaign returns",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-174 — Immediate operator incidents",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-175 — Provider and production launch gates",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-176 — Durable reproducible allocation plans",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    }
+  ]
+}

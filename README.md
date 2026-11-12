@@ -100,3 +100,9 @@ node --test tests/marketplace.test.js tests/finance.test.js tests/analytics.test
 Browser checks use isolated SQLite data and desktop/mobile Chromium. Tests never run against the user's `data/` directory.
 
 The broader [Slander Rebuild PRD 2.2](outputs/Slander-Rebuild-PRD.md) records product intent. [Revision log](outputs/Slander-Rebuild-PRD-Changes.md) and [original PRD](docs/PRD.md) provide context; a document audit does not prove runtime or production readiness.
+
+## Convex allocation preview
+
+Run `npm run dev:launch` to open the isolated manager allocation-preview workspace at `http://127.0.0.1:3210`. It uses actual local Convex records with explicit synthetic identities/evidence; preview saves reserve no money or slots. No provider credentials are required.
+
+Run `npm run test:launch` for planner, real-backend and desktop/mobile browser checks, and `npm run build:launch` for its dedicated bundle. See [the run guide](docs/ALLOCATION-PREVIEW.md) for setup, sample scenarios, data lifecycle and verification limits.
