@@ -732,3 +732,33 @@ small.held {
   max-width: 100%;
   white-space: normal;
 }
+.launch-readiness {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.launch-readiness .panel {
+  margin-bottom: 20px;
+  overflow-wrap: anywhere;
+}
+.launch-readiness .tag {
+  max-width: 100%;
+  white-space: normal;
+}
+.launch-readiness button {
+  max-width: 100%;
+  white-space: normal;
+  margin: 4px 0;
+}
+.readiness-component {
+  border-top: 1px solid #dce5d8;
+  padding: 16px 0;
+}
+.launch-readiness details {
+  margin: 12px 0;
+}
+.launch-readiness pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+}

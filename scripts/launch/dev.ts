@@ -63,6 +63,89 @@ const server = await createServer({
             void servePhotoRequest(backend.videoService, request, response);
             return;
           }
+          if (requestUrl.pathname === "/__allocation/readiness") {
+            if (
+              request.method !== "POST" ||
+              request.headers.host !== `127.0.0.1:${port}` ||
+              (request.headers.origin && request.headers.origin !== origin)
+            ) {
+              response.statusCode = 403;
+              response.end("Forbidden");
+              return;
+            }
+            let body = "";
+            request.on("data", (chunk: any) => {
+              body += chunk;
+              if (body.length > 1024) request.destroy();
+            });
+            request.on("end", () => {
+              void (async () => {
+                const input = JSON.parse(body);
+                if (!["configure", "recover", "fail"].includes(input.scenario))
+                  throw new Error("Unsupported owned readiness scenario");
+                const client = backend.client("administrator"),
+                  scope = { campaignId: "adoption" };
+                let current = await client.query(
+                  makeFunctionReference<"query">("readiness:read"),
+                  scope,
+                );
+                if (input.scenario === "configure") {
+                  await client.mutation(
+                    makeFunctionReference<"mutation">(
+                      "readiness:configureScope",
+                    ),
+                    {
+                      ...scope,
+                      expectedVersion: current.configurationVersion,
+                      accounts: Object.fromEntries(
+                        [
+                          "stripe",
+                          "meta",
+                          "tiktok",
+                          "clerk",
+                          "blob",
+                          "mux",
+                          "email",
+                        ].map((key, i) => [key, String(i + 1).repeat(64)]),
+                      ),
+                      selectedProviders: ["meta", "tiktok"],
+                    },
+                  );
+                } else {
+                  backend.email.mode(
+                    input.scenario === "fail" ? "fail" : "delivered",
+                  );
+                  const component = current.components.find(
+                    (c: any) => c.id === "stripe-eligibility",
+                  );
+                  await backend.runOwnedInternal("fixtures:readinessProof", {
+                    ...scope,
+                    nonprofitId: "nonprofit-a",
+                    component: "stripe-eligibility",
+                    revision: current.revision,
+                    account: component.scope.accountBinding,
+                    sequence: (component.evidence?.sequence ?? 0) + 1,
+                    observedAt: Date.now(),
+                    expiresAt: Date.now() + 600_000,
+                    reviewer: "administrator",
+                    digest: "a".repeat(64),
+                    outcome: input.scenario === "fail" ? "failed" : "verified",
+                  });
+                }
+                response.setHeader("Content-Type", "application/json");
+                response.end(
+                  JSON.stringify({
+                    synthetic: true,
+                    validatedForProduction: false,
+                  }),
+                );
+              })().catch(() => {
+                response.statusCode = 400;
+                response.end("Owned readiness fixture failed");
+              });
+            });
+            return;
+          }
           if (requestUrl.pathname === "/__allocation/incidents") {
             if (
               request.method !== "POST" ||
