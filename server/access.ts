@@ -107,7 +107,7 @@ export function requirePost(
     throw new AppError("You can only edit your own submissions.", 403);
   return post;
 }
-function publicPost(post: any, records: DemoRecords) {
+function publicPost(post: any, records?: DemoRecords) {
   const media = post.media.startsWith("/api/media/")
     ? records?.get("media", post.media.slice(11))
     : records?.byMediaPath(post.media);
@@ -134,7 +134,7 @@ function publicPost(post: any, records: DemoRecords) {
 export function scopedWorkspace(
   state: DemoState,
   access: any,
-  records: DemoRecords = {},
+  records?: DemoRecords,
 ): Record<string, any> {
   const projects = state.projects.filter((p: any) => canViewProject(p, access));
   const projectIds = new Set(projects.map((p: any) => p.id));
