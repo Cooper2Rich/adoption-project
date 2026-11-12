@@ -303,3 +303,28 @@ export const originalRecovery = mutation({
     }
   }
 });
+import { incidentObservation } from "./incidentSchema.ts";
+import { recordTrustedIncident } from "./operatorIncidents.ts";
+export const incident = mutation({ args: incidentObservation, handler: async (ctx, args) => recordTrustedIncident(ctx, args, { producer: "owned-incident-fixture", actor: "controlled-fixture-observer", synthetic: true }) });
+export const incidentControl = mutation({ args: { campaignId: v.string(), now: v.optional(v.union(v.number(), v.null())), dualRole: v.optional(v.boolean()), operatorActive: v.optional(v.boolean()) }, handler: async (ctx, args) => {
+  const campaign = await ctx.db.query("campaigns").withIndex("by_slug", q => q.eq("slug", args.campaignId)).unique();
+  if (!campaign?.fixtureRunId || campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned fixture required");
+  if (args.now !== undefined) await ctx.db.patch(campaign._id, { fixtureIncidentNow: args.now === null ? undefined : args.now });
+  if (args.dualRole !== undefined) {
+    const operator = await ctx.db.query("operators").withIndex("by_subject", q => q.eq("subject", "manager-a")).unique();
+    if (operator) await ctx.db.patch(operator._id, { active: args.dualRole });
+    else await ctx.db.insert("operators", { subject: "manager-a", active: args.dualRole });
+  }
+  if (args.operatorActive !== undefined) {
+    const operator = await ctx.db.query("operators").withIndex("by_subject", q => q.eq("subject", "administrator")).unique();
+    if (operator) await ctx.db.patch(operator._id, { active: args.operatorActive });
+  }
+} });
+import { watchEmail } from "./incidentEmail.ts";
+export const incidentWatchdog = mutation({ args: { emailId: v.id("incidentEmails"), skipAction: v.optional(v.boolean()) }, handler: async (ctx, args) => {
+  const email = await ctx.db.get(args.emailId);
+  const incident = email ? await ctx.db.get(email.incidentId) : null;
+  const campaign = incident ? await ctx.db.query("campaigns").withIndex("by_slug", q => q.eq("slug", incident.campaignSlug)).unique() : null;
+  if (!email || !incident?.synthetic || !campaign?.fixtureRunId || campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned fixture required");
+  return await watchEmail(ctx, { emailId: email._id, generation: email.wakeVersion }, args.skipAction === true);
+} });

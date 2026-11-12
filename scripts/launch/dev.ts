@@ -63,6 +63,136 @@ const server = await createServer({
             void servePhotoRequest(backend.videoService, request, response);
             return;
           }
+          if (requestUrl.pathname === "/__allocation/incidents") {
+            if (
+              request.method !== "POST" ||
+              request.headers.host !== `127.0.0.1:${port}` ||
+              (request.headers.origin && request.headers.origin !== origin)
+            ) {
+              response.statusCode = 403;
+              response.end("Forbidden");
+              return;
+            }
+            let body = "";
+            request.on("data", (chunk: any) => {
+              body += chunk;
+              if (body.length > 2048) request.destroy();
+            });
+            request.on("end", () => {
+              void (async () => {
+                const input = JSON.parse(body);
+                const key = "t08-browser";
+                if (
+                  ![
+                    "open",
+                    "recover",
+                    "fail",
+                    "exhaust",
+                    "unknown",
+                    "dispatch",
+                  ].includes(input.scenario)
+                )
+                  throw new Error("Unsupported owned incident scenario");
+                const client = backend.client("manager-a");
+                const read = () =>
+                  client.query(
+                    makeFunctionReference<"query">("operatorIncidents:list"),
+                    { campaignId: "adoption" },
+                  );
+                if (["open", "fail", "unknown"].includes(input.scenario)) {
+                  backend.email.mode(
+                    input.scenario === "fail"
+                      ? "fail"
+                      : input.scenario === "unknown"
+                        ? "unknown"
+                        : "delivered",
+                  );
+                  const records = await read();
+                  const sequence =
+                    Math.max(
+                      0,
+                      ...records
+                        .filter((i: any) => i.key === key)
+                        .flatMap((i: any) =>
+                          i.evidence.map((e: any) => e.sequence),
+                        ),
+                    ) + 1;
+                  await backend.runOwnedInternal("fixtures:incidentControl", {
+                    campaignId: "adoption",
+                    now: null,
+                  });
+                  await backend.runOwnedInternal("fixtures:incident", {
+                    campaignId: "adoption",
+                    key,
+                    kind: "launch-blocker",
+                    sequence,
+                    observedAt: Date.now(),
+                    active: true,
+                    reason: "Required launch approval is missing",
+                    evidence: "owned-browser-launch-check",
+                    resolutionRole: "administrator",
+                  });
+                }
+                if (input.scenario === "recover") {
+                  backend.email.mode("delivered");
+                  const records = await read();
+                  const sequence =
+                    Math.max(
+                      ...records
+                        .filter((i: any) => i.key === key)
+                        .flatMap((i: any) =>
+                          i.evidence.map((e: any) => e.sequence),
+                        ),
+                    ) + 1;
+                  await backend.runOwnedInternal("fixtures:incidentControl", {
+                    campaignId: "adoption",
+                    now: null,
+                  });
+                  await backend.runOwnedInternal("fixtures:incident", {
+                    campaignId: "adoption",
+                    key,
+                    kind: "launch-blocker",
+                    sequence,
+                    observedAt: Date.now(),
+                    active: false,
+                    reason: "Required launch approval was verified",
+                    evidence: "owned-browser-recovery-check",
+                    resolutionRole: "administrator",
+                  });
+                }
+                if (["exhaust", "dispatch"].includes(input.scenario)) {
+                  for (
+                    let n = 0;
+                    n < (input.scenario === "exhaust" ? 5 : 1);
+                    n++
+                  ) {
+                    const records = await read();
+                    const current = records.find(
+                      (i: any) => i.key === key && i.status === "open",
+                    );
+                    if (!current) throw new Error("Owned incident missing");
+                    for (const email of current.notices.flatMap(
+                      (notice: any) => notice.emails,
+                    )) {
+                      await backend.runOwnedInternal(
+                        "fixtures:incidentControl",
+                        { campaignId: "adoption", now: email.nextAt },
+                      );
+                      await backend.runOwnedInternal("incidentEmailJobs:run", {
+                        emailId: email.id,
+                      });
+                    }
+                  }
+                }
+                response.setHeader("Content-Type", "application/json");
+                response.end(JSON.stringify({ synthetic: true }));
+              })().catch(() => {
+                response.statusCode = 400;
+                response.end("Owned incident fixture failed");
+              });
+            });
+            return;
+          }
           if (requestUrl.pathname === "/__allocation/original-recovery") {
             if (
               request.method !== "POST" ||

@@ -15,6 +15,7 @@ import { PublicCampaign } from "./PublicCampaign.tsx";
 import { PhotoAuth } from "./photo-auth.tsx";
 import { PhotoReview } from "./Photos.tsx";
 import "./preview.css";
+import { OperatorIncidents } from "./OperatorIncidents.tsx";
 import { PreviewWorkspace } from "./PreviewWorkspace.tsx";
 
 function PublicFailure() {
@@ -75,7 +76,6 @@ function useHarnessIdentity() {
   return { isLoading: false, isAuthenticated: true, fetchAccessToken };
 }
 function LocalWorkspace() {
-  const [screen, setScreen] = useState("preview");
   if (new URLSearchParams(location.search).get("workspace") === "creator")
     return (
       <>
@@ -86,35 +86,7 @@ function LocalWorkspace() {
         <CreatorWorkspace />
       </>
     );
-  return (
-    <>
-      <nav className="workspace-tabs" aria-label="Workspace">
-        <button onClick={() => setScreen("preview")}>Allocation preview</button>
-        <button onClick={() => setScreen("setup")}>Campaign setup</button>
-        <button onClick={() => setScreen("invitations")}>
-          Creator invitations
-        </button>
-        <button onClick={() => setScreen("photos")}>Creative review</button>
-      </nav>
-      {screen === "preview" ? (
-        <PreviewWorkspace />
-      ) : (
-        <>
-          <div className="preview-notice">
-            Isolated verification · synthetic identity · real Clerk evidence
-            pending T38
-          </div>
-          {screen === "photos" ? (
-            <PhotoReview />
-          ) : screen === "invitations" ? (
-            <CreatorInvitations />
-          ) : (
-            <CampaignSetup />
-          )}
-        </>
-      )}
-    </>
-  );
+  return <ManagerWorkspace local />;
 }
 function AuthenticatedWorkspace({ local = false }: { local?: boolean }) {
   const { isLoading, isAuthenticated } = useConvexAuth();
@@ -138,19 +110,39 @@ function AuthenticatedWorkspace({ local = false }: { local?: boolean }) {
     <ManagerWorkspace />
   );
 }
-function ManagerWorkspace() {
-  const [screen, setScreen] = useState("setup");
+// Local verification and Clerk sessions share the exact navigation/renderer.
+// Only the isolated advisory-preview tab and fixture banner differ.
+function ManagerWorkspace({ local = false }: { local?: boolean }) {
+  const [screen, setScreen] = useState(local ? "preview" : "setup");
   return (
     <>
       <nav className="workspace-tabs" aria-label="Workspace">
+        {local ? (
+          <button onClick={() => setScreen("preview")}>
+            Allocation preview
+          </button>
+        ) : null}
         <button onClick={() => setScreen("setup")}>Campaign setup</button>
         <button onClick={() => setScreen("invitations")}>
           Creator invitations
         </button>
         <button onClick={() => setScreen("photos")}>Creative review</button>
+        <button onClick={() => setScreen("incidents")}>
+          Operator incidents
+        </button>
         <a href="?workspace=creator">My creator workspace</a>
       </nav>
-      {screen === "photos" ? (
+      {local && screen !== "preview" ? (
+        <div className="preview-notice">
+          Isolated verification · synthetic identity · real Clerk evidence
+          pending T38
+        </div>
+      ) : null}
+      {screen === "preview" && local ? (
+        <PreviewWorkspace />
+      ) : screen === "incidents" ? (
+        <OperatorIncidents />
+      ) : screen === "photos" ? (
         <PhotoReview />
       ) : screen === "setup" ? (
         <CampaignSetup />

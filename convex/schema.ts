@@ -8,7 +8,10 @@ import {
 import { rulesValidator } from "./campaignRules.ts";
 import { videoTables } from "./videoSchema.ts";
 
+import { incidentTables } from "./incidentSchema.ts";
+
 export default defineSchema({
+  ...incidentTables,
   ...videoTables,
   photoUploads: defineTable({
     campaignSlug: v.string(),
@@ -170,6 +173,7 @@ export default defineSchema({
     name: v.string(),
     fixtureRunId: v.optional(v.string()),
     fixtureArchiveNow: v.optional(v.number()),
+    fixtureIncidentNow: v.optional(v.number()),
     authority: authorityValidator,
     reservationFundingCents: v.number(),
     reservedSlots: v.number(),
