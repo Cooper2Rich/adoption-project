@@ -1,5 +1,6 @@
 import { ClerkProvider, SignIn, UserButton, useAuth } from "@clerk/react";
 import {
+  ConvexProvider,
   ConvexProviderWithAuth,
   ConvexReactClient,
   useConvexAuth,
@@ -10,11 +11,36 @@ import { createRoot } from "react-dom/client";
 import { harnessSession } from "./api.ts";
 import { CampaignSetup } from "./CampaignSetup.tsx";
 import { CreatorInvitations, CreatorWorkspace } from "./CreatorWorkspace.tsx";
+import { PublicCampaign } from "./PublicCampaign.tsx";
 import { PhotoAuth } from "./photo-auth.tsx";
 import { PhotoReview } from "./Photos.tsx";
 import "./preview.css";
 import { PreviewWorkspace } from "./PreviewWorkspace.tsx";
 
+function PublicFailure() {
+  return (
+    <main className="setup-message">
+      <h1>Campaign unavailable</h1>
+      <p>This page could not be loaded. Reconnect and retry.</p>
+      <a href="/">Return to campaign</a>
+      <p>
+        <button onClick={() => location.reload()}>Retry campaign</button>
+      </p>
+    </main>
+  );
+}
+class PublicBoundary extends Component<
+  { children: ReactNode },
+  { error: boolean }
+> {
+  state = { error: false };
+  static getDerivedStateFromError() {
+    return { error: true };
+  }
+  render() {
+    return this.state.error ? <PublicFailure /> : this.props.children;
+  }
+}
 class AccessBoundary extends Component<
   { children: ReactNode },
   { error: boolean }
@@ -172,7 +198,7 @@ function ClerkEntry() {
               new URLSearchParams(location.search).get("workspace") ===
               "creator"
                 ? "?workspace=creator"
-                : "/"
+                : "/?workspace=manager"
             }
           />
         )}
@@ -198,17 +224,25 @@ async function start() {
   const element = document.getElementById("root");
   if (!element) throw new Error("Application root is missing");
   const root = createRoot(element);
-  if (new URLSearchParams(location.search).get("workspace") === "public") {
-    root.render(
-      <main className="setup-message">
-        <h1>adoption.is</h1>
-        <p>Support adoption.is without a creator account.</p>
-        <a href="https://adoption.is">Visit adoption.is to view and donate</a>
-        <p>
-          <a href="?workspace=creator">Invited creator sign-in</a>
-        </p>
-      </main>,
-    );
+  const workspace = new URLSearchParams(location.search).get("workspace");
+  if (!workspace || workspace === "public") {
+    try {
+      const url =
+        import.meta.env.DEV &&
+        import.meta.env.VITE_LOCAL_LAUNCH_HARNESS === "owned-isolated-run"
+          ? (await (await fetch("/__allocation/public-config")).json()).url
+          : import.meta.env.VITE_CONVEX_URL;
+      if (!url) throw new Error("Campaign service unavailable");
+      root.render(
+        <PublicBoundary>
+          <ConvexProvider client={new ConvexReactClient(url)}>
+            <PublicCampaign />
+          </ConvexProvider>
+        </PublicBoundary>,
+      );
+    } catch {
+      root.render(<PublicFailure />);
+    }
     return;
   }
   try {

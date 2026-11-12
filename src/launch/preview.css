@@ -558,3 +558,141 @@ small.held {
 .photo-workspace input[type="file"] {
   max-width: 100%;
 }
+
+.public-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px max(24px, calc((100vw - 1160px) / 2));
+  background: white;
+  border-bottom: 1px solid #dce5d8;
+}
+.public-header nav {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.public-header a,
+.public-layout a {
+  color: #284e3a;
+}
+.public-layout {
+  max-width: 1208px;
+  margin: auto;
+  padding: 32px 24px 72px;
+  overflow-wrap: anywhere;
+}
+.public-hero {
+  max-width: 780px;
+  padding: 48px 0 64px;
+  line-height: 1.75;
+}
+.public-hero h1 {
+  font-size: clamp(48px, 8vw, 82px);
+  line-height: 1;
+  letter-spacing: -3px;
+  margin: 16px 0;
+}
+.public-lead {
+  font-size: clamp(23px, 4vw, 32px);
+  line-height: 1.35;
+}
+.public-action {
+  display: inline-block;
+  text-decoration: none;
+  margin: 12px 0;
+  padding: 14px 20px;
+}
+.public-layout .primary-button {
+  color: white;
+}
+.public-section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.public-ad-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.public-ad {
+  background: white;
+  border: 1px solid #dce5d8;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 24px 0;
+  min-width: 0;
+}
+.public-ad-copy {
+  padding: 24px;
+  line-height: 1.65;
+}
+.public-ad-copy h1,
+.public-ad-copy h3 {
+  margin: 8px 0;
+  font-size: 28px;
+  line-height: 1.2;
+}
+.public-ad-copy > a:last-child {
+  display: block;
+}
+.public-media {
+  background: #e9eee6;
+  display: grid;
+  gap: 4px;
+}
+.public-media img,
+.public-media video {
+  width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  display: block;
+}
+.public-media img {
+  min-height: 200px;
+}
+.public-media-error {
+  padding: 28px;
+  background: #f3eee1;
+}
+.public-description {
+  white-space: pre-wrap;
+}
+.public-link {
+  overflow-wrap: anywhere;
+}
+.public-footer {
+  padding: 28px 24px;
+  text-align: center;
+  border-top: 1px solid #dce5d8;
+  font-size: 14px;
+}
+@media (max-width: 650px) {
+  .public-header {
+    align-items: flex-start;
+    padding: 20px;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .public-header nav {
+    gap: 18px;
+    font-size: 14px;
+  }
+  .public-layout {
+    padding: 20px 16px 48px;
+  }
+  .public-hero {
+    padding: 24px 4px 36px;
+  }
+  .public-ad-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .public-ad-copy {
+    padding: 20px;
+  }
+}

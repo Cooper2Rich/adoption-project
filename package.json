@@ -12,7 +12,7 @@
     "dev:launch": "node scripts/launch/dev.ts",
     "build:launch": "tsc -p tsconfig.launch.json && vite build --config vite.launch.config.ts",
     "test:launch:planner": "node --test tests/launch/allocation-planner.test.ts",
-    "test:launch:backend": "node --test --test-concurrency=1 tests/launch/allocation-preview.test.ts tests/launch/campaign-setup.test.ts tests/launch/creator-access.test.ts tests/launch/photos.test.ts tests/launch/videos.test.ts",
+    "test:launch:backend": "node --test --test-concurrency=1 tests/launch/allocation-preview.test.ts tests/launch/campaign-setup.test.ts tests/launch/creator-access.test.ts tests/launch/photos.test.ts tests/launch/videos.test.ts tests/launch/public-viewer.test.ts",
     "test:launch:browser": "npm run build:launch && playwright test --config playwright.launch.config.ts",
     "test:launch": "npm run test:launch:planner && npm run test:launch:backend && npm run test:launch:browser",
     "dev:adoption": "vite --config vite.public.config.ts --mode public --base / --host 127.0.0.1 --port 5173 --strictPort",

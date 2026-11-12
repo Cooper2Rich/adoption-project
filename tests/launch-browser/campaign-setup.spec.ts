@@ -17,7 +17,9 @@ test("T01 built production entry requires configured Clerk and never uses a fixt
       sessionRequests.push(request.url());
   });
   try {
-    await page.goto(`http://127.0.0.1:${address.port}/launch-preview.html`);
+    await page.goto(
+      `http://127.0.0.1:${address.port}/launch-preview.html?workspace=manager`,
+    );
     await expect(
       page.getByRole("heading", { name: "Manager sign-in unavailable" }),
     ).toBeVisible();
@@ -25,6 +27,12 @@ test("T01 built production entry requires configured Clerk and never uses a fixt
     await expect(
       page.getByRole("button", { name: "Campaign setup", exact: true }),
     ).toHaveCount(0);
+    expect(sessionRequests).toEqual([]);
+    await page.goto(`http://127.0.0.1:${address.port}/launch-preview.html`);
+    await expect(
+      page.getByRole("heading", { name: "Campaign unavailable" }),
+    ).toBeVisible();
+    await expect(page.getByText("Clerk sign-in")).toHaveCount(0);
     expect(sessionRequests).toEqual([]);
     await page.screenshot({
       path: testInfo.outputPath("production-sign-in-unconfigured.png"),
@@ -44,7 +52,7 @@ test("T01 manager validates creates locks and reopens adoption.is rules in anoth
   test.setTimeout(60000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/?workspace=manager");
   await page
     .getByRole("button", { name: "Campaign setup", exact: true })
     .click();
@@ -121,7 +129,7 @@ test("T01 manager validates creates locks and reopens adoption.is rules in anoth
   });
   try {
     const second = await context.newPage();
-    await second.goto(new URL("/", page.url()).toString());
+    await second.goto(new URL("/?workspace=manager", page.url()).toString());
     await second
       .getByRole("button", { name: "Campaign setup", exact: true })
       .click();
@@ -159,7 +167,7 @@ test("T01 invalid session visibly fails closed without exposing workspace record
       json: { ...session, token: parts.join(".") },
     });
   });
-  await page.goto("/");
+  await page.goto("/?workspace=manager");
   await expect(page.getByRole("alert")).toContainText("Session unavailable");
   await expect(
     page.getByRole("button", { name: "Campaign setup", exact: true }),

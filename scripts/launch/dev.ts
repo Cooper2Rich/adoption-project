@@ -38,9 +38,23 @@ const server = await createServer({
       name: "owned-preview-session",
       configureServer(vite: any) {
         vite.middlewares.use((request: any, response: any, next: any) => {
-          if (request.url === "/" || request.url.startsWith("/?"))
-            request.url = "/launch-preview.html" + request.url.slice(1);
+          if (
+            request.url === "/" ||
+            request.url.startsWith("/?") ||
+            /^\/(entries|fundraise)\//.test(request.url)
+          )
+            request.url =
+              "/launch-preview.html" +
+              (request.url.includes("?")
+                ? request.url.slice(request.url.indexOf("?"))
+                : "");
           const requestUrl = new URL(request.url, origin);
+          if (requestUrl.pathname === "/__allocation/public-config") {
+            response.setHeader("Content-Type", "application/json");
+            response.setHeader("Cache-Control", "no-store");
+            response.end(JSON.stringify({ url: backend.url }));
+            return;
+          }
           if (requestUrl.pathname === "/api/photos") {
             void servePhotoRequest(backend.photoService, request, response);
             return;
@@ -211,6 +225,7 @@ const server = await createServer({
                     "creator-a",
                     "creator-b",
                     "video-creator",
+                    "public-creator",
                     "wrong-person",
                   ].includes(
                     requestUrl.searchParams.get("identity") ?? "manager-a",

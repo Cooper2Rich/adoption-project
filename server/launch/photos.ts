@@ -123,14 +123,58 @@ export function createPhotoService({ url, secret, store, fixtureRunId }: any) {
           503,
         );
       const authorization = request.headers.get("authorization");
+      const target = new URL(request.url);
+      const client = new ConvexHttpClient(url);
+      if (
+        request.method === "GET" &&
+        target.searchParams.get("action") === "public"
+      ) {
+        const value = {
+          entryId: target.searchParams.get("entryId"),
+          kind: "photo",
+          index: Number(target.searchParams.get("index") ?? "0"),
+          at: Date.now(),
+        };
+        const record: any = await client.query(
+          makeFunctionReference<"query">("publicViewer:mediaAccess"),
+          {
+            ...value,
+            signature: createHmac("sha256", secret)
+              .update(stable(value))
+              .digest("hex"),
+          },
+        );
+        if ((record.fixtureRunId ?? undefined) !== fixtureRunId)
+          throw new Error("FORBIDDEN: Public media unavailable");
+        const bytes = await new Response(
+          await store.read(record.pathname),
+        ).arrayBuffer();
+        const derivative = await sharp(Buffer.from(bytes), {
+          limitInputPixels: false,
+        })
+          .rotate()
+          .resize({
+            width: 1600,
+            height: 1600,
+            fit: "inside",
+            withoutEnlargement: true,
+          })
+          .jpeg({ quality: 85 })
+          .toBuffer();
+        return new Response(new Uint8Array(derivative), {
+          headers: {
+            "Content-Type": "image/jpeg",
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+          },
+        });
+      }
       if (!authorization?.startsWith("Bearer "))
         return json(
           { error: "FORBIDDEN: Sign in to access private photos" },
           403,
         );
-      const client = new ConvexHttpClient(url);
       client.setAuth(authorization.slice(7));
-      const target = new URL(request.url);
       const campaignId = target.searchParams.get("campaignId") ?? "adoption";
       const authorize = async (uploadId: any, resource: any = false) => {
         const record = await client.query(

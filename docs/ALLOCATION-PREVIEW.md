@@ -11,7 +11,7 @@ npm ci
 npm run dev:launch
 ```
 
-Open `http://127.0.0.1:3210`. To choose another port:
+Open `http://127.0.0.1:3210/?workspace=manager` for the manager preview. The root URL opens the account-free public campaign; `?workspace=creator` opens creator access. To choose another port:
 
 ```powershell
 npm run dev:launch -- --port 3215

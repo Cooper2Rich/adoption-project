@@ -67,6 +67,9 @@ test("T03 creator actual photo upload correction rejection and manager approval 
       name: "Your photo submissions",
     });
     await expect(photos).toBeVisible();
+    await photos
+      .getByLabel("Public creator name (optional)")
+      .fill("Family Studio");
     await creator
       .getByLabel("Photo title", { exact: true })
       .fill("A family together");
@@ -132,7 +135,7 @@ test("T03 creator actual photo upload correction rejection and manager approval 
       path: `.codex/ralph/t03-${info.project.name}-creator-pending.png`,
       fullPage: true,
     });
-    await page.goto("/");
+    await page.goto("/?workspace=manager");
     await page
       .getByRole("button", { name: "Creative review", exact: true })
       .click();

@@ -119,7 +119,7 @@ test("T04 creator and manager original upload, failed processing, retry, playbac
         row.versions.some((v: any) => v.title === "Together in motion"),
       );
     expect(entry).toBeTruthy();
-    await page.goto(base);
+    await page.goto(`${base}/?workspace=manager`);
     await page
       .getByRole("button", { name: "Creative review", exact: true })
       .click();

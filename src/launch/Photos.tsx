@@ -11,7 +11,7 @@ import { ProcessedVideo, VideoStatuses } from "./Videos.tsx";
 function errorText(error: unknown) {
   return (
     String(error instanceof Error ? error.message : error).match(
-      /(?:VIDEO_[A-Z_]+|PHOTO_[A-Z_]+|STALE_VERSION|TERMS_UNAVAILABLE|ACCEPTANCE_REQUIRED|REASON_REQUIRED|DESCRIPTION_REQUIRED|OPERATION_CONFLICT|FORBIDDEN):[^\n]*/,
+      /(?:VIDEO_[A-Z_]+|PHOTO_[A-Z_]+|STALE_VERSION|TERMS_UNAVAILABLE|ACCEPTANCE_REQUIRED|REASON_REQUIRED|DESCRIPTION_REQUIRED|PUBLIC_NAME|OPERATION_CONFLICT|FORBIDDEN):[^\n]*/,
     )?.[0] ?? "Photo operation could not be confirmed. Reconnect and retry."
   );
 }
@@ -67,14 +67,17 @@ function EntryHistory({ entry }: { entry: PhotoEntry }) {
       <h3>{current.title}</h3>
       <p>{current.description}</p>
       <p>
+        Public attribution: {current.publicCreatorName || "Campaign creator"}
+      </p>
+      <p>
         <strong>{entry.status}</strong> · Version {entry.version}
       </p>
       <p>
         Tracked fundraising path: <code>{entry.trackedPath}</code>
       </p>
       <p className="muted">
-        Reserved for this competition entry. Fundraising becomes available with
-        the public campaign.
+        This competition entry keeps the same tracked fundraising link across
+        sharing and platform placements.
       </p>
       <div className="photo-grid">
         {current.video && <ProcessedVideo id={current.video} />}
@@ -124,6 +127,7 @@ export function CreatorPhotos({ canSubmit }: { canSubmit: boolean }) {
   const token = usePhotoToken();
   const [editing, setEditing] = useState<PhotoEntry | null>(null);
   const [title, setTitle] = useState(""),
+    [publicCreatorName, setPublicCreatorName] = useState(""),
     [description, setDescription] = useState("");
   const [files, setFiles] = useState<File[]>([]),
     [pending, setPending] = useState(false),
@@ -156,6 +160,7 @@ export function CreatorPhotos({ canSubmit }: { canSubmit: boolean }) {
       const fingerprint = JSON.stringify({
         title,
         description,
+        publicCreatorName: publicCreatorName.trim(),
         entry: editing?._id,
         version: editing?.version,
         files: files.map((f) => [f.name, f.size, f.lastModified]),
@@ -216,6 +221,7 @@ export function CreatorPhotos({ canSubmit }: { canSubmit: boolean }) {
         operationId: operation.id,
         title,
         description,
+        publicCreatorName: publicCreatorName.trim(),
         photos,
         ...(editing
           ? { entryId: editing._id, expectedVersion: editing.version }
@@ -229,6 +235,7 @@ export function CreatorPhotos({ canSubmit }: { canSubmit: boolean }) {
       setEditing(null);
       setTitle("");
       setDescription("");
+      setPublicCreatorName("");
       setFiles([]);
       retry.current = null;
       if (input.current) input.current.value = "";
@@ -260,6 +267,18 @@ export function CreatorPhotos({ canSubmit }: { canSubmit: boolean }) {
           <h3>
             {editing ? `Edit version ${editing.version}` : "Submit photos"}
           </h3>
+          <label>
+            Public creator name (optional)
+            <input
+              maxLength={80}
+              value={publicCreatorName}
+              onChange={(event) => setPublicCreatorName(event.target.value)}
+            />
+            <span>
+              This name appears with approved ads. Leave blank to use a stable
+              campaign creator identifier. Do not enter your email.
+            </span>
+          </label>
           <label>
             Photo title
             <input
@@ -309,6 +328,7 @@ export function CreatorPhotos({ canSubmit }: { canSubmit: boolean }) {
                 setEditing(null);
                 setTitle("");
                 setDescription("");
+                setPublicCreatorName("");
                 setFiles([]);
                 retry.current = null;
                 if (input.current) input.current.value = "";
@@ -346,6 +366,7 @@ export function CreatorPhotos({ canSubmit }: { canSubmit: boolean }) {
                 setEditing(entry);
                 setTitle(v.title);
                 setDescription(v.description);
+                setPublicCreatorName(v.publicCreatorName ?? "");
                 setFiles([]);
                 retry.current = null;
                 if (input.current) input.current.value = "";

@@ -28,6 +28,7 @@ export const photoApi = {
       expectedVersion?: number;
       title: string;
       description: string;
+      publicCreatorName?: string;
       photos: Doc<"photoUploads">["_id"][];
       video?: Doc<"videoUploads">["_id"];
     },

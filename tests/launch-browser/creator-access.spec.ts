@@ -34,7 +34,7 @@ test("T02 manager dispatch failure retry and creator blocked terms acceptance re
   } catch (error) {
     expect(String(error)).toMatch(/RULES_LOCKED/);
   }
-  await page.goto("/");
+  await page.goto("/?workspace=manager");
   await page
     .getByRole("button", { name: "Creator invitations", exact: true })
     .click();
@@ -200,8 +200,8 @@ test("T02 public campaign entry never requests a Clerk or fixture session", asyn
     page.getByRole("heading", { name: "adoption.is", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Visit adoption.is to view and donate" }),
-  ).toHaveAttribute("href", "https://adoption.is");
+    page.getByRole("link", { name: "Explore approved ads" }),
+  ).toHaveAttribute("href", "#approved");
   expect(sessions).toEqual([]);
   await page.screenshot({
     path: `.codex/ralph/t02-${info.project.name}-public.png`,
