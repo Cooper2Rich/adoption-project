@@ -1,3 +1,7 @@
+import {
+  archiveState,
+  requireUsableOriginal,
+} from "./originalArchivePolicy.ts";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
@@ -181,24 +185,28 @@ export const workspace = query({
       .query("videoUploads")
       .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignId))
       .collect();
-    return records
-      .filter(
-        (r) =>
-          r.nonprofitId === viewer.campaign.nonprofitId &&
-          (viewer.manager || r.subject === viewer.subject),
-      )
-      .map((r) => ({
-        _id: r._id,
-        filename: r.filename,
-        subject: r.subject,
-        state: r.state,
-        error: r.error,
-        size: r.size ?? r.declaredSize,
-        sha256: r.sha256,
-        duration: r.duration,
-        attempt: r.attempt,
-        createdAt: r.createdAt,
-      }));
+    return Promise.all(
+      records
+        .filter(
+          (r) =>
+            r.nonprofitId === viewer.campaign.nonprofitId &&
+            (viewer.manager || r.subject === viewer.subject),
+        )
+        .map(async (r) => ({
+          _id: r._id,
+          filename: r.filename,
+          subject: r.subject,
+          state: r.state,
+          error: r.error,
+          size: r.size ?? r.declaredSize,
+          sha256: r.sha256,
+          duration: r.duration,
+          attempt: r.attempt,
+          createdAt: r.createdAt,
+          originalArchiveState:
+            (await archiveState(ctx, r._id))?.state ?? "retained",
+        })),
+    );
   },
 });
 export const multipart = mutation({
@@ -287,6 +295,7 @@ const receipt = v.object({
   duration: v.optional(v.number()),
   videoCodec: v.optional(v.string()),
   audioCodec: v.optional(v.string()),
+  storageIdentity: v.optional(v.string()),
 });
 export const record = mutation({
   args: { receipt, signature: v.string() },
@@ -320,6 +329,8 @@ export const record = mutation({
         return { claimed: false, record: u };
       }
     }
+    if (r.action === "claim" || r.action === "verified")
+      await requireUsableOriginal(ctx, u._id);
     if (r.action === "invalid") {
       if (u.sha256) return { claimed: false, record: u };
       if (!r.error || r.error.length > 1000) denied();
@@ -330,6 +341,8 @@ export const record = mutation({
         !r.sha256 ||
         !/^[a-f0-9]{64}$/.test(r.sha256) ||
         !r.duration ||
+        !r.storageIdentity ||
+        r.storageIdentity.length > 512 ||
         r.duration > 60 ||
         r.duration <= 0 ||
         r.videoCodec !== "h264" ||
@@ -349,6 +362,7 @@ export const record = mutation({
         videoCodec: r.videoCodec,
         audioCodec: r.audioCodec,
         verifiedAt: r.at,
+        storageIdentity: r.storageIdentity,
         state: "verified",
         error: undefined,
       });

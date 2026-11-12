@@ -63,6 +63,37 @@ const server = await createServer({
             void servePhotoRequest(backend.videoService, request, response);
             return;
           }
+          if (requestUrl.pathname === "/__allocation/original-recovery") {
+            if (
+              request.method !== "POST" ||
+              request.headers.host !== `127.0.0.1:${port}` ||
+              (request.headers.origin && request.headers.origin !== origin)
+            ) {
+              response.statusCode = 403;
+              response.end("Forbidden");
+              return;
+            }
+            let body = "";
+            request.on("data", (chunk: any) => (body += chunk));
+            request.on("end", () => {
+              void (async () => {
+                const input = JSON.parse(body);
+                if (input.mode) backend.videoStore.archiveMode(input.mode);
+                if (input.uploadId)
+                  await backend.runOwnedInternal(
+                    "fixtures:originalRecovery",
+                    Object.fromEntries(
+                      Object.entries(input).filter(([key]) => key !== "mode"),
+                    ),
+                  );
+                response.end("Owned archive fixture updated");
+              })().catch(() => {
+                response.statusCode = 400;
+                response.end("Fixture update failed");
+              });
+            });
+            return;
+          }
           if (requestUrl.pathname === "/__allocation/mux") {
             if (
               request.method !== "POST" ||
@@ -222,11 +253,13 @@ const server = await createServer({
                 url: backend.url,
                 token: backend.token(
                   [
+                    "administrator",
                     "creator-a",
                     "creator-b",
                     "video-creator",
                     "public-creator",
                     "archive-creator",
+                    "recovery-creator",
                     "wrong-person",
                   ].includes(
                     requestUrl.searchParams.get("identity") ?? "manager-a",
@@ -254,6 +287,12 @@ for (const signal of ["SIGINT", "SIGTERM"])
   });
 try {
   await server.listen();
+  await backend.command(
+    "env",
+    "set",
+    "VIDEO_ARCHIVE_WORKER_URL",
+    `${origin}/api/videos`,
+  );
   console.log(`Allocation preview ready: ${origin}`);
 } catch (err: any) {
   await close();

@@ -57,7 +57,9 @@ export default defineSchema({
     source: v.string(),
     at: v.number(),
     mediaChanged: v.boolean(),
-  }).index("by_entry_version", ["entryId", "version"]),
+  })
+    .index("by_entry_version", ["entryId", "version"])
+    .index("by_video", ["video"]),
   photoEvents: defineTable({
     campaignSlug: v.string(),
     nonprofitId: v.string(),
@@ -167,6 +169,7 @@ export default defineSchema({
     nonprofitId: v.string(),
     name: v.string(),
     fixtureRunId: v.optional(v.string()),
+    fixtureArchiveNow: v.optional(v.number()),
     authority: authorityValidator,
     reservationFundingCents: v.number(),
     reservedSlots: v.number(),

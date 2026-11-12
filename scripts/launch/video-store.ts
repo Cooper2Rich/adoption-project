@@ -20,13 +20,89 @@ import { inspectVideo } from "../../server/launch/video-inspection.ts";
 export async function localVideoStore(directory: string) {
   const root = join(directory, "private-video-fixture");
   await mkdir(root, { recursive: true });
+  const owned = new Set<string>();
+  const storageIdentity = `fixture:${randomUUID()}`;
+  let purgeMode = "normal";
+  let purgeCalls = 0;
+  let releasePurge: (() => void) | undefined;
+  let releasePreflight: (() => void) | undefined;
+  let preflightCalls = 0;
   const path = (name: string) => {
     if (!/^videos\/[a-z0-9]+\.mp4$/.test(name))
       throw new Error("VIDEO_PATH: Invalid video identity");
     return join(root, name.slice(7));
   };
   return {
-    async read(name: string) {
+    archiveAvailable: () => true,
+    identity: async () => storageIdentity,
+    preflightOriginal: async (record: any) => {
+      preflightCalls++;
+      if (purgeMode === "preflight-pause")
+        await new Promise<void>((resolve) => {
+          releasePreflight = resolve;
+        });
+      if (purgeMode === "preflight-failed") return false;
+      return record.storageIdentity === storageIdentity &&
+        owned.has(record.pathname)
+        ? { etag: "owned-local-fixture" }
+        : false;
+    },
+    archivePreflightCalls: () => preflightCalls,
+    archivePreflightRelease: () => {
+      releasePreflight?.();
+      releasePreflight = undefined;
+    },
+    archiveMode: (mode: string) => {
+      purgeMode = mode;
+    },
+    archiveCalls: () => purgeCalls,
+    archiveRelease: () => {
+      releasePurge?.();
+      releasePurge = undefined;
+      releasePreflight?.();
+      releasePreflight = undefined;
+    },
+    async purgeOriginal(record: any, reconcile: boolean) {
+      const target = path(record.pathname);
+      if (record.storageIdentity !== storageIdentity)
+        throw new Error("Owned storage identity mismatch");
+      if (!owned.has(record.pathname))
+        throw new Error(
+          "Refusing deletion outside new files owned by this store instance",
+        );
+      if (reconcile) {
+        try {
+          const file = await open(target, "r");
+          await file.close();
+          return "unknown";
+        } catch (error: any) {
+          if (error.code === "ENOENT") return "absent";
+          throw error;
+        }
+      }
+      purgeCalls++;
+      if (purgeMode === "pause")
+        await new Promise<void>((resolve) => {
+          releasePurge = resolve;
+        });
+      if (purgeMode === "unknown-before")
+        throw new Error("Synthetic unknown request");
+      if (purgeMode === "failed") return "failed";
+      await unlink(target);
+      if (purgeMode === "unknown-after")
+        throw new Error("Synthetic lost delete response");
+      try {
+        const file = await open(target, "r");
+        await file.close();
+        return "unknown";
+      } catch (error: any) {
+        if (error.code === "ENOENT") return "absent";
+        throw error;
+      }
+    },
+    async read(name: string, pinnedIdentity?: string) {
+      if (pinnedIdentity && pinnedIdentity !== storageIdentity)
+        throw new Error("Owned storage identity mismatch");
       const file = await open(path(name), "r");
       return Readable.toWeb(file.createReadStream());
     },
@@ -44,6 +120,7 @@ export async function localVideoStore(directory: string) {
         }
         await file.close();
         await link(temporary, destination);
+        owned.add(name);
       } finally {
         await file.close();
         await unlink(temporary);

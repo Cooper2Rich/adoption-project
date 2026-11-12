@@ -233,6 +233,40 @@ export async function createLocalBackend({
     return output;
   }
 
+  // Only bounded fixture controls and the intended purge action may use this
+  // run-owned admin capability. Never return the capability or key to a browser.
+  async function runOwnedInternal(name: string, args: any) {
+    if (
+      ![
+        "fixtures:originalRecovery",
+        "fixtures:archiveBoundary",
+        "archiveJobs:purge",
+      ].includes(name)
+    )
+      throw new Error("Unsupported owned internal operation");
+    const deployment = JSON.parse(
+      await readFile(
+        join(directory, ".convex/local/default/config.json"),
+        "utf8",
+      ),
+    );
+    const selected = await readFile(join(directory, ".env.local"), "utf8");
+    if (
+      deployment.deploymentName !== "anonymous-agent" ||
+      deployment.ports.cloud !== port ||
+      !selected.includes("anonymous:anonymous-agent") ||
+      !selected.includes(url)
+    )
+      throw new Error("Refusing operation outside this owned deployment");
+    const ownedClient = new ConvexHttpClient(url) as ConvexHttpClient & {
+      setAdminAuth(key: string): void;
+    };
+    ownedClient.setAdminAuth(deployment.adminKey);
+    return name === "archiveJobs:purge"
+      ? ownedClient.action(makeFunctionReference<"action">(name), args)
+      : ownedClient.mutation(makeFunctionReference<"mutation">(name), args);
+  }
+
   try {
     await start();
     await command("env", "set", "ALLOCATION_PREVIEW_FIXTURE_RUN_ID", runId);
@@ -290,11 +324,14 @@ export async function createLocalBackend({
           `Application auth configuration did not reject fixture identity: ${logs}`,
         );
     }
+    const videoStore = await localVideoStore(directory);
     return {
+      videoStore,
+      runOwnedInternal,
       videoService: createVideoService({
         url,
         secret: videoSecret,
-        store: await localVideoStore(directory),
+        store: videoStore,
         provider: mux,
         fixtureRunId: runId,
       }),

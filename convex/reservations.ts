@@ -1,3 +1,7 @@
+import {
+  requireEntryOriginalsAvailable,
+  requireUsableOriginal,
+} from "./originalArchivePolicy.ts";
 import { v } from "convex/values";
 import { authorizedCampaign, operationIdentity } from "./access.ts";
 import { integer, money } from "./allocation/money.ts";
@@ -55,6 +59,44 @@ export const reserve = mutation({
       campaign.reservationFinanceRevision !== args.financeRevision
     )
       throw new Error("REVISION_CHANGED: Revalidate authority and finance");
+    const entryId = ctx.db.normalizeId("photoEntries", args.entryId);
+    const boundEntry = entryId ? await ctx.db.get(entryId) : null;
+    if (
+      boundEntry &&
+      (boundEntry.campaignSlug !== args.campaignId ||
+        boundEntry.nonprofitId !== campaign.nonprofitId)
+    )
+      throw new Error("FORBIDDEN: Reservation entry access denied");
+    if (entryId && boundEntry) {
+      await requireEntryOriginalsAvailable(ctx, entryId);
+      const entry = boundEntry;
+      const version = await ctx.db
+        .query("photoVersions")
+        .withIndex("by_entry_version", (q) =>
+          q.eq("entryId", entryId).eq("version", entry.version),
+        )
+        .unique();
+      if (!version)
+        throw new Error(
+          "ENTRY_NOT_AUTHORIZED: Current entry revision is unresolved",
+        );
+      if (version?.video) await requireUsableOriginal(ctx, version.video);
+    } else {
+      const archives = await ctx.db
+        .query("originalArchives")
+        .withIndex("by_campaign", (q) => q.eq("campaignSlug", args.campaignId))
+        .collect();
+      if (
+        archives.some(
+          (a) =>
+            a.campaignSlug === args.campaignId &&
+            !["restored", "deleted"].includes(a.state),
+        )
+      )
+        throw new Error(
+          "VIDEO_ARCHIVE_FENCED: Resolve archive requests before reserving unattributed use",
+        );
+    }
     const candidate = await ctx.db
       .query("reservationCandidates")
       .withIndex("by_entry", (q) =>

@@ -275,3 +275,31 @@ export const archiveBoundary = mutation({
     }
   },
 });
+
+// T07 bounded owned-run controls; this module is never deployed with the app.
+export const originalRecovery = mutation({
+  args:{uploadId:v.id("videoUploads"),at:v.optional(v.number()),relativeToDeadline:v.optional(v.number()),clearClock:v.optional(v.boolean()),endSourceLease:v.optional(v.boolean()),state:v.optional(v.string()),entryStatus:v.optional(v.union(v.literal("pending"),v.literal("approved"),v.literal("rejected"))),commitment:v.optional(v.boolean()),authorizeOperator:v.optional(v.string()),reservationFunding:v.optional(v.number()),clearTestReservation:v.optional(v.boolean())},
+  handler:async(ctx,args)=>{
+    const upload=await ctx.db.get(args.uploadId);
+    if(!upload) throw new Error("Owned upload required");
+    const campaign=await ctx.db.query("campaigns").withIndex("by_slug",q=>q.eq("slug",upload.campaignSlug)).unique();
+    if(!campaign?.fixtureRunId || campaign.fixtureRunId!==process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned fixture required");
+    const archive=await ctx.db.query("originalArchives").withIndex("by_upload",q=>q.eq("uploadId",upload._id)).unique();
+    if(args.clearTestReservation) {
+      const item=await ctx.db.query("reservations").withIndex("by_operation",q=>q.eq("campaignSlug",upload.campaignSlug).eq("operationId","unrelated-after-purge")).unique();
+      if(item) {await ctx.db.delete(item._id);await ctx.db.patch(campaign._id,{reservedSlots:campaign.reservedSlots-1,reservedCents:campaign.reservedCents-item.amountCents});}
+    }
+    if(args.reservationFunding!==undefined) await ctx.db.patch(campaign._id,{reservationFundingCents:args.reservationFunding});
+    if(args.authorizeOperator) await ctx.db.insert("operators",{subject:args.authorizeOperator,active:true});
+    if(args.clearClock) await ctx.db.patch(campaign._id,{fixtureArchiveNow:undefined});
+    else if(args.at!==undefined || args.relativeToDeadline!==undefined) await ctx.db.patch(campaign._id,{fixtureArchiveNow:args.at ?? (archive!.purgeAt+args.relativeToDeadline!)});
+    if(args.endSourceLease) await ctx.db.patch(upload._id,{sourceExpiresAt:undefined});
+    if(args.state) await ctx.db.patch(upload._id,{state:args.state});
+    if(args.entryStatus) for(const revision of (await ctx.db.query("photoVersions").collect()).filter(r=>r.video===upload._id)) await ctx.db.patch(revision.entryId,{status:args.entryStatus});
+    if(args.commitment!==undefined) {
+      const items=(await ctx.db.query("reservationCandidates").collect()).filter(r=>r.campaignSlug===upload.campaignSlug && r.entryId==="t07-unknown-use");
+      for(const item of items) await ctx.db.delete(item._id);
+      if(args.commitment) await ctx.db.insert("reservationCandidates",{campaignSlug:upload.campaignSlug,entryId:"t07-unknown-use",authorized:true,amountCents:100});
+    }
+  }
+});

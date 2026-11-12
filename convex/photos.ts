@@ -1,3 +1,7 @@
+import {
+  requireEntryOriginalsAvailable,
+  requireUsableOriginal,
+} from "./originalArchivePolicy.ts";
 import { projection, trackedPath, unnamedCreator } from "./publicViewer.ts";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
@@ -280,6 +284,7 @@ export const submit = mutation({
         !video.sha256)
     )
       forbidden();
+    if (args.video) await requireUsableOriginal(ctx, args.video);
     let entry = args.entryId ? await ctx.db.get(args.entryId) : null;
     if (
       args.entryId &&
@@ -293,6 +298,7 @@ export const submit = mutation({
       throw new Error(
         "STALE_VERSION: Reopen the current submission before editing",
       );
+    if (entry) await requireEntryOriginalsAvailable(ctx, entry._id);
     const current = entry
       ? await ctx.db
           .query("photoVersions")
@@ -409,12 +415,14 @@ export const review = mutation({
     if (entry!.version !== args.expectedVersion)
       throw new Error("STALE_VERSION: Review the latest submitted version");
     if (args.decision === "approved") {
+      await requireEntryOriginalsAvailable(ctx, args.entryId);
       const version = await ctx.db
         .query("photoVersions")
         .withIndex("by_entry_version", (q) =>
           q.eq("entryId", args.entryId).eq("version", entry!.version),
         )
         .unique();
+      if (version?.video) await requireUsableOriginal(ctx, version.video);
       if (
         version?.video &&
         (await ctx.db.get(version.video))?.state !== "ready"
