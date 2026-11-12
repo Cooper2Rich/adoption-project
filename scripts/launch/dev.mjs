@@ -35,9 +35,67 @@ const server = await createServer({
       name: "owned-preview-session",
       configureServer(vite) {
         vite.middlewares.use((request, response, next) => {
-          if (request.url === "/") request.url = "/launch-preview.html";
+          if (request.url === "/" || request.url.startsWith("/?"))
+            request.url = "/launch-preview.html" + request.url.slice(1);
+          const requestUrl = new URL(request.url, origin);
+          if (requestUrl.pathname === "/__allocation/clerk-mode") {
+            if (
+              request.method !== "POST" ||
+              request.headers.host !== `127.0.0.1:${port}` ||
+              (request.headers.origin && request.headers.origin !== origin)
+            ) {
+              response.statusCode = 403;
+              response.end("Forbidden");
+              return;
+            }
+            let body = "";
+            request.on("data", (chunk) => {
+              body += chunk;
+            });
+            request.on("end", () => {
+              if (
+                !["confirmed", "failed", "unknown", "unknown-absent"].includes(
+                  body,
+                )
+              ) {
+                response.statusCode = 400;
+                response.end("Unknown synthetic mode");
+                return;
+              }
+              backend.clerk.mode(body);
+              response.end("Owned synthetic provider mode changed");
+            });
+            return;
+          }
+          if (requestUrl.pathname === "/__allocation/terms") {
+            if (
+              request.method !== "POST" ||
+              request.headers.host !== `127.0.0.1:${port}` ||
+              (request.headers.origin && request.headers.origin !== origin)
+            ) {
+              response.statusCode = 403;
+              response.end("Forbidden");
+              return;
+            }
+            void backend
+              .command(
+                "run",
+                "fixtures:terms",
+                JSON.stringify({ campaignSlug: "adoption", synthetic: true }),
+              )
+              .then(() =>
+                response.end(
+                  "Configured synthetic terms for owned verification only",
+                ),
+              )
+              .catch(() => {
+                response.statusCode = 500;
+                response.end("Fixture configuration failed");
+              });
+            return;
+          }
           if (
-            request.url !== "/__allocation/session" &&
+            requestUrl.pathname !== "/__allocation/session" &&
             request.url !== "/__allocation/health"
           )
             return next();
@@ -72,7 +130,13 @@ const server = await createServer({
             response.end(
               JSON.stringify({
                 url: backend.url,
-                token: backend.token("manager-a"),
+                token: backend.token(
+                  ["creator-a", "creator-b", "wrong-person"].includes(
+                    requestUrl.searchParams.get("identity"),
+                  )
+                    ? requestUrl.searchParams.get("identity")
+                    : "manager-a",
+                ),
               }),
             );
         });
