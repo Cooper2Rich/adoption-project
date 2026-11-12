@@ -23,6 +23,8 @@ import { createClerkFixture } from "./clerk-fixture.ts";
 import { localPhotoStore } from "./photo-store.ts";
 import { localMuxProvider, localVideoStore } from "./video-store.ts";
 
+import { createEmailFixture } from "./email-fixture.ts";
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const cli = join(root, "node_modules/convex/bin/main.js");
 
@@ -42,6 +44,7 @@ export async function createLocalBackend({
   onLog = () => {},
 }: any = {}) {
   const clerk = await createClerkFixture();
+  const email = await createEmailFixture();
   const directory = await mkdtemp(join(tmpdir(), "slander-preview-"));
   const runId = randomUUID();
   const photoSecret = randomUUID() + randomUUID();
@@ -240,6 +243,13 @@ export async function createLocalBackend({
       ![
         "fixtures:originalRecovery",
         "fixtures:archiveBoundary",
+        "fixtures:incident",
+        "fixtures:incidentControl",
+        "fixtures:incidentWatchdog",
+        "incidentEmail:watchdog",
+        "incidentEmail:claim",
+        "incidentEmail:settle",
+        "incidentEmailJobs:run",
         "archiveJobs:purge",
       ].includes(name)
     )
@@ -262,7 +272,7 @@ export async function createLocalBackend({
       setAdminAuth(key: string): void;
     };
     ownedClient.setAdminAuth(deployment.adminKey);
-    return name === "archiveJobs:purge"
+    return ["archiveJobs:purge", "incidentEmailJobs:run"].includes(name)
       ? ownedClient.action(makeFunctionReference<"action">(name), args)
       : ownedClient.mutation(makeFunctionReference<"mutation">(name), args);
   }
@@ -270,6 +280,13 @@ export async function createLocalBackend({
   try {
     await start();
     await command("env", "set", "ALLOCATION_PREVIEW_FIXTURE_RUN_ID", runId);
+    await command("env", "set", "OPERATOR_EMAIL_FIXTURE_URL", email.url);
+    await command(
+      "env",
+      "set",
+      "OPERATOR_EMAIL_FROM",
+      "alerts@controlled.example",
+    );
     await command("env", "set", "PHOTO_RECEIPT_SECRET", photoSecret);
     await command("env", "set", "VIDEO_RECEIPT_SECRET", videoSecret);
     await command("env", "set", "CLERK_INVITATION_FIXTURE_URL", clerk.url);
@@ -327,6 +344,7 @@ export async function createLocalBackend({
     const videoStore = await localVideoStore(directory);
     return {
       videoStore,
+      email,
       runOwnedInternal,
       videoService: createVideoService({
         url,
@@ -351,6 +369,7 @@ export async function createLocalBackend({
       stop: async () => {
         await stop();
         await clerk.stop();
+        await email.stop();
       },
       diagnostics: () => logs,
       restart: async () => {

@@ -696,3 +696,35 @@ small.held {
     padding: 20px;
   }
 }
+.operator-incidents {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.operator-incidents .panel {
+  margin-bottom: 20px;
+  overflow-wrap: anywhere;
+}
+.operator-incidents form {
+  display: grid;
+  gap: 8px;
+  margin: 20px 0;
+}
+.operator-incidents input {
+  min-width: 0;
+  padding: 10px;
+}
+.operator-incidents button {
+  max-width: 100%;
+  white-space: normal;
+  margin: 4px 0;
+}
+.operator-incident h2 {
+  text-transform: capitalize;
+}
+.operator-incident li {
+  margin-bottom: 12px;
+}
+.operator-incident details {
+  margin: 12px 0;
+}
