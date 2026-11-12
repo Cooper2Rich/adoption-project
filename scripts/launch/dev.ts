@@ -226,6 +226,7 @@ const server = await createServer({
                     "creator-b",
                     "video-creator",
                     "public-creator",
+                    "archive-creator",
                     "wrong-person",
                   ].includes(
                     requestUrl.searchParams.get("identity") ?? "manager-a",

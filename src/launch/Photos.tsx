@@ -7,6 +7,7 @@ import { timestamp } from "./format.ts";
 import { photoApi, type PhotoEntry } from "./photo-api.ts";
 import { usePhotoToken } from "./photo-auth.tsx";
 import { ProcessedVideo, VideoStatuses } from "./Videos.tsx";
+import { OriginalDownload } from "./OriginalDownload.tsx";
 
 function errorText(error: unknown) {
   return (
@@ -85,6 +86,13 @@ function EntryHistory({ entry }: { entry: PhotoEntry }) {
           <PrivatePhoto key={id} id={id} />
         ))}
       </div>
+      {current.video && (
+        <OriginalDownload
+          uploadId={current.video}
+          entryId={entry._id}
+          version={current.version}
+        />
+      )}
       <details onToggle={(event) => setHistoryOpen(event.currentTarget.open)}>
         <summary>
           Submission and review history ({entry.versions.length} versions)
@@ -95,6 +103,13 @@ function EntryHistory({ entry }: { entry: PhotoEntry }) {
               Version {v.version}: {v.title}
             </h4>
             <p>{v.description}</p>
+            {historyOpen && v.video && v.version !== entry.version && (
+              <OriginalDownload
+                uploadId={v.video}
+                entryId={entry._id}
+                version={v.version}
+              />
+            )}
             <p>
               {timestamp(v.at)} · {v.actor} · {v.source} · {v.photos.length}{" "}
               original photos · agreement {v.acceptanceId}

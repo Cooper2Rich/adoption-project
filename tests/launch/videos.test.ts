@@ -1020,6 +1020,39 @@ test(
           assert.equal(result.sha256, expected.digest("hex"));
           const saved = await submit(result._id);
           assert.ok(saved._id);
+          const issued = await route(
+            "original-ticket",
+            record._id,
+            "creator-a",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                entryId: saved._id,
+                version: 1,
+                operationId: "t06-5gb-download",
+              }),
+            },
+          );
+          assert.equal(issued.status, 200, await issued.clone().text());
+          const grant = await issued.json();
+          const download = await fetch(origin + grant.url);
+          assert.equal(download.status, 200);
+          assert.equal(download.headers.get("content-length"), "5000000000");
+          const received = createHash("sha256");
+          let length = 0,
+            chunks = 0;
+          for await (const chunk of download.body!) {
+            received.update(chunk);
+            length += chunk.length;
+            chunks++;
+          }
+          assert.equal(length, 5_000_000_000);
+          assert.equal(received.digest("hex"), result.sha256);
+          assert.ok(chunks > 100);
+          console.log(
+            `T06 exact original streamed download: bytes=${length}, chunks=${chunks}, sha256=${result.sha256}; same T04 fixture, no additional 5GB allocation`,
+          );
           console.log(
             `T04 actual original boundary: bytes=${result.size}, seconds=${result.duration}, sha256=${result.sha256}`,
           );

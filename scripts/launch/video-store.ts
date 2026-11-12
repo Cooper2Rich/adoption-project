@@ -26,7 +26,10 @@ export async function localVideoStore(directory: string) {
     return join(root, name.slice(7));
   };
   return {
-    read: async (name: any) => Readable.toWeb(createReadStream(path(name))),
+    async read(name: string) {
+      const file = await open(path(name), "r");
+      return Readable.toWeb(file.createReadStream());
+    },
     async write(name: any, stream: any) {
       const destination = path(name),
         temporary = destination + "." + randomUUID();

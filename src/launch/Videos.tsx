@@ -6,6 +6,7 @@ import { campaign } from "./creator-api.ts";
 import { photoApi, type PhotoEntry } from "./photo-api.ts";
 import { usePhotoToken } from "./photo-auth.tsx";
 import { uploadOriginalParts } from "./video-upload.ts";
+import { OriginalDownload } from "./OriginalDownload.tsx";
 
 const endpoint = (action: string, id?: string) =>
   `/api/videos?action=${action}&campaignId=adoption${id ? `&uploadId=${id}` : ""}`;
@@ -169,6 +170,7 @@ export function VideoStatuses({
               {record.duration ? ` · ${record.duration} seconds` : ""}
             </p>
             {record.error && <p role="alert">{record.error}</p>}
+            {record.sha256 && <OriginalDownload uploadId={record._id} />}
             {record.state === "ready" ? (
               <ProcessedVideo id={record._id} />
             ) : (
@@ -369,7 +371,8 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
           Upload one exact MP4/H.264 original with AAC or no audio: up to
           5,000,000,000 bytes and 60 seconds, inclusive. Your original stays
           private. Staff review processed playback and return corrections to
-          you.
+          you. Verified originals have no automatic archive expiry, including
+          after campaign completion, withdrawal or playback removal.
         </p>
         {canSubmit ? (
           <form onSubmit={save} className="photo-form">
@@ -464,13 +467,18 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
           (version) => version.version === entry.version,
         )!;
         return (
-          <article className="panel" key={entry._id}>
+          <article className="panel photo-entry" key={entry._id}>
             <h3>{version.title}</h3>
             <p>
               {version.description} · {entry.status} · Version {entry.version}
             </p>
             <p>Tracked fundraising path: {entry.trackedPath}</p>
             <ProcessedVideo id={version.video!} />
+            <OriginalDownload
+              uploadId={version.video!}
+              entryId={entry._id}
+              version={version.version}
+            />
             <button
               disabled={pending || !canSubmit}
               onClick={() => {
@@ -491,11 +499,20 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
                 Video revision history ({entry.versions.length} versions)
               </summary>
               {entry.versions.map((version) => (
-                <p key={version._id}>
-                  Version {version.version} · {version.title} · agreement{" "}
-                  {version.acceptanceId} · {new Date(version.at).toISOString()}{" "}
-                  · {version.actor}
-                </p>
+                <div key={version._id}>
+                  <p>
+                    Version {version.version} · {version.title} · agreement{" "}
+                    {version.acceptanceId} ·{" "}
+                    {new Date(version.at).toISOString()} · {version.actor}
+                  </p>
+                  {version.video && version.version !== entry.version && (
+                    <OriginalDownload
+                      uploadId={version.video}
+                      entryId={entry._id}
+                      version={version.version}
+                    />
+                  )}
+                </div>
               ))}
             </details>
           </article>

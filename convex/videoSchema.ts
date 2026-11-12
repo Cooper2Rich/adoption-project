@@ -2,6 +2,24 @@ import { defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const videoTables = {
+  originalDownloadGrants: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    entryId: v.optional(v.id("photoEntries")),
+    version: v.optional(v.number()),
+    archiveVersion: v.literal(1),
+    uploadId: v.id("videoUploads"),
+    sha256: v.string(),
+    size: v.number(),
+    actor: v.string(),
+    source: v.literal("originalDownloads:issue"),
+    at: v.number(),
+    expiresAt: v.number(),
+    operationId: v.string(),
+    fingerprint: v.string(),
+  })
+    .index("by_operation", ["campaignSlug", "actor", "operationId"])
+    .index("by_upload", ["uploadId"]),
   videoUploads: defineTable({
     campaignSlug: v.string(),
     nonprofitId: v.string(),
