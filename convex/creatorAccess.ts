@@ -96,7 +96,7 @@ async function applicableTerms(ctx: QueryCtx, campaign: Doc<"campaigns">) {
     return null;
   return terms;
 }
-async function acceptedCreator(ctx: QueryCtx, campaignId: string) {
+export async function acceptedCreator(ctx: QueryCtx, campaignId: string) {
   const result = await creator(ctx, campaignId);
   const acceptance = await ctx.db
     .query("participationAcceptances")

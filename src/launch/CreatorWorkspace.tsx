@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent } from "react";
 import { useMutation, useQuery, useAction } from "convex/react";
 import { creatorApi, campaign } from "./creator-api";
 import { timestamp } from "./format";
+import { CreatorPhotos } from "./Photos";
 
 export function CreatorInvitations() {
   const invitations = useQuery(creatorApi.manager, campaign);
@@ -194,7 +195,6 @@ function PrivateStatus() {
       ) : (
         <p>No earnings or payment setup records yet.</p>
       )}
-      <p>Submission intake is not available yet.</p>
     </section>
   );
 }
@@ -255,6 +255,7 @@ export function CreatorWorkspace() {
             <pre className="terms-body">{acceptance.termsBody}</pre>
           </section>
           <PrivateStatus />
+          <CreatorPhotos canSubmit={terms?._id === acceptance.termsId} />
         </>
       ) : !terms ? (
         <section className="panel" role="alert">
