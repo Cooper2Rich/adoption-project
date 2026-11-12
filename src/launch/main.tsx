@@ -8,6 +8,7 @@ import {
 import { harnessSession } from "./api";
 import { PreviewWorkspace } from "./PreviewWorkspace";
 import { CampaignSetup } from "./CampaignSetup";
+import { CreatorInvitations, CreatorWorkspace } from "./CreatorWorkspace";
 import { ClerkProvider, SignIn, UserButton, useAuth } from "@clerk/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import "./preview.css";
@@ -24,7 +25,14 @@ class AccessBoundary extends Component<
     return this.state.error ? (
       <main className="setup-message">
         <h1>Workspace unavailable</h1>
-        <p>Your session or campaign access has changed. Reload to reconnect.</p>
+        <p>
+          Your session or campaign access has changed. Use the invited identity,
+          then sign in again through Clerk.
+        </p>
+        <a href="?workspace=creator">Retry creator access</a>
+        <p>
+          <a href="?workspace=signin">Clerk sign-in and recovery</a>
+        </p>
       </main>
     ) : (
       this.props.children
@@ -40,11 +48,24 @@ function useHarnessIdentity() {
 }
 function LocalWorkspace() {
   const [screen, setScreen] = useState("preview");
+  if (new URLSearchParams(location.search).get("workspace") === "creator")
+    return (
+      <>
+        <div className="preview-notice">
+          Isolated verification · synthetic identity · real Clerk evidence
+          pending T38
+        </div>
+        <CreatorWorkspace />
+      </>
+    );
   return (
     <>
       <nav className="workspace-tabs" aria-label="Workspace">
         <button onClick={() => setScreen("preview")}>Allocation preview</button>
         <button onClick={() => setScreen("setup")}>Campaign setup</button>
+        <button onClick={() => setScreen("invitations")}>
+          Creator invitations
+        </button>
       </nav>
       {screen === "preview" ? (
         <PreviewWorkspace />
@@ -54,7 +75,11 @@ function LocalWorkspace() {
             Isolated verification · synthetic identity · real Clerk evidence
             pending T38
           </div>
-          <CampaignSetup />
+          {screen === "invitations" ? (
+            <CreatorInvitations />
+          ) : (
+            <CampaignSetup />
+          )}
         </>
       )}
     </>
@@ -74,7 +99,28 @@ function AuthenticatedWorkspace({ local = false }: { local?: boolean }) {
         Session unavailable. Reload to reconnect.
       </main>
     );
-  return local ? <LocalWorkspace /> : <CampaignSetup />;
+  return local ? (
+    <LocalWorkspace />
+  ) : new URLSearchParams(location.search).get("workspace") === "creator" ? (
+    <CreatorWorkspace />
+  ) : (
+    <ManagerWorkspace />
+  );
+}
+function ManagerWorkspace() {
+  const [screen, setScreen] = useState("setup");
+  return (
+    <>
+      <nav className="workspace-tabs" aria-label="Workspace">
+        <button onClick={() => setScreen("setup")}>Campaign setup</button>
+        <button onClick={() => setScreen("invitations")}>
+          Creator invitations
+        </button>
+        <a href="?workspace=creator">My creator workspace</a>
+      </nav>
+      {screen === "setup" ? <CampaignSetup /> : <CreatorInvitations />}
+    </>
+  );
 }
 function ClerkEntry() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -84,11 +130,37 @@ function ClerkEntry() {
         Loading sign-in…
       </main>
     );
-  if (!isSignedIn)
+  if (
+    !isSignedIn ||
+    new URLSearchParams(location.search).get("workspace") === "signin"
+  )
     return (
       <main className="setup-message">
-        <h1>adoption.is manager sign-in</h1>
-        <SignIn routing="hash" />
+        <h1>adoption.is campaign sign-in</h1>
+        <p>
+          Use your invited email. Clerk provides sign-in, email verification and
+          supported account recovery.
+        </p>
+        {isSignedIn ? (
+          <>
+            <p>
+              Manage your Clerk session or sign out to use another invited
+              identity.
+            </p>
+            <UserButton />
+          </>
+        ) : (
+          <SignIn
+            routing="hash"
+            fallbackRedirectUrl={
+              new URLSearchParams(location.search).get("workspace") ===
+              "creator"
+                ? "?workspace=creator"
+                : "/"
+            }
+          />
+        )}
+        <a href="?workspace=public">View the public campaign</a>
       </main>
     );
   return (
@@ -108,6 +180,19 @@ async function start() {
   const element = document.getElementById("root");
   if (!element) throw new Error("Application root is missing");
   const root = createRoot(element);
+  if (new URLSearchParams(location.search).get("workspace") === "public") {
+    root.render(
+      <main className="setup-message">
+        <h1>adoption.is</h1>
+        <p>Support adoption.is without a creator account.</p>
+        <a href="https://adoption.is">Visit adoption.is to view and donate</a>
+        <p>
+          <a href="?workspace=creator">Invited creator sign-in</a>
+        </p>
+      </main>,
+    );
+    return;
+  }
   try {
     if (!(
       import.meta.env.DEV &&

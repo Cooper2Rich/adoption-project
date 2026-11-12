@@ -128,3 +128,112 @@ export const revoke = mutation({
     await ctx.db.patch(membership._id, { active: false });
   },
 });
+
+export const terms = mutation({
+  args: { campaignSlug: v.string(), synthetic: v.literal(true) },
+  handler: async (ctx, { campaignSlug, synthetic }) => {
+    const campaign = await ctx.db
+      .query("campaigns")
+      .withIndex("by_slug", (q) => q.eq("slug", campaignSlug))
+      .unique();
+    if (
+      !campaign ||
+      campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID
+    )
+      throw new Error("Owned fixture required");
+    if (
+      await ctx.db
+        .query("participationTerms")
+        .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignSlug))
+        .unique()
+    )
+      throw new Error("Fixture terms already configured");
+    return await ctx.db.insert("participationTerms", {
+      campaignSlug,
+      nonprofitId: campaign.nonprofitId,
+      version: "synthetic-test-v1",
+      title: "SYNTHETIC TEST AGREEMENT — NOT LEGAL TERMS",
+      body: "SYNTHETIC ISOLATED VERIFICATION ONLY. This text is not an applicable legal agreement and must never enable production signup.\nTest coverage: commission, prizes, score, cutoffs, refunds and creative use.\nTest permission model: creators retain ownership and confirm permission to authorize included content. Campaign submissions may be publicly displayed and used for campaign advertising without additional approval per submission or placement. New advertising use ends on withdrawal or campaign completion. Private records remain available to explain results and payments.\nActual legal matters require a supplied, approved pre-signup use agreement.",
+      synthetic,
+      approvedBy: "synthetic-fixture-operator",
+      approvedAt: Date.now(),
+    });
+  },
+});
+export const privateRecords = mutation({
+  args: { campaignSlug: v.string(), subject: v.string() },
+  handler: async (ctx, { campaignSlug, subject }) => {
+    const campaign = await ctx.db
+      .query("campaigns")
+      .withIndex("by_slug", (q) => q.eq("slug", campaignSlug))
+      .unique();
+    if (
+      !campaign ||
+      campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID
+    )
+      throw new Error("Owned fixture required");
+    const ids = [];
+    for (const kind of ["earnings", "payment-setup"] as const)
+      ids.push(
+        await ctx.db.insert("creatorPrivateRecords", {
+          campaignSlug,
+          nonprofitId: campaign.nonprofitId,
+          subject,
+          kind,
+          summary: `Synthetic private ${kind} for ${subject}`,
+        }),
+      );
+    return ids;
+  },
+});
+export const removeFixtureScope = mutation({
+  args: { campaignSlug: v.string() },
+  handler: async (ctx, { campaignSlug }) => {
+    const campaign = await ctx.db
+      .query("campaigns")
+      .withIndex("by_slug", (q) => q.eq("slug", campaignSlug))
+      .unique();
+    if (
+      !campaign ||
+      campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID
+    )
+      throw new Error("Owned fixture required");
+    await ctx.db.patch(campaign._id, { fixtureRunId: undefined });
+  },
+});
+
+export const removeTerms = mutation({
+  args: { campaignSlug: v.string() },
+  handler: async (ctx, { campaignSlug }) => {
+    const terms = await ctx.db
+      .query("participationTerms")
+      .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignSlug))
+      .unique();
+    if (terms) await ctx.db.delete(terms._id);
+  },
+});
+export const foreignPrivateRecord = mutation({
+  args: { subject: v.string() },
+  handler: async (ctx, { subject }) =>
+    await ctx.db.insert("creatorPrivateRecords", {
+      campaignSlug: "adoption",
+      nonprofitId: "nonprofit-b",
+      subject,
+      kind: "earnings",
+      summary: "FOREIGN_PRIVATE_MUST_NOT_LEAK",
+    }),
+});
+
+export const restoreFixtureScope = mutation({
+  args: { campaignSlug: v.string(), runId: v.string() },
+  handler: async (ctx, { campaignSlug, runId }) => {
+    if (runId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID)
+      throw new Error("Owned run required");
+    const campaign = await ctx.db
+      .query("campaigns")
+      .withIndex("by_slug", (q) => q.eq("slug", campaignSlug))
+      .unique();
+    if (!campaign) throw new Error("Campaign missing");
+    await ctx.db.patch(campaign._id, { fixtureRunId: runId });
+  },
+});

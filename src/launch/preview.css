@@ -488,3 +488,21 @@ small.held {
     padding: 40px 24px;
   }
 }
+
+.terms-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+}
+.campaign-setup article {
+  border-top: 1px solid var(--border, #bbb);
+  padding-block: 1rem;
+}
+.campaign-setup article a {
+  display: inline-block;
+  margin-right: 1rem;
+}
+.campaign-setup input[type="checkbox"] {
+  width: auto;
+  margin-right: 0.6rem;
+}

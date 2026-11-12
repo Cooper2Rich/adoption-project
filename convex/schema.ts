@@ -8,6 +8,89 @@ import {
 } from "./allocation/validators.ts";
 
 export default defineSchema({
+  clerkInvitationJournal: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    invitationId: v.id("creatorInvitations"),
+    kind: v.union(v.literal("create"), v.literal("revoke")),
+    state: v.union(
+      v.literal("dispatched"),
+      v.literal("unknown"),
+      v.literal("confirmed"),
+      v.literal("failed"),
+    ),
+    actor: v.string(),
+    source: v.string(),
+    version: v.literal(1),
+    at: v.number(),
+    updatedAt: v.number(),
+    providerId: v.optional(v.string()),
+    history: v.array(
+      v.object({ state: v.string(), actor: v.string(), at: v.number() }),
+    ),
+  }).index("by_invitation_kind", ["invitationId", "kind"]),
+  creatorInvitations: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    email: v.string(),
+    providerState: v.union(v.literal("proposed"), v.literal("confirmed")),
+    providerId: v.optional(v.string()),
+    subject: v.optional(v.string()),
+    active: v.boolean(),
+    createdAt: v.number(),
+    actor: v.string(),
+  })
+    .index("by_campaign_email", ["campaignSlug", "email"])
+    .index("by_campaign_subject", ["campaignSlug", "subject"]),
+  participationTerms: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    version: v.string(),
+    title: v.string(),
+    body: v.string(),
+    synthetic: v.boolean(),
+    approvedBy: v.string(),
+    approvedAt: v.number(),
+  }).index("by_campaign", ["campaignSlug"]),
+  participationAcceptances: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    invitationId: v.id("creatorInvitations"),
+    subject: v.string(),
+    termsId: v.id("participationTerms"),
+    version: v.string(),
+    termsTitle: v.string(),
+    termsBody: v.string(),
+    synthetic: v.boolean(),
+    acceptedAt: v.number(),
+    source: v.string(),
+    operationId: v.string(),
+  }).index("by_invitation", ["invitationId"]),
+  creatorPrivateRecords: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    subject: v.string(),
+    kind: v.union(v.literal("earnings"), v.literal("payment-setup")),
+    summary: v.string(),
+  }).index("by_owner", ["campaignSlug", "subject"]),
+  creatorAudit: defineTable({
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    actor: v.string(),
+    source: v.string(),
+    at: v.number(),
+    version: v.string(),
+    operationId: v.string(),
+    fingerprint: v.string(),
+    invitationId: v.id("creatorInvitations"),
+    action: v.union(
+      v.literal("invited"),
+      v.literal("revoked"),
+      v.literal("accepted"),
+    ),
+  })
+    .index("by_operation", ["campaignSlug", "actor", "operationId"])
+    .index("by_campaign", ["campaignSlug"]),
   campaignResources: defineTable({
     campaignSlug: v.string(),
     nonprofitId: v.string(),

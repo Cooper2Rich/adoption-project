@@ -16,6 +16,8 @@ import { randomUUID, generateKeyPairSync, sign } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
 import { ConvexHttpClient } from "convex/browser";
 
+import { createClerkFixture } from "./clerk-fixture.mjs";
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const cli = join(root, "node_modules/convex/bin/main.js");
 
@@ -34,6 +36,7 @@ export async function createLocalBackend({
   fixtureAuth = true,
   onLog = () => {},
 } = {}) {
+  const clerk = await createClerkFixture();
   const directory = await mkdtemp(join(tmpdir(), "slander-preview-"));
   const runId = randomUUID();
   const issuer = `https://allocation-preview.invalid/${runId}`;
@@ -168,6 +171,8 @@ export async function createLocalBackend({
     const payload = Buffer.from(
       JSON.stringify({
         sub: subject,
+        email: `${subject}@creators.example`,
+        email_verified: true,
         iss: issuer,
         aud: "allocation-preview",
         iat: now,
@@ -214,6 +219,7 @@ export async function createLocalBackend({
   try {
     await start();
     await command("env", "set", "ALLOCATION_PREVIEW_FIXTURE_RUN_ID", runId);
+    await command("env", "set", "CLERK_INVITATION_FIXTURE_URL", clerk.url);
     await command("run", "fixtures:seed", JSON.stringify({ runId }));
     if (!fixtureAuth) {
       const fixtureClient = new ConvexHttpClient(url);
@@ -257,11 +263,15 @@ export async function createLocalBackend({
     }
     return {
       directory,
+      clerk,
       runId,
       url,
       token,
       command,
-      stop,
+      stop: async () => {
+        await stop();
+        await clerk.stop();
+      },
       diagnostics: () => logs,
       restart: async () => {
         await stop();
@@ -284,6 +294,7 @@ export async function createLocalBackend({
     };
   } catch (err) {
     await stop();
+    await clerk.stop();
     throw err;
   }
 }
