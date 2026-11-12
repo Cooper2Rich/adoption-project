@@ -6,7 +6,7 @@ import { money, integer } from "./allocation/money.ts";
 export const state = query({
   args: { campaignId: v.string() },
   handler: async (ctx, { campaignId }) => {
-    const { campaign } = await authorizedCampaign(ctx, campaignId);
+    const { campaign } = await authorizedCampaign(ctx, campaignId, true);
     return {
       reservedSlots: campaign.reservedSlots,
       reservedCents: campaign.reservedCents,
@@ -30,6 +30,7 @@ export const reserve = mutation({
     const { campaign, subject } = await authorizedCampaign(
       ctx,
       args.campaignId,
+      true,
     );
     operationIdentity(args.operationId);
     const existing = await ctx.db

@@ -57,6 +57,53 @@ select:focus-visible {
 .wordmark span {
   color: #72935c;
 }
+.workspace-tabs {
+  display: flex;
+  gap: 12px;
+  padding: 12px 24px;
+  background: white;
+}
+.workspace-tabs button {
+  border: 1px solid #dce5d8;
+  border-radius: 8px;
+  background: #eff3e8;
+  padding: 10px;
+}
+.preview-layout.campaign-setup {
+  max-width: 820px;
+}
+.campaign-setup > p {
+  line-height: 1.7;
+}
+.rules-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.rules-summary dt {
+  font-weight: 600;
+}
+.rules-summary dd {
+  margin: 0;
+  text-align: left;
+}
+@media (max-width: 600px) {
+  .campaign-setup .field-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .campaign-setup input {
+    min-width: 0;
+  }
+  .rules-summary {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .rules-summary dd {
+    margin-bottom: 12px;
+  }
+}
 .session-label {
   margin-left: auto;
   border: 1px solid #dce5d8;

@@ -18,6 +18,10 @@ const server = await createServer({
   root,
   cacheDir: join(backend.directory, "vite-cache"),
   configFile: join(root, "vite.launch.config.ts"),
+  define: {
+    "import.meta.env.VITE_LOCAL_LAUNCH_HARNESS":
+      JSON.stringify("owned-isolated-run"),
+  },
   server: {
     host: "127.0.0.1",
     port,

@@ -3,6 +3,39 @@ import type {
   AllocationInput,
   AllocationResult,
 } from "../../convex/allocation/planner.ts";
+import type { CampaignRules } from "../../convex/campaignRules.ts";
+
+export type CampaignSettings = {
+  _id: string;
+  rules: CampaignRules;
+  version: 1;
+  acceptedTermsVersion: string;
+  actor: string;
+  source: string;
+  createdAt: number;
+  operationId: string;
+  batchPreparation: { weekday: 3; time: "12:00"; timezone: "America/Chicago" };
+};
+export type CampaignWorkspace = {
+  name: string;
+  slug: string;
+  nonprofitId: string;
+  subject: string;
+  isAdministrator: boolean;
+  settings: CampaignSettings | null;
+};
+export const setupApi = {
+  workspace: makeFunctionReference<
+    "query",
+    { campaignId: string },
+    CampaignWorkspace
+  >("campaignSetup:workspace"),
+  create: makeFunctionReference<
+    "mutation",
+    { campaignId: string; operationId: string; rules: CampaignRules },
+    CampaignSettings
+  >("campaignSetup:create"),
+};
 
 export type SavedPreview = {
   _id: string;

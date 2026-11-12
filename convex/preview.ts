@@ -21,7 +21,11 @@ export const save = mutation({
     input: inputValidator,
   },
   handler: async (ctx, { campaignId, operationId, input }) => {
-    const { campaign, subject } = await authorizedCampaign(ctx, campaignId);
+    const { campaign, subject } = await authorizedCampaign(
+      ctx,
+      campaignId,
+      true,
+    );
     operationIdentity(operationId);
     const fingerprint = stableRequest(input);
     const existing = await ctx.db
@@ -81,7 +85,7 @@ export const save = mutation({
 export const list = query({
   args: { campaignId: v.string() },
   handler: async (ctx, { campaignId }) => {
-    await authorizedCampaign(ctx, campaignId);
+    await authorizedCampaign(ctx, campaignId, true);
     return await ctx.db
       .query("previews")
       .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignId))
@@ -93,7 +97,11 @@ export const list = query({
 export const campaign = query({
   args: { campaignId: v.string() },
   handler: async (ctx, { campaignId }) => {
-    const { campaign, subject } = await authorizedCampaign(ctx, campaignId);
+    const { campaign, subject } = await authorizedCampaign(
+      ctx,
+      campaignId,
+      true,
+    );
     return {
       name: campaign.name,
       slug: campaign.slug,
@@ -107,7 +115,7 @@ export const campaign = query({
 export const notifications = query({
   args: { campaignId: v.string() },
   handler: async (ctx, { campaignId }) => {
-    await authorizedCampaign(ctx, campaignId);
+    await authorizedCampaign(ctx, campaignId, true);
     return await ctx.db
       .query("notifications")
       .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignId))

@@ -45,6 +45,13 @@ export const seed = mutation({
         role: "creator",
         active: true,
       });
+      for (const kind of ["provider", "finance"] as const)
+        await ctx.db.insert("campaignResources", {
+          campaignSlug: slug,
+          nonprofitId,
+          kind,
+          reference: `unvalidated-fixture-${kind}-${nonprofitId}`,
+        });
     }
     for (const control of [
       { slug: "slot-control", capacity: 1, fundingCents: 2000 },
@@ -81,6 +88,17 @@ export const seed = mutation({
       active: true,
     });
   },
+});
+
+export const resourceIds = mutation({
+  args: { campaignSlug: v.string() },
+  handler: async (ctx, { campaignSlug }) =>
+    (
+      await ctx.db
+        .query("campaignResources")
+        .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignSlug))
+        .collect()
+    ).map((row) => row._id),
 });
 
 export const changeAuthority = mutation({
