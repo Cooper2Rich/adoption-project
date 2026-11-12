@@ -432,19 +432,19 @@ export function PhotoReview() {
   return (
     <main className="preview-layout campaign-setup">
       <p className="eyebrow">adoption.is / Manager review</p>
-      <h1>Review creator photos.</h1>
+      <h1>Review creator photos and videos.</h1>
       <VideoStatuses />
       <p>
-        Review the submitted originals. Return any creative or formatting
-        problem to the creator. Approval permits public display; paid
-        advertising requires separate launch readiness and admission.
+        Review submitted photos and processed video playback. Return creative or
+        formatting problems to the creator. Approval permits public display;
+        paid advertising requires separate launch readiness and admission.
       </p>
       {!entries ? (
         <p>Loading submissions…</p>
       ) : entries.length ? (
         entries.map((entry) => <ReviewEntry key={entry._id} entry={entry} />)
       ) : (
-        <p>No photo submissions to review.</p>
+        <p>No creative submissions to review.</p>
       )}
     </main>
   );

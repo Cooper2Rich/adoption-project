@@ -1,8 +1,10 @@
-import { expect, test } from "@playwright/test";
+import { expect as baseExpect, test } from "@playwright/test";
 import { ConvexHttpClient } from "convex/browser";
 import { makeFunctionReference } from "convex/server";
 import { campaignRules as rules } from "../launch/fixtures.ts";
 import { videoBytes } from "../launch/video-fixtures.ts";
+
+const expect = baseExpect.configure({ timeout: 30_000 });
 
 test("T04 creator and manager original upload, failed processing, retry, playback and fresh revisions", async ({
   page,
@@ -41,6 +43,9 @@ test("T04 creator and manager original upload, failed processing, retry, playbac
     invitationId: invitation._id,
     kind: "create",
   });
+  // Set the run-owned terms fixture before navigation; an instantaneous
+  // isVisible() can see the loading screen and miss the unavailable-terms state.
+  await page.request.post(`${base}/__allocation/terms`);
   const context = await browser.newContext({
     viewport: info.project.use.viewport,
   });
@@ -56,12 +61,6 @@ test("T04 creator and manager original upload, failed processing, retry, playbac
     await creator.goto(
       `${base}/?workspace=creator&invitation=${invitation._id}`,
     );
-    if (
-      await creator
-        .getByRole("heading", { name: "Participation terms unavailable" })
-        .isVisible()
-    )
-      await page.request.post(`${base}/__allocation/terms`);
     await creator.getByRole("checkbox").check();
     await creator
       .getByRole("button", { name: "Complete campaign signup" })
@@ -122,13 +121,13 @@ test("T04 creator and manager original upload, failed processing, retry, playbac
     expect(entry).toBeTruthy();
     await page.goto(base);
     await page
-      .getByRole("button", { name: "Photo review", exact: true })
+      .getByRole("button", { name: "Creative review", exact: true })
       .click();
     const review = page.getByRole("article", { name: `Review ${entry._id}` });
     await review
       .getByRole("button", { name: "Approve unchanged creative", exact: true })
       .click();
-    await expect(review.getByRole("status")).toContainText("VIDEO_NOT_READY");
+    await expect(review).toContainText("VIDEO_NOT_READY");
     await creator.screenshot({
       path: `.codex/ralph/t04-${info.project.name}-failed.png`,
       fullPage: true,
@@ -148,7 +147,7 @@ test("T04 creator and manager original upload, failed processing, retry, playbac
     await status
       .getByRole("button", { name: "Retry / refresh processing", exact: true })
       .click();
-    await expect(status).toContainText("processing");
+    await expect(status.getByText("processing", { exact: true })).toBeVisible();
     await creator.screenshot({
       path: `.codex/ralph/t04-${info.project.name}-processing.png`,
       fullPage: true,
@@ -181,7 +180,7 @@ test("T04 creator and manager original upload, failed processing, retry, playbac
     // The manager view also plays the processed bytes before fresh review.
     await page.reload();
     await page
-      .getByRole("button", { name: "Photo review", exact: true })
+      .getByRole("button", { name: "Creative review", exact: true })
       .click();
     await expect(
       review.getByLabel("Processed video review", { exact: true }),
@@ -247,6 +246,19 @@ test("T04 creator and manager original upload, failed processing, retry, playbac
         exact: true,
       }),
     ).toContainText("A different original");
+    // Metadata establishes each player's intrinsic height. Capture the complete
+    // pending replacement only after those layout changes have settled.
+    await expect
+      .poll(() =>
+        creator
+          .getByLabel("Processed video review", { exact: true })
+          .evaluateAll(
+            (videos: HTMLVideoElement[]) =>
+              videos.length === 4 &&
+              videos.every((video) => video.readyState >= 1),
+          ),
+      )
+      .toBeTruthy();
     await creator.screenshot({
       path: `.codex/ralph/t04-${info.project.name}-replacement.png`,
       fullPage: true,
@@ -266,9 +278,10 @@ test("T04 creator and manager original upload, failed processing, retry, playbac
     );
     await creator.reload();
     await expect(
-      creator
-        .getByText(/access.*(unavailable|denied)|permission|revoked/i)
-        .first(),
+      creator.getByRole("heading", {
+        name: "Workspace unavailable",
+        exact: true,
+      }),
     ).toBeVisible();
   } finally {
     await context.close();

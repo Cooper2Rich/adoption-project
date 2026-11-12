@@ -66,7 +66,14 @@ export function muxProvider({
 }: any = {}) {
   return {
     synthetic: false,
-    available: () => !!evidenceId,
+    available: () =>
+      !!(
+        evidenceId &&
+        (client.authorizationToken || (client.tokenId && client.tokenSecret)) &&
+        client.webhookSecret &&
+        client.jwtSigningKey &&
+        client.jwtPrivateKey
+      ),
     create: (url: any, identity: any) =>
       client.video.assets.create(
         {
@@ -147,6 +154,14 @@ export function createVideoService({
   fixtureRunId,
   sourceOrigin,
 }: any) {
+  let trustedSourceOrigin: string | undefined;
+  try {
+    const source = new URL(sourceOrigin);
+    if (source.protocol === "https:" && !source.username && !source.password)
+      trustedSourceOrigin = source.origin;
+  } catch {
+    /* Invalid or missing configuration blocks dispatch before claiming an attempt. */
+  }
   return async function videoService(request: any) {
     const json = (body: any, status: any = 200) =>
       Response.json(body, {
@@ -409,7 +424,7 @@ export function createVideoService({
             },
             503,
           );
-        if (!sourceOrigin && !fixtureRunId)
+        if (!trustedSourceOrigin && !fixtureRunId)
           return json(
             {
               error:
@@ -438,7 +453,10 @@ export function createVideoService({
             ).record,
           );
         }
-        const source = new URL("/api/videos", sourceOrigin ?? target.origin);
+        const source = new URL(
+          "/api/videos",
+          trustedSourceOrigin ?? target.origin,
+        );
         source.searchParams.set("action", "source");
         source.searchParams.set("grant", sourceToken(record));
         try {

@@ -423,3 +423,24 @@ export const providerAccess = query({
     return { ...record!, fixtureRunId: campaign?.fixtureRunId ?? null };
   },
 });
+
+// Permission-checked processing evidence is separate from source access grants.
+export const history = query({
+  args: { ...scope, uploadId },
+  handler: async (ctx, args) => {
+    await videoReader(ctx, args.campaignId, args.uploadId);
+    return (
+      await ctx.db
+        .query("videoEvents")
+        .withIndex("by_upload", (q) => q.eq("uploadId", args.uploadId))
+        .collect()
+    ).map((event) => ({
+      actor: event.actor,
+      source: event.source,
+      at: event.at,
+      attempt: event.attempt,
+      action: event.action,
+      eventId: event.eventId,
+    }));
+  },
+});

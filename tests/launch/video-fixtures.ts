@@ -11,6 +11,8 @@ export async function videoBytes({
   audio = "none",
   faststart = false,
   color = "orange",
+  fragmented = false,
+  bframes = false,
 } = {}) {
   const directory = await mkdtemp(join(tmpdir(), "slander-video-fixture-")),
     output = join(directory, "fixture.mp4");
@@ -33,7 +35,12 @@ export async function videoBytes({
           ? ["-preset", "ultrafast", "-pix_fmt", "yuv420p"]
           : []),
         ...(audio !== "none" ? ["-c:a", audio] : ["-an"]),
-        ...(faststart ? ["-movflags", "+faststart"] : []),
+        ...(bframes ? ["-bf", "2"] : []),
+        ...(fragmented
+          ? ["-movflags", "+frag_keyframe+empty_moov+default_base_moof"]
+          : faststart
+            ? ["-movflags", "+faststart"]
+            : []),
         "-t",
         String(duration),
         output,

@@ -1,10 +1,3 @@
-import { sha256 } from "@noble/hashes/sha2.js";
-import { bytesToHex } from "@noble/hashes/utils.js";
-import {
-  completeMultipartUpload,
-  createMultipartUpload,
-  uploadPart,
-} from "@vercel/blob/client";
 import { useConvex, useMutation, useQuery } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import { useEffect, useRef, useState, type FormEvent } from "react";
@@ -12,6 +5,7 @@ import type { Doc } from "../../convex/functions.ts";
 import { campaign } from "./creator-api.ts";
 import { photoApi, type PhotoEntry } from "./photo-api.ts";
 import { usePhotoToken } from "./photo-auth.tsx";
+import { uploadOriginalParts } from "./video-upload.ts";
 
 const endpoint = (action: string, id?: string) =>
   `/api/videos?action=${action}&campaignId=adoption${id ? `&uploadId=${id}` : ""}`;
@@ -146,7 +140,7 @@ export function VideoStatuses({
       });
       const body = await result.json();
       if (!result.ok) throw new Error(body.error);
-      setMessage(`Original preserved. Processing status: ${body.state}.`);
+      setMessage("Original preserved. Status refresh requested.");
     } catch (error) {
       setMessage(videoError(error));
     } finally {
@@ -238,13 +232,16 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
         description,
         editing?._id,
         editing?.version,
-        resumeId,
+        // Setting resumeId after reservation is internal progress, not a new
+        // submission. Keep a lost-response retry bound to the same operation.
+        file ? undefined : resumeId,
         file?.name,
         file?.size,
         file?.lastModified,
       ]);
       if (operation.current.fingerprint !== fingerprint)
         operation.current = { id: crypto.randomUUID(), fingerprint };
+      const operationId = operation.current.id;
       const headers = { Authorization: `Bearer ${await token()}` };
       let id = editing?.versions.find(
         (version) => version.version === editing.version,
@@ -254,7 +251,7 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
           ? await client.query(accessRef, { ...campaign, uploadId: resumeId })
           : await reserve({
               ...campaign,
-              operationId: operation.current.id,
+              operationId,
               filename: file!.name,
               size: file!.size,
             });
@@ -298,72 +295,22 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
             });
             const body = await response.json();
             if (!response.ok) throw new Error(body.error);
-            const options = {
-              access: "private" as const,
-              contentType: "video/mp4",
-              token: body.clientToken,
-            };
-            const multipart = record.multipart ?? {
-              ...(await createMultipartUpload(record.pathname, options)),
-              parts: [],
-            };
-            await saveMultipart({
-              ...campaign,
-              uploadId: id,
-              key: multipart.key,
-              providerUploadId: multipart.uploadId,
-              parts: multipart.parts,
-            });
-            const partSize = 16 * 1024 * 1024;
-            for (
-              let start = 0, partNumber = 1;
-              start < file.size;
-              start += partSize, partNumber++
-            ) {
-              const part = file.slice(
-                  start,
-                  Math.min(start + partSize, file.size),
-                ),
-                hash = bytesToHex(
-                  sha256(new Uint8Array(await part.arrayBuffer())),
-                ),
-                prior = multipart.parts.find(
-                  (part) => part.partNumber === partNumber,
-                );
-              if (prior) {
-                if (prior.sha256 !== hash)
-                  throw new Error(
-                    "VIDEO_RESUME: Selected original differs from uploaded parts. Start a new upload",
-                  );
-                continue;
-              }
-              setMessage(
-                `Uploading original: ${Math.round((start / file.size) * 100)}%. Keep this page open or reselect the same file to resume.`,
-              );
-              const result = await uploadPart(record.pathname, part, {
-                ...options,
-                key: multipart.key,
-                uploadId: multipart.uploadId,
-                partNumber,
-              });
-              multipart.parts.push({ ...result, sha256: hash });
-              await saveMultipart({
-                ...campaign,
-                uploadId: id,
-                key: multipart.key,
-                providerUploadId: multipart.uploadId,
-                parts: multipart.parts,
-              });
-            }
-            try {
-              await completeMultipartUpload(record.pathname, multipart.parts, {
-                ...options,
-                key: multipart.key,
-                uploadId: multipart.uploadId,
-              });
-            } catch {
-              /* A lost finalize response is resolved by authoritative byte verification. */
-            }
+            await uploadOriginalParts(
+              file,
+              record.pathname,
+              body.clientToken,
+              record.multipart,
+              async (multipart) => {
+                await saveMultipart({
+                  ...campaign,
+                  uploadId: id!,
+                  key: multipart.key,
+                  providerUploadId: multipart.uploadId,
+                  parts: multipart.parts,
+                });
+              },
+              setMessage,
+            );
           }
           setMessage("Verifying the exact stored original…");
           const verified = await fetch(endpoint("verify", id), {
@@ -384,7 +331,7 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
       if (!id) throw new Error("VIDEO_COUNT: Choose one original video");
       const saved = await submit({
         ...campaign,
-        operationId: operation.current.id,
+        operationId,
         title,
         description,
         photos: [],
@@ -468,6 +415,10 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
               type="button"
               disabled={pending}
               onClick={() => {
+                operation.current = {
+                  id: crypto.randomUUID(),
+                  fingerprint: "",
+                };
                 setResumeId(null);
                 setEditing(null);
                 setFile(null);

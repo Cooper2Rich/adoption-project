@@ -17,6 +17,7 @@ import {
 } from "../../server/launch/videos.ts";
 import { campaignRules as rules } from "./fixtures.ts";
 import { paddedVideo, videoBytes } from "./video-fixtures.ts";
+import { uploadOriginalParts } from "../../src/launch/video-upload.ts";
 
 test("T04 official Blob SDK grants exact private multipart path and inclusive 5GB capability (synthetic signing key)", async () => {
   const record = {
@@ -63,6 +64,154 @@ test("T04 official Blob SDK grants exact private multipart path and inclusive 5G
   );
 });
 
+test("T04 actual SDK multipart HTTP resumes confirmed bytes and rejects a different reselected file", async () => {
+  const parts = new Map<number, Buffer>(),
+    calls: number[] = [];
+  let failSecond = true,
+    creates = 0,
+    completed: Buffer | undefined;
+  const server = createServer(async (request, response) => {
+    const action = request.headers["x-mpu-action"],
+      chunks: Buffer[] = [];
+    for await (const chunk of request) chunks.push(chunk);
+    const body = Buffer.concat(chunks);
+    response.setHeader("Content-Type", "application/json");
+    assert.equal(
+      request.headers.authorization?.startsWith("Bearer vercel_blob_client_"),
+      true,
+    );
+    assert.equal(
+      new URL(request.url!, "http://local").searchParams.get("pathname"),
+      "videos/multipart.mp4",
+    );
+    if (action === "create") {
+      creates++;
+      response.end(
+        JSON.stringify({ key: "owned-key", uploadId: "owned-upload" }),
+      );
+    } else if (action === "upload") {
+      const n = Number(request.headers["x-mpu-part-number"]);
+      calls.push(n);
+      if (n === 2 && failSecond) {
+        response.statusCode = 400;
+        response.end(
+          JSON.stringify({
+            error: {
+              code: "bad_request",
+              message: "Synthetic interrupted part",
+            },
+          }),
+        );
+      } else {
+        parts.set(n, body);
+        response.end(
+          JSON.stringify({
+            etag: createHash("sha256").update(body).digest("hex"),
+          }),
+        );
+      }
+    } else {
+      const order = JSON.parse(body.toString());
+      completed = Buffer.concat(
+        order.map((p: { partNumber: number; etag: string }) => {
+          const bytes = parts.get(p.partNumber)!;
+          assert.equal(
+            p.etag,
+            createHash("sha256").update(bytes).digest("hex"),
+          );
+          return bytes;
+        }),
+      );
+      // The write completed but the caller lost its finalize acknowledgement.
+      response.statusCode = 400;
+      response.end(
+        JSON.stringify({
+          error: {
+            code: "bad_request",
+            message: "Synthetic lost finalize acknowledgement",
+          },
+        }),
+      );
+    }
+  });
+  server.listen(0, "127.0.0.1");
+  await once(server, "listening");
+  const previous = process.env.VERCEL_BLOB_API_URL;
+  process.env.VERCEL_BLOB_API_URL = `http://127.0.0.1:${(server.address() as import("node:net").AddressInfo).port}`;
+  try {
+    const bytes = Buffer.alloc(33 * 1024 * 1024 + 17, 91),
+      file = new Blob([bytes]),
+      record = {
+        pathname: "videos/multipart.mp4",
+        expiresAt: Date.now() + 60_000,
+      },
+      token = await blobVideoStore({
+        token: "vercel_blob_rw_synthetic_not-a-provider-credential",
+      }).token(
+        new Request("http://owned.invalid"),
+        {
+          type: "blob.generate-client-token",
+          payload: {
+            pathname: record.pathname,
+            multipart: true,
+            clientPayload: "{}",
+          },
+        },
+        async () => record,
+      );
+    let saved: Parameters<typeof uploadOriginalParts>[3];
+    const checkpoint = async (state: NonNullable<typeof saved>) => {
+      saved = structuredClone(state);
+    };
+    await assert.rejects(
+      uploadOriginalParts(
+        file,
+        record.pathname,
+        token.clientToken,
+        undefined,
+        checkpoint,
+        () => {},
+      ),
+    );
+    assert.equal(saved!.parts.length, 1);
+    assert.deepEqual(calls, [1, 2]);
+    const changed = Buffer.from(bytes);
+    changed[0] ^= 1;
+    await assert.rejects(
+      uploadOriginalParts(
+        new Blob([changed]),
+        record.pathname,
+        token.clientToken,
+        saved,
+        checkpoint,
+        () => {},
+      ),
+      /VIDEO_RESUME/,
+    );
+    assert.deepEqual(calls, [1, 2]);
+    failSecond = false;
+    await uploadOriginalParts(
+      file,
+      record.pathname,
+      token.clientToken,
+      saved,
+      checkpoint,
+      () => {},
+    );
+    assert.equal(creates, 1);
+    assert.deepEqual(calls, [1, 2, 2, 3]);
+    assert.equal(saved!.parts.length, 3);
+    assert.deepEqual(completed, bytes);
+    console.log(
+      `T04 controlled multipart bytes=${completed!.length}, parts=3, sha256=${createHash("sha256").update(completed!).digest("hex")}`,
+    );
+  } finally {
+    if (previous === undefined) delete process.env.VERCEL_BLOB_API_URL;
+    else process.env.VERCEL_BLOB_API_URL = previous;
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});
+
 test("T04 official Mux SDK wire contract, no POST retries, exact input fields, and ambiguous correlation (synthetic HTTP)", async () => {
   let calls = 0,
     wire: any;
@@ -104,6 +253,24 @@ test("T04 official Mux SDK wire contract, no POST retries, exact input fields, a
     /VIDEO_PROVIDER_UNKNOWN/,
   );
   assert.equal(muxProvider({ client, evidenceId: "" }).available(), false);
+  assert.equal(
+    muxProvider({ client, evidenceId: "synthetic-evidence-only" }).available(),
+    false,
+  );
+  const configured = new Mux({
+    tokenId: "synthetic",
+    tokenSecret: "synthetic",
+    webhookSecret: "synthetic",
+    jwtSigningKey: "synthetic",
+    jwtPrivateKey: "synthetic",
+  });
+  assert.equal(
+    muxProvider({
+      client: configured,
+      evidenceId: "synthetic-evidence",
+    }).available(),
+    true,
+  );
   verifyProviderInput(
     [
       {
@@ -192,6 +359,45 @@ test("T04 streaming actual MP4 bytes codec, inclusive 60-second and malformed co
     inspectVideo([badAudio], badAudio.length),
     /descriptor/i,
   );
+  for (const options of [
+    { duration: 60, fragmented: true },
+    { duration: 60, bframes: true },
+    { duration: 1, audio: "aac", fragmented: true },
+  ]) {
+    const bytes = await videoBytes(options);
+    const result = await inspectVideo([bytes], bytes.length);
+    assert.ok(result.duration > 0 && result.duration <= 60);
+  }
+  const long = await videoBytes({ duration: 61 });
+  // Spoof short movie/track headers and suppress the edit list; real sample
+  // timing must still reject the 61-second media timeline.
+  for (const type of ["mvhd", "tkhd"]) {
+    const offset = long.indexOf(Buffer.from(type));
+    long.writeUInt32BE(1, offset + (type === "mvhd" ? 20 : 24));
+  }
+  long.write("free", long.indexOf(Buffer.from("elst")));
+  await assert.rejects(inspectVideo([long], long.length), /VIDEO_DURATION/);
+  for (const type of ["stts", "stsz", "stco", "avcC"]) {
+    const altered = Buffer.from(bytes),
+      at = altered.indexOf(Buffer.from(type));
+    assert.ok(at > 0);
+    if (type === "stts") altered.writeUInt32BE(0xffffffff, at + 16);
+    if (type === "stsz") altered.writeUInt32BE(0xffffffff, at + 8);
+    if (type === "stco") altered.writeUInt32BE(0xffffffff, at + 12);
+    if (type === "avcC") altered.writeUInt16BE(0xffff, at + 10);
+    await assert.rejects(
+      inspectVideo([altered], altered.length),
+      /VIDEO_(FORMAT|DURATION)/,
+    );
+  }
+  // Split atom headers and table fields at arbitrary transport boundaries.
+  async function* tinyChunks() {
+    for (let i = 0; i < bytes.length; i += 3) yield bytes.subarray(i, i + 3);
+  }
+  assert.equal(
+    (await inspectVideo(tinyChunks(), bytes.length)).sha256,
+    createHash("sha256").update(bytes).digest("hex"),
+  );
 });
 
 test(
@@ -199,6 +405,9 @@ test(
   { timeout: 900_000 },
   async (t) => {
     const backend = await createLocalBackend();
+    console.log(
+      `T04 owned byte run: ${backend.directory}; Convex=${await backend.backendVersion()}`,
+    );
     const server = createServer(
       (request, response) =>
         void servePhotoRequest(backend.videoService, request, response),
@@ -571,6 +780,59 @@ test(
             },
           );
           assert.equal(ready.state, "ready");
+          const history = await manager.query(
+            makeFunctionReference<"query">("videos:history"),
+            { ...scope, uploadId: original._id },
+          );
+          assert.equal(
+            history.filter((event: any) => event.eventId === eventId).length,
+            1,
+          );
+          assert.ok(
+            history.some(
+              (event: any) =>
+                event.actor === "creator-a" &&
+                event.source === "videos:reserve" &&
+                event.action === "reserved" &&
+                event.attempt === 0,
+            ),
+          );
+          assert.ok(
+            history.some(
+              (event: any) =>
+                event.actor === "mux:verified-provider" &&
+                event.source === "mux:verified-asset" &&
+                event.action === "ready" &&
+                event.attempt === 1,
+            ),
+          );
+          assert.ok(
+            history.every(
+              (event: any) => Number.isFinite(event.at) && event.at > 0,
+            ),
+          );
+          await assert.rejects(
+            bob.query(makeFunctionReference<"query">("videos:history"), {
+              ...scope,
+              uploadId: original._id,
+            }),
+            /FORBIDDEN/,
+          );
+          const projected = await alice.query(
+            makeFunctionReference<"query">("videos:workspace"),
+            scope,
+          );
+          assert.ok(
+            projected.every(
+              (row: any) =>
+                !row.pathname &&
+                !row.sourceExpiresAt &&
+                !row.multipart &&
+                !row.assetId &&
+                !row.playbackId,
+            ),
+          );
+
           assert.equal((await fetch(asset.source)).status, 403);
           const playback = await route("playback", original._id);
           assert.equal(playback.status, 200);
@@ -615,6 +877,32 @@ test(
               )
             ).state,
             "unknown",
+          );
+          const ambiguous = await upload(await videoBytes({ color: "purple" }));
+          await backend.mux.mode("unknown");
+          const unknownBefore = await backend.mux.calls();
+          const unknown = await route("process", ambiguous._id, "creator-a", {
+            method: "POST",
+          });
+          assert.equal((await unknown.json()).state, "unknown");
+          await backend.mux.mode("ready");
+          const reconciled = await route(
+            "process",
+            ambiguous._id,
+            "creator-a",
+            { method: "POST" },
+          );
+          const existing = await reconciled.json();
+          assert.equal(existing.state, "processing");
+          assert.equal(await backend.mux.calls(), unknownBefore + 1);
+          await backend.mux.update(existing.assetId, { status: "ready" });
+          await callback(existing, "video.asset.ready");
+          assert.equal((await route("playback", ambiguous._id)).status, 200);
+          // A valid signature for an old attempt cannot change this revision.
+          const stale = { ...existing, attempt: 0 };
+          assert.deepEqual(
+            await (await callback(stale, "video.asset.errored")).json(),
+            { ignored: true },
           );
           const rejected = await upload(await videoBytes({ color: "green" }));
           await backend.mux.mode("reject");

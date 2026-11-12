@@ -134,10 +134,10 @@ test("T03 creator actual photo upload correction rejection and manager approval 
     });
     await page.goto("/");
     await page
-      .getByRole("button", { name: "Photo review", exact: true })
+      .getByRole("button", { name: "Creative review", exact: true })
       .click();
     await expect(
-      page.getByRole("heading", { name: "Review creator photos." }),
+      page.getByRole("heading", { name: "Review creator photos and videos." }),
     ).toBeVisible();
     const review = page.getByRole("article", { name: `Review ${entryId}` });
     await expect(review.getByRole("img")).toHaveJSProperty("naturalWidth", 2);

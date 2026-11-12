@@ -68,7 +68,7 @@ function LocalWorkspace() {
         <button onClick={() => setScreen("invitations")}>
           Creator invitations
         </button>
-        <button onClick={() => setScreen("photos")}>Photo review</button>
+        <button onClick={() => setScreen("photos")}>Creative review</button>
       </nav>
       {screen === "preview" ? (
         <PreviewWorkspace />
@@ -121,7 +121,7 @@ function ManagerWorkspace() {
         <button onClick={() => setScreen("invitations")}>
           Creator invitations
         </button>
-        <button onClick={() => setScreen("photos")}>Photo review</button>
+        <button onClick={() => setScreen("photos")}>Creative review</button>
         <a href="?workspace=creator">My creator workspace</a>
       </nav>
       {screen === "photos" ? (
