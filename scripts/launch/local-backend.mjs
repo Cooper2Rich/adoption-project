@@ -17,6 +17,8 @@ import { setTimeout as delay } from "node:timers/promises";
 import { ConvexHttpClient } from "convex/browser";
 
 import { createClerkFixture } from "./clerk-fixture.mjs";
+import { localPhotoStore } from "./photo-store.mjs";
+import { createPhotoService } from "../../server/launch/photos.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const cli = join(root, "node_modules/convex/bin/main.js");
@@ -39,6 +41,7 @@ export async function createLocalBackend({
   const clerk = await createClerkFixture();
   const directory = await mkdtemp(join(tmpdir(), "slander-preview-"));
   const runId = randomUUID();
+  const photoSecret = randomUUID() + randomUUID();
   const issuer = `https://allocation-preview.invalid/${runId}`;
   const { privateKey, publicKey } = generateKeyPairSync("rsa", {
     modulusLength: 2048,
@@ -219,6 +222,7 @@ export async function createLocalBackend({
   try {
     await start();
     await command("env", "set", "ALLOCATION_PREVIEW_FIXTURE_RUN_ID", runId);
+    await command("env", "set", "PHOTO_RECEIPT_SECRET", photoSecret);
     await command("env", "set", "CLERK_INVITATION_FIXTURE_URL", clerk.url);
     await command("run", "fixtures:seed", JSON.stringify({ runId }));
     if (!fixtureAuth) {
@@ -262,6 +266,12 @@ export async function createLocalBackend({
         );
     }
     return {
+      photoService: createPhotoService({
+        url,
+        secret: photoSecret,
+        store: await localPhotoStore(directory),
+        fixtureRunId: runId,
+      }),
       directory,
       clerk,
       runId,

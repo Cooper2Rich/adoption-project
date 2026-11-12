@@ -12,6 +12,8 @@ import { CreatorInvitations, CreatorWorkspace } from "./CreatorWorkspace";
 import { ClerkProvider, SignIn, UserButton, useAuth } from "@clerk/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import "./preview.css";
+import { PhotoAuth } from "./photo-auth";
+import { PhotoReview } from "./Photos";
 
 class AccessBoundary extends Component<
   { children: ReactNode },
@@ -66,6 +68,7 @@ function LocalWorkspace() {
         <button onClick={() => setScreen("invitations")}>
           Creator invitations
         </button>
+        <button onClick={() => setScreen("photos")}>Photo review</button>
       </nav>
       {screen === "preview" ? (
         <PreviewWorkspace />
@@ -75,7 +78,9 @@ function LocalWorkspace() {
             Isolated verification · synthetic identity · real Clerk evidence
             pending T38
           </div>
-          {screen === "invitations" ? (
+          {screen === "photos" ? (
+            <PhotoReview />
+          ) : screen === "invitations" ? (
             <CreatorInvitations />
           ) : (
             <CampaignSetup />
@@ -116,14 +121,25 @@ function ManagerWorkspace() {
         <button onClick={() => setScreen("invitations")}>
           Creator invitations
         </button>
+        <button onClick={() => setScreen("photos")}>Photo review</button>
         <a href="?workspace=creator">My creator workspace</a>
       </nav>
-      {screen === "setup" ? <CampaignSetup /> : <CreatorInvitations />}
+      {screen === "photos" ? (
+        <PhotoReview />
+      ) : screen === "setup" ? (
+        <CampaignSetup />
+      ) : (
+        <CreatorInvitations />
+      )}
     </>
   );
 }
 function ClerkEntry() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
+  const photoToken = useCallback(
+    () => getToken({ template: "convex" }),
+    [getToken],
+  );
   if (!isLoaded)
     return (
       <main className="setup-message" role="status">
@@ -172,7 +188,9 @@ function ClerkEntry() {
         <span>Campaign workspace</span>
         <UserButton />
       </header>
-      <AuthenticatedWorkspace />
+      <PhotoAuth.Provider value={photoToken}>
+        <AuthenticatedWorkspace />
+      </PhotoAuth.Provider>
     </>
   );
 }
@@ -229,7 +247,11 @@ async function start() {
     root.render(
       <AccessBoundary>
         <ConvexProviderWithAuth client={client} useAuth={useHarnessIdentity}>
-          <AuthenticatedWorkspace local />
+          <PhotoAuth.Provider
+            value={async () => (await harnessSession()).token}
+          >
+            <AuthenticatedWorkspace local />
+          </PhotoAuth.Provider>
         </ConvexProviderWithAuth>
       </AccessBoundary>,
     );

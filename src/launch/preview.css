@@ -12,7 +12,8 @@ body {
 }
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 button {
@@ -59,6 +60,7 @@ select:focus-visible {
 }
 .workspace-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 12px 24px;
   background: white;
@@ -206,7 +208,8 @@ label > span {
   font-weight: 400;
 }
 input,
-select {
+select,
+textarea {
   display: block;
   width: 100%;
   margin-top: 5px;
@@ -505,4 +508,53 @@ small.held {
 .campaign-setup input[type="checkbox"] {
   width: auto;
   margin-right: 0.6rem;
+}
+.photo-form {
+  display: grid;
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+.photo-form label,
+.photo-entry label {
+  display: grid;
+  gap: 0.5rem;
+}
+.photo-form textarea,
+.photo-entry textarea {
+  width: 100%;
+  min-height: 6rem;
+  resize: vertical;
+}
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 1rem;
+  margin-block: 1rem;
+}
+.submitted-photo {
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  border-radius: 0.6rem;
+  background: #e9ece9;
+}
+.photo-entry {
+  border-top: 1px solid #c9d4cd;
+  padding-block: 1.5rem;
+  overflow-wrap: anywhere;
+}
+.photo-entry code {
+  overflow-wrap: anywhere;
+}
+.photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.photo-entry details {
+  margin-block: 1rem;
+}
+.photo-workspace input[type="file"] {
+  max-width: 100%;
 }

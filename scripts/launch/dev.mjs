@@ -2,6 +2,7 @@ import { dirname, resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer } from "vite";
 import { createLocalBackend } from "./local-backend.mjs";
+import { servePhotoRequest } from "../../api/photos.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const portIndex = process.argv.indexOf("--port");
@@ -38,6 +39,10 @@ const server = await createServer({
           if (request.url === "/" || request.url.startsWith("/?"))
             request.url = "/launch-preview.html" + request.url.slice(1);
           const requestUrl = new URL(request.url, origin);
+          if (requestUrl.pathname === "/api/photos") {
+            void servePhotoRequest(backend.photoService, request, response);
+            return;
+          }
           if (requestUrl.pathname === "/__allocation/clerk-mode") {
             if (
               request.method !== "POST" ||
