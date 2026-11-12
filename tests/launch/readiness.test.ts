@@ -5,7 +5,7 @@ import { createLocalBackend } from "../../scripts/launch/local-backend.ts";
 import { readinessComponents } from "../../convex/readinessPolicy.ts";
 import { mutation, query, preparePublicCreator } from "./public-fixtures.ts";
 import { pngBytes } from "./photo-fixtures.ts";
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { campaignRules } from "./fixtures.ts";
 
 const scope = { campaignId: "adoption" };
@@ -976,6 +976,7 @@ test(
       );
       const after = await read();
       const incidentsBefore = await incidents();
+      await mkdir(".codex/ralph", { recursive: true });
       await writeFile(
         ".codex/ralph/t09-observed-operations.json",
         JSON.stringify(
