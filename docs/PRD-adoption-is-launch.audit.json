@@ -1,0 +1,78 @@
+{
+  "prd": "docs/PRD-adoption-is-launch.md",
+  "passed": true,
+  "summary": {
+    "sections": 12,
+    "requirements": 43,
+    "errors": 0,
+    "warnings": 11
+  },
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-113 — Locked competition rules and versioned advertising controls",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-116 — Chicago competition periods",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-118 — Ranks and shared prizes",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-119 — Delayed winner finalization",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-122 — Separate campaign funds",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-124 — Replenishment shortfall warning",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-125 — Thirty-second refresh",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-127 — Audited manual fallback",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-129 — Payment retries and reversals",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-130 — Private creator status",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    },
+    {
+      "severity": "warning",
+      "code": "possible-compound-requirement",
+      "location": "REQ-132 — Automated advertising boundary",
+      "message": "Confirm the statement is atomic or split it into separate requirements"
+    }
+  ]
+}

@@ -34,6 +34,42 @@ jobs:
       - name: Build application and run unit tests
         run: npm run check
 
+  launch:
+    name: Launch preview tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run allocation planner tests
+        run: npm run test:launch:planner
+      - name: Run actual local Convex backend tests
+        run: npm run test:launch:backend
+      - name: Build launch preview bundle
+        run: npm run build:launch
+      - name: Install Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Verify launch preview desktop and mobile journeys
+        run: npm run test:launch:browser -- --reporter=list,html
+      - name: Save launch failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: launch-test-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
   browser:
     name: Browser tests
     runs-on: ubuntu-latest
