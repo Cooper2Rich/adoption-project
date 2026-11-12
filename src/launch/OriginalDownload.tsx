@@ -1,3 +1,4 @@
+import { OriginalRecovery, useOriginalArchive } from "./OriginalRecovery.tsx";
 import { useRef, useState } from "react";
 import { usePhotoToken } from "./photo-auth.tsx";
 
@@ -22,6 +23,10 @@ function OriginalDownloadControl({
   version,
 }: OriginalDownloadProps) {
   const token = usePhotoToken();
+  const archive = useOriginalArchive(uploadId);
+  const unavailable =
+    archive &&
+    ["dispatched", "unknown", "failed", "deleted"].includes(archive.state);
   const operation = useRef<string | null>(null);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
@@ -82,10 +87,15 @@ function OriginalDownloadControl({
           : `Private original version ${version}`
       }
     >
-      <button type="button" disabled={pending} onClick={() => void issue()}>
+      <OriginalRecovery uploadId={uploadId} status={archive} />
+      <button
+        type="button"
+        disabled={pending || !!unavailable}
+        onClick={() => void issue()}
+      >
         {pending ? "Requesting private link…" : "Get original download link"}
       </button>
-      {grant && (
+      {grant && !unavailable && (
         <p>
           <a href={grant.url} download rel="noreferrer">
             Download exact original
@@ -93,11 +103,12 @@ function OriginalDownloadControl({
           {" · "}Expires {new Date(grant.expiresAt).toLocaleTimeString()}.
         </p>
       )}
-      {message && <p role="status">{message}</p>}
+      {message && !unavailable && <p role="status">{message}</p>}
       <p className="muted">
         Links last five minutes. Anyone holding an issued link can use it until
-        expiry, even after access is revoked. A transfer started before expiry
-        may finish afterward. Keep the link private.
+        expiry, even after access is revoked, unless original purge starts.
+        Purge blocks new transfers. A transfer already started may finish
+        afterward. Keep the link private.
       </p>
     </div>
   );

@@ -1,5 +1,6 @@
 import {
   actionGeneric,
+  internalActionGeneric,
   internalMutationGeneric,
   internalQueryGeneric,
   mutationGeneric,
@@ -29,3 +30,6 @@ export const internalMutation: MutationBuilder<DataModel, "internal"> =
 export const action: ActionBuilder<DataModel, "public"> = actionGeneric;
 export const internalQuery: QueryBuilder<DataModel, "internal"> =
   internalQueryGeneric;
+
+export const internalAction: ActionBuilder<DataModel, "internal"> =
+  internalActionGeneric;

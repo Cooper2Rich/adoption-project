@@ -23,7 +23,7 @@ type Status = Pick<
   | "duration"
   | "attempt"
   | "createdAt"
->;
+> & { originalArchiveState: string };
 const workspace = makeFunctionReference<
   "query",
   { campaignId: string },
@@ -176,7 +176,12 @@ export function VideoStatuses({
             ) : (
               <>
                 <button
-                  disabled={pending}
+                  disabled={
+                    pending ||
+                    !["retained", "restored"].includes(
+                      record.originalArchiveState,
+                    )
+                  }
                   onClick={() =>
                     void retry(record._id, record.sha256 ? "process" : "verify")
                   }

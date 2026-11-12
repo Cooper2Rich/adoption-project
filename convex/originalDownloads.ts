@@ -1,3 +1,4 @@
+import { archiveState } from "./originalArchivePolicy.ts";
 import { v } from "convex/values";
 import { operationIdentity, stableRequest } from "./access.ts";
 import { mutation, query, type Doc, type QueryCtx } from "./functions.ts";
@@ -44,12 +45,24 @@ export const issue = mutation({
       args.campaignId,
       args.uploadId,
     );
+    const archive = await archiveState(ctx, record._id);
+    if (
+      archive &&
+      ["dispatched", "unknown", "failed", "deleted"].includes(archive.state)
+    )
+      throw new Error(
+        "VIDEO_ARCHIVE_UNAVAILABLE: Original deletion has been dispatched or confirmed",
+      );
     operationIdentity(args.operationId);
     if ((args.entryId === undefined) !== (args.version === undefined)) denied();
     if (args.entryId !== undefined && args.version !== undefined)
       await boundRevision(ctx, record, args.entryId, args.version);
     if (!record.sha256 || !record.size)
       throw new Error("VIDEO_UNVERIFIED: Original archive is not verified");
+    if (!record.storageIdentity)
+      throw new Error(
+        "VIDEO_ARCHIVE_UNAVAILABLE: Original storage identity needs verification",
+      );
     const fingerprint = stableRequest(args);
     const prior = await ctx.db
       .query("originalDownloadGrants")
@@ -73,6 +86,7 @@ export const issue = mutation({
         archiveVersion: 1,
         uploadId: record._id,
         sha256: record.sha256,
+        storageIdentity: record.storageIdentity,
         size: record.size,
         actor: viewer.subject,
         source: "originalDownloads:issue",
@@ -102,9 +116,18 @@ export const delivery = query({
       record.campaignSlug !== grant.campaignSlug ||
       record.nonprofitId !== grant.nonprofitId ||
       record.sha256 !== grant.sha256 ||
-      record.size !== grant.size
+      record.size !== grant.size ||
+      record.storageIdentity !== grant.storageIdentity
     )
       denied();
+    const archive = await archiveState(ctx, record!._id);
+    if (
+      archive &&
+      ["dispatched", "unknown", "failed", "deleted"].includes(archive.state)
+    )
+      throw new Error(
+        "VIDEO_ARCHIVE_UNAVAILABLE: Original deletion has been dispatched or confirmed",
+      );
     if (grant.entryId !== undefined && grant.version !== undefined)
       await boundRevision(ctx, record!, grant.entryId, grant.version);
     const campaign = await ctx.db
@@ -116,6 +139,7 @@ export const delivery = query({
     // No playback/entry status, campaign dates or intake expiry can purge bytes.
     return {
       pathname: record!.pathname,
+      storageIdentity: record!.storageIdentity,
       filename: record!.filename,
       size: grant.size,
       sha256: grant.sha256,

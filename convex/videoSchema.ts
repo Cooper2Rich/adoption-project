@@ -2,7 +2,47 @@ import { defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const videoTables = {
+  originalArchives: defineTable({
+    uploadId: v.id("videoUploads"),
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    sha256: v.string(),
+    size: v.number(),
+    generation: v.number(),
+    storageIdentity: v.optional(v.string()),
+    state: v.string(),
+    requestedAt: v.number(),
+    requestedBy: v.string(),
+    purgeAt: v.number(),
+    nonce: v.string(),
+    dispatchAt: v.optional(v.number()),
+    confirmedAt: v.optional(v.number()),
+    message: v.optional(v.string()),
+  })
+    .index("by_upload", ["uploadId"])
+    .index("by_campaign", ["campaignSlug"]),
+  originalArchiveEvents: defineTable({
+    uploadId: v.id("videoUploads"),
+    campaignSlug: v.string(),
+    nonprofitId: v.string(),
+    actor: v.string(),
+    source: v.string(),
+    at: v.number(),
+    generation: v.number(),
+    action: v.string(),
+    operationId: v.string(),
+    fingerprint: v.string(),
+    confirmation: v.optional(v.string()),
+    sha256: v.string(),
+    size: v.number(),
+    revisions: v.array(
+      v.object({ entryId: v.id("photoEntries"), version: v.number() }),
+    ),
+  })
+    .index("by_operation", ["campaignSlug", "actor", "operationId"])
+    .index("by_upload", ["uploadId"]),
   originalDownloadGrants: defineTable({
+    storageIdentity: v.optional(v.string()),
     campaignSlug: v.string(),
     nonprofitId: v.string(),
     entryId: v.optional(v.id("photoEntries")),
@@ -38,6 +78,7 @@ export const videoTables = {
     videoCodec: v.optional(v.string()),
     audioCodec: v.optional(v.string()),
     verifiedAt: v.optional(v.number()),
+    storageIdentity: v.optional(v.string()),
     state: v.string(),
     error: v.optional(v.string()),
     attempt: v.number(),

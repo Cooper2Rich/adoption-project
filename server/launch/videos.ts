@@ -1,10 +1,15 @@
 import Mux from "@mux/ts";
 import type { WebhookBody } from "@mux/ts/resources/webhooks.mjs";
-import { get } from "@vercel/blob";
+import { del, get } from "@vercel/blob";
 import { handleUpload } from "@vercel/blob/client";
 import { ConvexHttpClient } from "convex/browser";
 import { makeFunctionReference } from "convex/server";
-import { createHmac, type KeyLike, timingSafeEqual } from "node:crypto";
+import {
+  createHash,
+  createHmac,
+  type KeyLike,
+  timingSafeEqual,
+} from "node:crypto";
 import { inspectVideo, VIDEO_MAX_BYTES } from "./video-inspection.ts";
 
 export function stable(value: unknown): string {
@@ -18,10 +23,66 @@ export function stable(value: unknown): string {
 }
 export const sign = (value: any, secret: KeyLike) =>
   createHmac("sha256", secret).update(stable(value)).digest("hex");
-export function blobVideoStore({ token }: any = {}) {
+// The installed SDK resolves read/write token store IDs from segment four.
+// Reject unrecognized credential formats rather than infer an object's absence.
+export function blobCredentialOrigin(token: unknown) {
+  const storeId =
+    typeof token === "string"
+      ? /^vercel_blob_rw_([a-z0-9-]+)_/i.exec(token)?.[1]
+      : undefined;
+  return storeId
+    ? `https://${storeId.toLowerCase()}.private.blob.vercel-storage.com`
+    : null;
+}
+export function blobCredentialIdentity(token: unknown) {
+  const origin = blobCredentialOrigin(token);
+  return origin ? createHash("sha256").update(origin).digest("hex") : null;
+}
+export function blobVideoStore({
+  token = process.env.BLOB_READ_WRITE_TOKEN,
+}: any = {}) {
   return {
-    async read(pathname: string) {
+    ...blobArchivePurger({ token }),
+    async identity(pathname: string) {
       const result = await get(pathname, {
+        token,
+        access: "private",
+        useCache: false,
+      });
+      if (
+        !result ||
+        result.statusCode !== 200 ||
+        result.blob.pathname !== pathname
+      )
+        throw new Error(
+          "VIDEO_INCOMPLETE: Original storage identity is unconfirmed",
+        );
+      await result.stream.cancel();
+      const origin = new URL(result.blob.url).origin;
+      if (
+        blobCredentialOrigin(token) !== origin ||
+        !/^https:\/\/[a-z0-9-]+\.private\.blob\.vercel-storage\.com$/.test(
+          origin,
+        )
+      )
+        throw new Error(
+          "VIDEO_UNAVAILABLE: Private original storage identity is unsupported",
+        );
+      return createHash("sha256").update(origin).digest("hex");
+    },
+    async read(pathname: string, storageIdentity?: string) {
+      if (storageIdentity && !/^videos\/[a-z0-9]+\.mp4$/.test(pathname))
+        throw new Error(
+          "VIDEO_ARCHIVE_UNAVAILABLE: Original resource identity is invalid",
+        );
+      if (storageIdentity && blobCredentialIdentity(token) !== storageIdentity)
+        throw new Error(
+          "VIDEO_ARCHIVE_UNAVAILABLE: Original storage identity does not match current configuration",
+        );
+      const resource = storageIdentity
+        ? new URL(pathname, blobCredentialOrigin(token)! + "/").toString()
+        : pathname;
+      const result = await get(resource, {
         token,
         access: "private",
         useCache: false,
@@ -57,6 +118,79 @@ export function blobVideoStore({ token }: any = {}) {
           };
         },
       });
+    },
+  };
+}
+// Actual provider dispatch remains gated on the accepted media evidence. A
+// controlled SDK-shaped adapter receipt does not fulfill T39 provider evidence.
+export function blobArchivePurger({
+  token = process.env.BLOB_READ_WRITE_TOKEN,
+  read = get,
+  remove = del,
+  evidenceId = process.env.VIDEO_PROVIDER_EVIDENCE_ID,
+  deleteEvidenceId = process.env.ORIGINAL_DELETE_PROVIDER_EVIDENCE_ID,
+  retrySetting = process.env.VERCEL_BLOB_RETRIES,
+}: any = {}) {
+  const options = { token, access: "private" as const, useCache: false };
+  const resourceUrl = (record: any) => {
+    const origin = blobCredentialOrigin(token);
+    if (
+      !origin ||
+      blobCredentialIdentity(token) !== record.storageIdentity ||
+      !/^videos\/[a-z0-9]+\.mp4$/.test(record.pathname)
+    )
+      return null;
+    return new URL(record.pathname, origin + "/").toString();
+  };
+  return {
+    archiveAvailable: () =>
+      !!(
+        evidenceId &&
+        deleteEvidenceId &&
+        retrySetting === "0" &&
+        blobCredentialOrigin(token)
+      ),
+    async preflightOriginal(record: any) {
+      const resource = resourceUrl(record);
+      if (!resource) return false;
+      const result = await read(resource, options);
+      if (result === null) return { absent: true };
+      if (result.statusCode !== 200) return false;
+      if (
+        result.blob.pathname !== record.pathname ||
+        new URL(result.blob.url).origin !== blobCredentialOrigin(token) ||
+        !result.blob.etag
+      ) {
+        await result.stream.cancel();
+        return false;
+      }
+      const hash = createHash("sha256");
+      let size = 0;
+      for await (const chunk of result.stream) {
+        size += chunk.length;
+        hash.update(chunk);
+      }
+      if (size !== record.size || hash.digest("hex") !== record.sha256)
+        return false;
+      return { etag: result.blob.etag };
+    },
+    async purgeOriginal(record: any, reconcile: boolean) {
+      const resource = resourceUrl(record);
+      if (!resource) return "unknown";
+      // Use the persisted full origin even if a credential is reconfigured to
+      // another store. An empty different store cannot prove this object's absence.
+      if (reconcile || record.prepared?.absent) {
+        const current = await read(resource, options);
+        if (current?.statusCode === 200) await current.stream.cancel();
+        return current === null ? "absent" : "unknown";
+      }
+      if (!record.prepared?.etag) return "unknown";
+      // No endpoint idempotency assumption: one dispatch, conditional on the
+      // exact origin ETag just read. Unknown dispatches are read-only thereafter.
+      await remove(resource, { token, ifMatch: record.prepared.etag });
+      const after = await read(resource, options);
+      if (after?.statusCode === 200) await after.stream.cancel();
+      return after === null ? "absent" : "unknown";
     },
   };
 }
@@ -197,6 +331,13 @@ export function createVideoService({
           );
         return record;
       };
+      const readOriginal = (record: any) => {
+        if (!record.storageIdentity)
+          throw new Error(
+            "VIDEO_ARCHIVE_UNAVAILABLE: Original storage identity needs verification",
+          );
+        return store.read(record.pathname, record.storageIdentity);
+      };
       const authorize = async (id: string | null, resource: any = false) =>
         checkScope(
           await client.query(
@@ -239,6 +380,70 @@ export function createVideoService({
           ),
         );
       };
+      if (action === "archive-purge" && request.method === "POST") {
+        const { receipt, signature } = await request.json();
+        const expected = sign(receipt, secret);
+        if (
+          !receipt ||
+          receipt.purpose !== "archive-job" ||
+          !Number.isFinite(receipt.at) ||
+          Math.abs(Date.now() - receipt.at) > 300_000 ||
+          typeof signature !== "string" ||
+          !/^[a-f0-9]{64}$/.test(signature) ||
+          !timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+        )
+          throw new Error("FORBIDDEN: Invalid archive job");
+        const call = async (action: string, extra: any = {}) => {
+          const value = {
+            purpose: "archive-worker",
+            uploadId: receipt.uploadId,
+            generation: receipt.generation,
+            at: Date.now(),
+            action,
+            ...extra,
+          };
+          return client.mutation(
+            makeFunctionReference<"mutation">("originalArchives:worker"),
+            { receipt: value, signature: sign(value, secret) },
+          );
+        };
+        const contextReceipt = {
+          purpose: "archive-worker-context",
+          uploadId: receipt.uploadId,
+          generation: receipt.generation,
+          at: Date.now(),
+        };
+        const context = await client.query(
+          makeFunctionReference<"query">("originalArchives:workerContext"),
+          { ...contextReceipt, signature: sign(contextReceipt, secret) },
+        );
+        if (!context) return json({ held: true });
+        checkScope(context);
+        let prepared: any = false;
+        if (!context.reconcile && store.archiveAvailable?.() === true)
+          try {
+            prepared = await store.preflightOriginal(context);
+          } catch {
+            /* Configuration/identity uncertainty holds before dispatch. */
+          }
+        const record = await call("claim", { available: !!prepared });
+        if (!record) return json({ held: true });
+        checkScope(record);
+        let outcome = "unknown";
+        try {
+          outcome = await store.purgeOriginal(
+            { ...record, prepared },
+            record.reconcile,
+          );
+        } catch {
+          /* Lost/failed response remains unknown; never redispatch. */
+        }
+        await call("finish", {
+          nonce: record.nonce,
+          outcome: ["absent", "failed"].includes(outcome) ? outcome : "unknown",
+        });
+        return json({ reconciled: true });
+      }
       if (action === "original-download" && request.method === "GET") {
         const encoded = target.searchParams.get("grant") ?? "";
         if (encoded.length > 2048)
@@ -286,7 +491,7 @@ export function createVideoService({
         );
         // Stream the immutable private object; never buffer a multi-GB archive
         // or redirect to a storage URL. Expiry is checked before transfer starts.
-        return new Response(await store.read(record.pathname), {
+        return new Response(await readOriginal(record), {
           headers: {
             "Content-Type": "video/mp4",
             "Content-Length": String(record.size),
@@ -422,7 +627,7 @@ export function createVideoService({
           throw new Error("FORBIDDEN: Source access is no longer active");
         // Source is for one ingestion attempt only. It is never an original-download
         // endpoint for the browser, and never returns a Blob credential or URL.
-        return new Response(await store.read(record.pathname), {
+        return new Response(await readOriginal(record), {
           headers: {
             "Content-Type": "video/mp4",
             "Content-Length": String(record.size),
@@ -523,6 +728,7 @@ export function createVideoService({
               uploadId: record._id,
               at: Date.now(),
               action: "verified",
+              storageIdentity: await store.identity(record.pathname),
               attempt: record.attempt,
               ...inspected,
             })
