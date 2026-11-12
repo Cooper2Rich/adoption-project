@@ -1,3 +1,4 @@
+import { projection, trackedPath, unnamedCreator } from "./publicViewer.ts";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
@@ -215,6 +216,7 @@ export const submit = mutation({
     expectedVersion: v.optional(v.number()),
     title: v.string(),
     description: v.string(),
+    publicCreatorName: v.optional(v.string()),
     photos: v.array(photoId),
     video: v.optional(v.id("videoUploads")),
   },
@@ -223,6 +225,14 @@ export const submit = mutation({
       await requireSubmissionParticipant(ctx, args.campaignId);
     operationIdentity(args.operationId);
     text(args.title, args.description);
+    if (
+      args.publicCreatorName !== undefined &&
+      (args.publicCreatorName.length > 80 ||
+        /[@\r\n]/.test(args.publicCreatorName))
+    )
+      throw new Error(
+        "PUBLIC_NAME: Use a public creator name up to 80 characters, without an email address",
+      );
     const fingerprint = stableRequest(args);
     const prior = await ctx.db
       .query("photoEvents")
@@ -236,7 +246,10 @@ export const submit = mutation({
     if (prior) {
       if (prior.fingerprint !== fingerprint)
         throw new Error("OPERATION_CONFLICT");
-      return (await ctx.db.get(prior.entryId))!;
+      return {
+        ...(await ctx.db.get(prior.entryId))!,
+        trackedPath: trackedPath(prior.entryId),
+      };
     }
     if (args.video && args.photos.length)
       throw new Error("VIDEO_COUNT: Choose one video or 1 to 10 photos");
@@ -324,6 +337,11 @@ export const submit = mutation({
       version: nextVersion,
       title: args.title,
       description: args.description,
+      publicCreatorName:
+        args.publicCreatorName !== undefined
+          ? args.publicCreatorName.trim() ||
+            unnamedCreator(campaign._id, subject)
+          : current?.publicCreatorName || unnamedCreator(campaign._id, subject),
       photos: args.photos,
       ...(args.video ? { video: args.video } : {}),
       acceptanceId: acceptance._id,
@@ -344,7 +362,7 @@ export const submit = mutation({
       operationId: args.operationId,
       fingerprint,
     });
-    return (await ctx.db.get(id))!;
+    return { ...(await ctx.db.get(id))!, trackedPath: trackedPath(id) };
   },
 });
 export const review = mutation({
@@ -488,26 +506,8 @@ export const resource = query({
 export const publicEntry = query({
   args: { entryId },
   handler: async (ctx, { entryId }) => {
-    const entry = await ctx.db.get(entryId);
-    if (
-      !entry ||
-      entry.campaignSlug !== "adoption" ||
-      entry.status !== "approved"
-    )
-      forbidden();
-    const version = await ctx.db
-      .query("photoVersions")
-      .withIndex("by_entry_version", (q) =>
-        q.eq("entryId", entryId).eq("version", entry!.version),
-      )
-      .unique();
-    return {
-      id: entry!._id,
-      title: version!.title,
-      description: version!.description,
-      photos: version!.photos,
-      ...(version!.video ? { video: version!.video } : {}),
-      trackedPath: `/fundraise/${entryId}`,
-    };
+    const entry = await projection(ctx, entryId);
+    if (!entry) forbidden();
+    return entry!;
   },
 });

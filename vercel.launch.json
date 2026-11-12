@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run build:launch",
+  "outputDirectory": "launch-site",
+  "rewrites": [
+    { "source": "/entries/:entryId", "destination": "/index.html" },
+    { "source": "/fundraise/:entryId", "destination": "/index.html" }
+  ]
+}

@@ -52,7 +52,7 @@ const multipartRef = makeFunctionReference<
 export function videoError(error: unknown) {
   return (
     String(error instanceof Error ? error.message : error).match(
-      /(?:VIDEO_[A-Z_]+|DESCRIPTION_REQUIRED|STALE_VERSION|TERMS_UNAVAILABLE|ACCEPTANCE_REQUIRED|FORBIDDEN|OPERATION_CONFLICT):[^\n]*/,
+      /(?:VIDEO_[A-Z_]+|PUBLIC_NAME|DESCRIPTION_REQUIRED|STALE_VERSION|TERMS_UNAVAILABLE|ACCEPTANCE_REQUIRED|FORBIDDEN|OPERATION_CONFLICT):[^\n]*/,
     )?.[0] ??
     "Video operation could not be confirmed. Reconnect and retry the same original."
   );
@@ -214,6 +214,7 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
   const [editing, setEditing] = useState<PhotoEntry | null>(null),
     [resumeId, setResumeId] = useState<Video["_id"] | null>(null),
     [title, setTitle] = useState(""),
+    [publicCreatorName, setPublicCreatorName] = useState(""),
     [description, setDescription] = useState(""),
     [file, setFile] = useState<File | null>(null),
     [message, setMessage] = useState(""),
@@ -230,6 +231,7 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
       const fingerprint = JSON.stringify([
         title,
         description,
+        publicCreatorName,
         editing?._id,
         editing?.version,
         // Setting resumeId after reservation is internal progress, not a new
@@ -334,6 +336,7 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
         operationId,
         title,
         description,
+        publicCreatorName: publicCreatorName.trim(),
         photos: [],
         video: id,
         ...(editing
@@ -349,6 +352,7 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
       setResumeId(null);
       setTitle("");
       setDescription("");
+      setPublicCreatorName("");
       setFile(null);
       if (input.current) input.current.value = "";
     } catch (error) {
@@ -376,6 +380,18 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
                   ? "Resume original upload"
                   : "Submit a video"}
             </h3>
+            <label>
+              Public creator name (optional)
+              <input
+                maxLength={80}
+                value={publicCreatorName}
+                onChange={(event) => setPublicCreatorName(event.target.value)}
+              />
+              <span>
+                This name appears with approved ads. Leave blank to use a stable
+                campaign creator identifier. Do not enter your email.
+              </span>
+            </label>
             <label>
               Video title
               <input
@@ -463,6 +479,7 @@ export function CreatorVideos({ canSubmit }: { canSubmit: boolean }) {
                 setFile(null);
                 setTitle(version.title);
                 setDescription(version.description);
+                setPublicCreatorName(version.publicCreatorName ?? "");
                 if (input.current) input.current.value = "";
                 input.current?.scrollIntoView({ block: "center" });
               }}

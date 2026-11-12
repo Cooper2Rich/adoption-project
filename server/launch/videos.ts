@@ -230,6 +230,34 @@ export function createVideoService({
           JSON.stringify({ ...value, signature: sign(value, secret) }),
         ).toString("base64url");
       };
+      const publicRecord = async (entryId: string | null) => {
+        const value = { entryId, kind: "video", index: 0, at: Date.now() };
+        return checkScope(
+          await client.query(
+            makeFunctionReference<"query">("publicViewer:mediaAccess"),
+            { ...value, signature: sign(value, secret) },
+          ),
+        );
+      };
+      if (action === "public" && request.method === "GET") {
+        const entryId = target.searchParams.get("entryId");
+        const record = await publicRecord(entryId);
+        if (record.state !== "ready" || !record.playbackId)
+          throw new Error("VIDEO_NOT_READY: Public playback unavailable");
+        const value = {
+          entryId,
+          version: record.publicVersion,
+          uploadId: record._id,
+          playbackId: record.playbackId,
+          expires: Date.now() + 300_000,
+        };
+        return json({
+          url: fixtureRunId
+            ? `/api/videos?action=synthetic-playback&grant=${Buffer.from(JSON.stringify({ ...value, signature: sign(value, secret) })).toString("base64url")}`
+            : await provider.playback(record.playbackId),
+          expiresAt: value.expires,
+        });
+      }
       if (
         action === "synthetic-playback" &&
         fixtureRunId &&
@@ -245,8 +273,16 @@ export function createVideoService({
         const { signature, ...value } = grant;
         if (value.expires < Date.now() || signature !== sign(value, secret))
           throw new Error("FORBIDDEN: Processed playback grant expired");
-        const record = await providerRecord(value.uploadId);
-        if (record.state !== "ready" || record.playbackId !== value.playbackId)
+        const record = value.entryId
+          ? await publicRecord(value.entryId)
+          : await providerRecord(value.uploadId);
+        if (
+          (value.entryId &&
+            (record.publicVersion !== value.version ||
+              record._id !== value.uploadId)) ||
+          record.state !== "ready" ||
+          record.playbackId !== value.playbackId
+        )
           throw new Error("VIDEO_NOT_READY: Processed playback is unavailable");
         return new Response(await provider.playbackBytes(value.playbackId), {
           headers: {

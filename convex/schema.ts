@@ -49,6 +49,7 @@ export default defineSchema({
     version: v.number(),
     title: v.string(),
     description: v.string(),
+    publicCreatorName: v.optional(v.string()),
     photos: v.array(v.id("photoUploads")),
     video: v.optional(v.id("videoUploads")),
     acceptanceId: v.id("participationAcceptances"),

@@ -6,7 +6,7 @@ test("manager saves a real persisted preview and retrieves it in a fresh session
 }, testInfo) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.goto("/?workspace=manager", { waitUntil: "domcontentloaded" });
   await expect(
     page.getByRole("button", { name: "Save new preview" }),
   ).toBeVisible();
@@ -23,7 +23,7 @@ test("manager saves a real persisted preview and retrieves it in a fresh session
   const context = await browser.newContext();
   try {
     const second = await context.newPage();
-    await second.goto(new URL("/", page.url()).toString(), {
+    await second.goto(new URL("/?workspace=manager", page.url()).toString(), {
       waitUntil: "domcontentloaded",
     });
     await expect(second.getByTestId("boost-total")).toHaveText("$10.00");
@@ -73,7 +73,7 @@ test("private backend configuration cannot be served through the public build ca
 test("healthy startup shares only residual boosts and incomplete reports hold boosts", async ({
   page,
 }) => {
-  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.goto("/?workspace=manager", { waitUntil: "domcontentloaded" });
   await page.getByLabel("Snapshot scenario").selectOption("startup");
   await page.getByRole("button", { name: "Save new preview" }).click();
   await expect(
@@ -115,7 +115,7 @@ test("healthy startup shares only residual boosts and incomplete reports hold bo
 test("unknown finances block allocations and unavailable provider shares remain held", async ({
   page,
 }) => {
-  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.goto("/?workspace=manager", { waitUntil: "domcontentloaded" });
   await page.getByLabel("Snapshot scenario").selectOption("unknown");
   await page.getByRole("button", { name: "Save new preview" }).click();
   await expect(
