@@ -407,6 +407,21 @@ export const readinessZeroPrizeCampaign = mutation({ args: {}, handler: async (c
   await ctx.db.insert("campaigns", { ...record, slug, name: "Owned zero prize verification", reservedSlots: 0, reservedCents: 0, reservationFundingCents: 0 });
 } });
 import { recordTrustedCommissionObligation,recordTrustedCommissionPayment,recordTrustedFinalizedFundraising,recordTrustedFundraisingPeriod } from "./fundraisingCorrections.ts";
+import { competitionPeriods } from "./competitionPolicy.ts";
+// Affirmative empty period evidence from the owned ledger producer, never a public flag.
+export const standingsZero = mutation({
+  args: { entryId:v.id("photoEntries"),kind:v.union(v.literal("daily"),v.literal("weekly")),period:v.string(),start:v.number(),end:v.number() },
+  handler:async(ctx,args)=>{
+    const entry=await ctx.db.get(args.entryId),campaign=entry && await ctx.db.query("campaigns").withIndex("by_slug",q=>q.eq("slug",entry.campaignSlug)).unique();
+    if(!entry || !campaign?.fixtureRunId || campaign.fixtureRunId!==process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID)throw new Error("Owned empty ledger required");
+    const settings=await ctx.db.query("campaignSettings").withIndex("by_campaign",q=>q.eq("campaignSlug",entry.campaignSlug)).unique();
+    const period=settings && competitionPeriods(settings.rules,args.kind).find(p=>p.label===args.period);
+    if(!period || period.inputStart!==args.start || period.inputEnd!==args.end)throw new Error("Owned zero exact period scope required");
+    const donations=await ctx.db.query("fundraisingDonations").withIndex("by_campaign",q=>q.eq("campaignSlug",entry.campaignSlug)).collect();
+    if(donations.some(d=>d.originEntryId===entry._id&&d.eligible&&d.completedAt>=args.start&&d.completedAt<args.end))throw new Error("Owned zero contradicted by donation");
+    return recordTrustedFundraisingPeriod(ctx,{entryId:entry._id,periodKind:args.kind,period:args.period,eligibleGrossCents:0,originalGrossCents:0,donationIds:[]},{actor:"owned-fundraising-ledger-producer",source:"owned-explicit-empty-period-v1",evidence:"Run-owned affirmative empty ledger read; never production authority",synthetic:true});
+  }
+});
 // Copied owned controls exercise nonregistered future-owner seams; never browser authority.
 export const fundraisingEvidence = mutation({
   args: { donationId:v.id("fundraisingDonations"), action:v.union(v.literal("obligation"),v.literal("paid"),v.literal("finalized"),v.literal("period")), facts:v.any() },

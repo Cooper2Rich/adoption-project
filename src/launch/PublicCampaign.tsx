@@ -3,6 +3,7 @@ import { makeFunctionReference } from "convex/server";
 import { useEffect, useRef, useState } from "react";
 import type { Doc } from "../../convex/functions.ts";
 import { DonationCheckout } from "./Fundraising.tsx";
+import { Standings } from "./Standings.tsx";
 
 type Entry = {
   id: Doc<"photoEntries">["_id"];
@@ -178,11 +179,14 @@ export function PublicCampaign() {
         </a>
         <nav aria-label="Campaign navigation">
           <a href="/#approved">Browse approved ads</a>
+          <a href="/?view=standings">Daily and weekly standings</a>
           <a href="/?workspace=creator">Creator sign-in</a>
         </nav>
       </header>
       <main className="public-layout">
-        {id ? (
+        {new URLSearchParams(location.search).get("view") === "standings" ? (
+          <Standings />
+        ) : id ? (
           <PublicDetail
             id={id as Entry["id"]}
             fundraising={parts[0] === "fundraise"}
