@@ -762,3 +762,31 @@ small.held {
   overflow-wrap: anywhere;
   font: inherit;
 }
+
+.paid-metrics {
+  overflow-wrap: anywhere;
+}
+.paid-metrics .tag {
+  white-space: normal;
+  max-width: 100%;
+}
+.paid-metrics select {
+  max-width: 100%;
+  width: 100%;
+}
+.paid-mapping {
+  border-top: 1px solid var(--line, #ddd);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+.paid-coverage {
+  padding-left: 1.2rem;
+}
+.paid-coverage li {
+  padding-block: 0.5rem;
+}
+.paid-metrics button {
+  margin: 0.35rem 0.35rem 0.35rem 0;
+  max-width: 100%;
+  white-space: normal;
+}

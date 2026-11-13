@@ -16,6 +16,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
+import lockfile from "proper-lockfile";
 
 import { createPhotoService } from "../../server/launch/photos.ts";
 import { createVideoService } from "../../server/launch/videos.ts";
@@ -25,6 +26,8 @@ import { localMuxProvider, localVideoStore } from "./video-store.ts";
 
 import { createEmailFixture } from "./email-fixture.ts";
 import { createStripeFixture } from "./stripe-fixture.ts";
+import { createPaidMetricFixture } from "./paid-metric-fixture.ts";
+import { createPaidMetricService } from "../../server/launch/paid-metrics.ts";
 import {
   createFundraisingService,
   digest,
@@ -55,6 +58,8 @@ export async function createLocalBackend({
   const directory = await mkdtemp(join(tmpdir(), "slander-preview-"));
   const runId = randomUUID();
   const stripe = await createStripeFixture(runId);
+  const paidProvider = await createPaidMetricFixture(runId);
+  const paidSecret = randomUUID() + randomUUID();
   const fundraisingSecret = randomUUID() + randomUUID();
   const photoSecret = randomUUID() + randomUUID();
   const videoSecret = randomUUID() + randomUUID();
@@ -119,6 +124,26 @@ export async function createLocalBackend({
   let logs = "";
 
   async function start() {
+    // Anonymous Convex instances choose a dashboard port before binding it.
+    // Coordinate all fixture processes until that dashboard and its functions
+    // are ready; each backend then keeps its own independent lifetime.
+    const release = await lockfile.lock(
+      join(tmpdir(), "slander-convex-dashboard-startup"),
+      {
+        realpath: false,
+        stale: 30000,
+        update: 5000,
+        retries: { retries: 720, factor: 1, minTimeout: 250, maxTimeout: 250 },
+      },
+    );
+    try {
+      await startWhileLocked();
+    } finally {
+      await release();
+    }
+  }
+
+  async function startWhileLocked() {
     child = spawn(
       process.execPath,
       [
@@ -237,11 +262,16 @@ export async function createLocalBackend({
       stdio: ["ignore", "pipe", "pipe"],
     });
     let output = "";
+    let diagnostics = "";
     commandChild.stdout.on("data", (chunk: any) => (output += chunk));
-    commandChild.stderr.on("data", (chunk: any) => (output += chunk));
-    const [code] = await once(commandChild, "exit");
+    commandChild.stderr.on("data", (chunk: any) => (diagnostics += chunk));
+    // Successful CLI callers parse stdout as JSON. Warnings on stderr are
+    // diagnostics, and both pipes must finish before returning their contents.
+    const [code, signal] = await once(commandChild, "close");
     if (code !== 0)
-      throw new Error(`Isolated Convex command failed: ${output}`);
+      throw new Error(
+        `Isolated Convex command failed (exit ${code}, signal ${signal}): ${diagnostics}${output}`,
+      );
     return output;
   }
 
@@ -251,6 +281,7 @@ export async function createLocalBackend({
     if (
       ![
         "fixtures:originalRecovery",
+        "fixtures:terms",
         "fixtures:archiveBoundary",
         "fixtures:incident",
         "fixtures:incidentControl",
@@ -261,6 +292,12 @@ export async function createLocalBackend({
         "fixtures:readinessZeroPrizeCampaign",
         "fixtures:fundraisingControl",
         "fixtures:fundraisingEvidence",
+        "fixtures:paidEnrollment",
+        "fixtures:paidControl",
+        "fixtures:paidRequirements",
+        "paidMetrics:watchdog",
+        "paidMetrics:operationWatchdog",
+        "paidMetrics:expireCoverage",
         "incidentEmail:watchdog",
         "incidentEmail:claim",
         "incidentEmail:settle",
@@ -304,6 +341,7 @@ export async function createLocalBackend({
     );
     await command("env", "set", "PHOTO_RECEIPT_SECRET", photoSecret);
     await command("env", "set", "VIDEO_RECEIPT_SECRET", videoSecret);
+    await command("env", "set", "PAID_METRIC_RECEIPT_SECRET", paidSecret);
     await command(
       "env",
       "set",
@@ -364,6 +402,27 @@ export async function createLocalBackend({
     }
     const videoStore = await localVideoStore(directory);
     return {
+      paidProvider,
+      paidService: createPaidMetricService({
+        url,
+        secret: paidSecret,
+        fixtureRunId: runId,
+        providerOrigin: paidProvider.origin,
+      }),
+      ownedPaidOperation: async (name: string, input: any) => {
+        if (!["claim", "complete"].includes(name))
+          throw new Error("Unsupported owned paid receipt");
+        const value = { ...input, fixtureRunId: runId, at: Date.now() };
+        return new ConvexHttpClient(url).mutation(
+          makeFunctionReference<"mutation">(`paidMetrics:${name}`),
+          {
+            value,
+            signature: createHmac("sha256", paidSecret)
+              .update(stable(value))
+              .digest("hex"),
+          },
+        );
+      },
       stripe,
       fundraisingService: createFundraisingService({
         url,
@@ -442,6 +501,7 @@ export async function createLocalBackend({
         await clerk.stop();
         await email.stop();
         await stripe.stop();
+        await paidProvider.stop();
       },
       diagnostics: () => logs,
       restart: async () => {
@@ -469,7 +529,9 @@ export async function createLocalBackend({
   } catch (err: any) {
     await stop();
     await clerk.stop();
+    await email.stop();
     await stripe.stop();
+    await paidProvider.stop();
     throw err;
   }
 }

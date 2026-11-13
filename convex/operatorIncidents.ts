@@ -450,6 +450,17 @@ export const resume = mutation({
           continue;
         }
         await ctx.db.patch(notice._id, { hold: route.hold });
+        const held = await ctx.db
+          .query("incidentEmails")
+          .withIndex("by_notice_state", (q) =>
+            q.eq("noticeId", notice._id).eq("state", "held"),
+          )
+          .first();
+        // Stable routes with no held recipient have nothing to repair. Do
+        // not depend on accepted/sending rows that watchdogs keep updating.
+        // Changed routes still inspect every prior recipient below, so new
+        // contacts cannot bypass immutable attempts or duplicate fences.
+        if (!held && notice.routing === route.fingerprint) continue;
         const emails = await ctx.db
           .query("incidentEmails")
           .withIndex("by_notice", (q) => q.eq("noticeId", notice._id))

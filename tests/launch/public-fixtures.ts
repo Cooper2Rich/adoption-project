@@ -12,6 +12,7 @@ export async function preparePublicCreator(
   prefix: string,
   campaignId = "adoption",
   subject = "public-creator",
+  onStage: (stage: string) => void = () => {},
 ) {
   const scope = { campaignId };
   try {
@@ -28,12 +29,15 @@ export async function preparePublicCreator(
     email: `${subject}@creators.example`,
     operationId: `${prefix}-invite`,
   });
+  onStage("after-creator-invite");
   await manager.action("clerkInvitations:dispatch", {
     ...scope,
     invitationId: invitation._id,
     kind: "create",
   });
+  onStage("after-clerk-invitation-dispatch");
   const workspace = await query(creator, "creatorAccess:workspace", scope);
+  onStage("after-creator-workspace");
   await mutation(creator, "creatorAccess:accept", {
     ...scope,
     invitationId: invitation._id,
@@ -42,4 +46,5 @@ export async function preparePublicCreator(
     confirmed: true,
     operationId: `${prefix}-accept`,
   });
+  onStage("after-creator-terms-acceptance");
 }

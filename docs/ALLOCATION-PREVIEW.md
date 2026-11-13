@@ -42,11 +42,14 @@ Individual checks:
 
 ```powershell
 npm run test:launch:planner
+npm run test:launch:auth
 npm run test:launch:backend
 npm run test:launch:browser
 npm test
 npm run build
 ```
+
+`test:launch:auth` runs concurrent backend startup, CLI-output isolation, allocation authority, application authentication, locked campaign setup and creator isolation tests without waiting for the media suite. Both backend commands use TAP output so each failed test includes its exception as soon as that test completes; a later large-video test cannot delay the error details until the end of the entire run.
 
 The planner suite tests the intended public calculation boundary. The backend suite starts real isolated Convex processes, uses signed identities, restarts the same state and checks concurrent operations. Separate slot/funding controls invoke the intended reservation operation; the manager preview never calls it. The browser suite uses real Convex requests on desktop/mobile, including a fresh session and private-state serving denial. Browser network mocks and browser-local demo persistence are not used.
 
@@ -56,7 +59,9 @@ The planner suite tests the intended public calculation boundary. The backend su
 
 - Application auth configuration trusts the configured Clerk issuer, not fixture issuers. Only the copied configuration in an owned local run trusts that run's generated test key. The negative auth test switches back to the exact application configuration with an isolated placeholder issuer and verifies fixture rejection; this does not validate real Clerk invitation/recovery behavior.
 - Private signing material stays in runner memory. Backend administrative state is outside the application directory and outside the dev server's filesystem allowlist. Only the generated public dependency cache is served; cross-origin fixture-session requests are rejected.
+- Successful fixture CLI calls return stdout alone, so stderr warnings cannot corrupt JSON results. Failed calls retain stdout, stderr, exit code and signal for diagnosis. The harness waits for both output pipes to close before returning.
 - Internal seed/revision/revocation helpers are templates copied into the owned test deployment, not application functions or browser assets. CLI mutations verify the selected deployment matches the run's local URL/configuration before execution.
+- Fixture startup uses a shared temporary lock across processes until health is ready, avoiding the anonymous Convex dashboard port-selection race. The lock is released on success or failure; its heartbeat permits recovery after a crashed owner. Backends run independently after startup.
 - Windows uses polling for owned Convex/Vite watchers because native watchers aborted on short temporary paths and the dependency junction during verification. Vite cache files live outside OneDrive, and dependency scanning is restricted to the preview entry point.
 - If cloud placeholder dependency files become unreadable, `npm ci` restores the locked installed files. No user campaign data is deleted to refresh this feature.
 

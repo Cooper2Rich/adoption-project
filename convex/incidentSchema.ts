@@ -140,7 +140,9 @@ export const incidentTables = {
     failures: v.number(),
     wakeVersion: v.number(),
     activeAttempt: v.optional(v.id("incidentEmailAttempts")),
-  }).index("by_notice", ["noticeId"]),
+  })
+    .index("by_notice", ["noticeId"])
+    .index("by_notice_state", ["noticeId", "state"]),
   incidentEmailAttempts: defineTable({
     emailId: v.id("incidentEmails"),
     ordinal: v.number(),
