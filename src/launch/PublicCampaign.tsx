@@ -2,6 +2,7 @@ import { useQuery } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import { useEffect, useRef, useState } from "react";
 import type { Doc } from "../../convex/functions.ts";
+import { DonationCheckout } from "./Fundraising.tsx";
 
 type Entry = {
   id: Doc<"photoEntries">["_id"];
@@ -28,7 +29,7 @@ const fundraisingRef = makeFunctionReference<
   { entryId: Doc<"photoEntries">["_id"] },
   {
     originEntryId: string;
-    entry: Entry;
+    entry: Entry | null;
     trackedPath: string;
     checkout: "unavailable";
   } | null
@@ -186,6 +187,11 @@ export function PublicCampaign() {
             id={id as Entry["id"]}
             fundraising={parts[0] === "fundraise"}
           />
+        ) : parts[0] === "fundraise" ? (
+          <section className="panel">
+            <h1>Support adoption.is</h1>
+            <DonationCheckout />
+          </section>
         ) : parts.length ? (
           <Unavailable />
         ) : (
@@ -222,22 +228,30 @@ function PublicDetail({
   const [shared, setShared] = useState("");
   if (entry === undefined || (fundraising && origin === undefined))
     return <p role="status">Loading campaign ad…</p>;
-  if (!entry || (fundraising && !origin)) return <Unavailable />;
+  if ((!fundraising && !entry) || (fundraising && !origin))
+    return <Unavailable />;
+  const displayEntry = fundraising ? origin!.entry : entry;
   return (
     <>
       <a href="/#approved">← All approved ads</a>
-      <Ad entry={entry} detail />
+      {displayEntry && entry ? (
+        <Ad entry={displayEntry} detail />
+      ) : (
+        <section className="panel">
+          <h1>Support adoption.is</h1>
+          <p>This preserved link continues supporting the nonprofit.</p>
+        </section>
+      )}
       {fundraising ? (
         <section className="panel" aria-label="Tracked fundraising">
           <h2>Support adoption.is</h2>
-          <p>
-            You reached adoption.is through {entry.creator}'s ad, “{entry.title}
-            ”.
-          </p>
-          <p role="status">
-            Donation checkout is not available yet. Your entry-specific
-            fundraising link is preserved.
-          </p>
+          {displayEntry && (
+            <p>
+              You reached adoption.is through {displayEntry.creator}'s ad, “
+              {displayEntry.title}”.
+            </p>
+          )}
+          <DonationCheckout entryId={id} />
           <p>Share this same link from any platform:</p>
           <a className="public-link" href={origin!.trackedPath}>
             {location.origin}
@@ -250,15 +264,15 @@ function PublicDetail({
           <p>
             Every platform uses the same entry and tracked fundraising link.
           </p>
-          <a className="public-link" href={entry.trackedPath}>
+          <a className="public-link" href={entry!.trackedPath}>
             {location.origin}
-            {entry.trackedPath}
+            {entry!.trackedPath}
           </a>
           <p>
             <button
               onClick={() => {
                 void navigator.clipboard
-                  .writeText(`${location.origin}${entry.trackedPath}`)
+                  .writeText(`${location.origin}${entry!.trackedPath}`)
                   .then(
                     () => setShared("Tracked link copied."),
                     () =>

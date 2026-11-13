@@ -4,6 +4,7 @@ import { campaign, creatorApi } from "./creator-api.ts";
 import { timestamp } from "./format.ts";
 import { CreatorPhotos } from "./Photos.tsx";
 import { CreatorVideos } from "./Videos.tsx";
+import { FundraisingLedger } from "./Fundraising.tsx";
 
 export function CreatorInvitations() {
   const invitations = useQuery(creatorApi.manager, campaign);
@@ -194,7 +195,7 @@ function PrivateStatus() {
           </p>
         ))
       ) : (
-        <p>No earnings or payment setup records yet.</p>
+        <p>No additional private updates yet.</p>
       )}
     </section>
   );
@@ -256,6 +257,7 @@ export function CreatorWorkspace() {
             <pre className="terms-body">{acceptance.termsBody}</pre>
           </section>
           <PrivateStatus />
+          <FundraisingLedger audience="creator" />
           <CreatorPhotos canSubmit={terms?._id === acceptance.termsId} />
           <CreatorVideos canSubmit={terms?._id === acceptance.termsId} />
         </>

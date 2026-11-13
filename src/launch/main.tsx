@@ -18,6 +18,7 @@ import "./preview.css";
 import { OperatorIncidents } from "./OperatorIncidents.tsx";
 import { PreviewWorkspace } from "./PreviewWorkspace.tsx";
 import { LaunchReadiness } from "./LaunchReadiness.tsx";
+import { FundraisingLedger } from "./Fundraising.tsx";
 
 function PublicFailure() {
   return (
@@ -132,6 +133,9 @@ function ManagerWorkspace({ local = false }: { local?: boolean }) {
           Operator incidents
         </button>
         <button onClick={() => setScreen("readiness")}>Launch readiness</button>
+        <button onClick={() => setScreen("fundraising")}>
+          Fundraising ledger
+        </button>
         <a href="?workspace=creator">My creator workspace</a>
       </nav>
       {local && screen !== "preview" ? (
@@ -142,6 +146,10 @@ function ManagerWorkspace({ local = false }: { local?: boolean }) {
       ) : null}
       {screen === "preview" && local ? (
         <PreviewWorkspace />
+      ) : screen === "fundraising" ? (
+        <main className="preview-layout">
+          <FundraisingLedger audience="manager" />
+        </main>
       ) : screen === "readiness" ? (
         <LaunchReadiness />
       ) : screen === "incidents" ? (

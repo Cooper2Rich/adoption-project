@@ -24,6 +24,8 @@ import { localPhotoStore } from "./photo-store.ts";
 import { localMuxProvider, localVideoStore } from "./video-store.ts";
 
 import { createEmailFixture } from "./email-fixture.ts";
+import { createStripeFixture } from "./stripe-fixture.ts";
+import { createFundraisingService } from "../../server/launch/fundraising.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const cli = join(root, "node_modules/convex/bin/main.js");
@@ -47,6 +49,8 @@ export async function createLocalBackend({
   const email = await createEmailFixture();
   const directory = await mkdtemp(join(tmpdir(), "slander-preview-"));
   const runId = randomUUID();
+  const stripe = await createStripeFixture(runId);
+  const fundraisingSecret = randomUUID() + randomUUID();
   const photoSecret = randomUUID() + randomUUID();
   const videoSecret = randomUUID() + randomUUID();
   const mux = await localMuxProvider(directory, randomUUID());
@@ -250,6 +254,7 @@ export async function createLocalBackend({
         "fixtures:readinessControl",
         "fixtures:readinessReleaseTarget",
         "fixtures:readinessZeroPrizeCampaign",
+        "fixtures:fundraisingControl",
         "incidentEmail:watchdog",
         "incidentEmail:claim",
         "incidentEmail:settle",
@@ -293,6 +298,12 @@ export async function createLocalBackend({
     );
     await command("env", "set", "PHOTO_RECEIPT_SECRET", photoSecret);
     await command("env", "set", "VIDEO_RECEIPT_SECRET", videoSecret);
+    await command(
+      "env",
+      "set",
+      "FUNDRAISING_RECEIPT_SECRET",
+      fundraisingSecret,
+    );
     await command("env", "set", "CLERK_INVITATION_FIXTURE_URL", clerk.url);
     await command("run", "fixtures:seed", JSON.stringify({ runId }));
     if (!fixtureAuth) {
@@ -347,6 +358,29 @@ export async function createLocalBackend({
     }
     const videoStore = await localVideoStore(directory);
     return {
+      stripe,
+      fundraisingService: createFundraisingService({
+        url,
+        secret: fundraisingSecret,
+        fixtureRunId: runId,
+        stripeOrigin: stripe.origin,
+        stripeKey: stripe.key,
+        webhookSecret: stripe.webhookSecret,
+      }),
+      fundraisingServiceFor: (overrides: {
+        applicationOrigin?: string;
+        fixtureRunId?: string;
+        stripeOrigin?: string;
+      }) =>
+        createFundraisingService({
+          url,
+          secret: fundraisingSecret,
+          fixtureRunId: overrides.fixtureRunId ?? runId,
+          stripeOrigin: overrides.stripeOrigin ?? stripe.origin,
+          stripeKey: `owned-${overrides.fixtureRunId ?? runId}`,
+          webhookSecret: stripe.webhookSecret,
+          applicationOrigin: overrides.applicationOrigin,
+        }),
       videoStore,
       email,
       runOwnedInternal,
@@ -374,6 +408,7 @@ export async function createLocalBackend({
         await stop();
         await clerk.stop();
         await email.stop();
+        await stripe.stop();
       },
       diagnostics: () => logs,
       restart: async () => {
@@ -401,6 +436,7 @@ export async function createLocalBackend({
   } catch (err: any) {
     await stop();
     await clerk.stop();
+    await stripe.stop();
     throw err;
   }
 }

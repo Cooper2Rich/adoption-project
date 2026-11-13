@@ -1,6 +1,24 @@
 import { internalMutation as mutation } from "./functions.ts";
 import { v } from "convex/values";
 
+// Test time/lifecycle controls only; never inserts or confirms a donation.
+export const fundraisingControl = mutation({
+  args: { entryId: v.optional(v.id("photoEntries")), approvedAt: v.optional(v.number()), cutoff: v.optional(v.number()), reason: v.optional(v.union(v.literal("withdrawal"), v.literal("ordinary-removal"))), operationId: v.optional(v.string()), retryBefore: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    if (args.entryId) {
+      const entry = await ctx.db.get(args.entryId), campaign = entry ? await ctx.db.query("campaigns").withIndex("by_slug", q => q.eq("slug", entry.campaignSlug)).unique() : null;
+      if (!entry || !campaign?.fixtureRunId || campaign.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned fixture required");
+      if (args.approvedAt !== undefined) await ctx.db.patch(entry._id, { firstApprovedAt: args.approvedAt });
+      if (args.cutoff !== undefined) await ctx.db.insert("fundraisingCutoffs", { entryId: entry._id, effectiveAt: args.cutoff, reason: args.reason ?? "withdrawal", actor: "owned-lifecycle-control", source: "fixtures:fundraisingControl", at: Date.now(), version: 1 });
+    }
+    if (args.operationId && args.retryBefore !== undefined) {
+      const row = await ctx.db.query("fundraisingCheckouts").withIndex("by_operation", q => q.eq("operationId", args.operationId!)).unique();
+      if (!row || row.scope.fixtureRunId !== process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned checkout required");
+      await ctx.db.patch(row._id, { retryBefore: args.retryBefore });
+    }
+  },
+});
+
 // Copied only into a run-owned local deployment. Never part of application functions.
 export const seed = mutation({
   args: { runId: v.string() },
