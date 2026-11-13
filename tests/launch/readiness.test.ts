@@ -7,6 +7,7 @@ import { mutation, query, preparePublicCreator } from "./public-fixtures.ts";
 import { pngBytes } from "./photo-fixtures.ts";
 import { mkdir, writeFile } from "node:fs/promises";
 import { campaignRules } from "./fixtures.ts";
+import { promisedPrizes } from "../../convex/prizePolicy.ts";
 
 const scope = { campaignId: "adoption" };
 const accounts = Object.fromEntries(
@@ -55,6 +56,13 @@ test(
       lastProof: any,
       firstDispatchDelayMs = -1;
     const proof = async (id: string, extra: any = {}) => {
+      // Independent owned purpose producer supplies the actual whole schedule;
+      // the legacy readiness proof's example values cannot replace this read.
+      if (id === "prize-funding")
+        await backend.runOwnedInternal("fixtures:prizeEvidence", {
+          ...scope,
+          facts: { prizeCents: promisedPrizes(campaignRules).requiredCents },
+        });
       const current = await read(admin),
         component = current.components.find((c: any) => c.id === id);
       const value = {
@@ -422,6 +430,11 @@ test(
             /FACTS/,
           );
           await zeroProof();
+          await backend.runOwnedInternal("fixtures:prizeEvidence", {
+            ...zeroScope,
+            facts: { prizeCents: 0 },
+          });
+          await mutation(manager, "readiness:evaluate", zeroScope);
           const proven = await zeroRead();
           const prize = proven.components.find(
             (c: any) => c.id === "prize-funding",

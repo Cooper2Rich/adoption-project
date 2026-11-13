@@ -2,6 +2,21 @@ import { internalMutation as mutation } from "./functions.ts";
 import { v } from "convex/values";
 import { recordTrustedPaidEnrollment, creativeBinding, appendTrustedPaidPeriods } from "./paidMetrics.ts";
 import { paidProvider, paidPlatform } from "./paidMetricSchema.ts";
+import { recordTrustedPrizeEvidence, prizeContext, prizeDigest, prizeNow, advancePrizeOccurrence, ensurePrizeSchedule } from "./prizeFunds.ts";
+
+export const prizeEvidence=mutation({args:{campaignId:v.string(),facts:v.any()},handler:async(ctx,args)=>{
+  const c=await ctx.db.query("campaigns").withIndex("by_slug",q=>q.eq("slug",args.campaignId)).unique();
+  if(!c?.fixtureRunId||c.fixtureRunId!==process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID)throw new Error("Owned fixture required");
+  const context=await prizeContext(ctx,c),now=await prizeNow(ctx,c),history=await ctx.db.query("prizeEvidence").withIndex("by_campaign",q=>q.eq("campaignSlug",c.slug)).collect();
+  return recordTrustedPrizeEvidence(ctx,{campaignId:c.slug,nonprofitId:c.nonprofitId,revision:context.revision,account:"owned-prize-"+c.nonprofitId,financialAccountBinding:context.financialScope?.accounts.stripe??prizeDigest("owned-prize-"+c.nonprofitId),route:"owned-purpose-transfer-v1",sourcePurpose:"fundraising",destinationPurpose:"prize",beneficiary:c.nonprofitId,destination:"owned-prize-destination-"+c.slug,transportBinding:prizeDigest({origin:process.env.PRIZE_FIXTURE_ORIGIN,credential:process.env.PRIZE_FIXTURE_SECRET}),authorityRevision:"owned-prize-contract-v1",manager:c.slug==="other"?"manager-b":"manager-a",approvedAmountCents:context.settings!.rules.weeklyReplenishmentCents,fundraisingCents:0,prizeCents:0,advertisingCents:0,reservedCreatorCents:context.creatorReserveCents,refundHoldCents:0,reflectedRefunds:[],otherFundraisingObligationsCents:0,advertisingObligationsCents:0,reflectedTransfers:[],sourceReflectedTransfers:args.facts.reflectedTransfers??[],sequence:Math.max(0,...history.map(e=>e.input.sequence))+1,observedAt:now,expiresAt:now+7*86400000,evidence:"Owned controlled purpose/account/route/obligation read; actual financial authority held",...args.facts},{actor:"owned-prize-producer",source:"owned-prize-producer-v1",synthetic:true});
+}});
+export const prizeControl=mutation({args:{campaignId:v.string(),now:v.optional(v.number()),advance:v.optional(v.boolean()),replacementManager:v.optional(v.string())},handler:async(ctx,args)=>{
+  const c=await ctx.db.query("campaigns").withIndex("by_slug",q=>q.eq("slug",args.campaignId)).unique();if(!c?.fixtureRunId||c.fixtureRunId!==process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID)throw new Error("Owned fixture required");
+  if(args.replacementManager){await ctx.db.insert("memberships",{subject:args.replacementManager,nonprofitId:c.nonprofitId,role:"manager",active:true});}
+  if(args.now!==undefined){if(!Number.isSafeInteger(args.now)||args.now<0)throw new Error("Owned prize clock");const old=await ctx.db.query("prizeClocks").withIndex("by_campaign",q=>q.eq("campaignSlug",c.slug)).unique();if(old)await ctx.db.patch(old._id,{now:args.now});else await ctx.db.insert("prizeClocks",{campaignSlug:c.slug,now:args.now});}
+  await ensurePrizeSchedule(ctx,c);
+  if(args.advance)for(const o of await ctx.db.query("prizeOccurrences").withIndex("by_campaign",q=>q.eq("campaignSlug",c.slug)).collect())await advancePrizeOccurrence(ctx,o._id);
+}});
 
 export const paidEnrollment = mutation({
   args: {campaignId:v.string(),entryId:v.id("photoEntries"),provider:paidProvider,platform:paidPlatform,account:v.string(),adId:v.string(),requiredPeriods:v.array(v.object({start:v.number(),end:v.number()})),overrides:v.optional(v.any())},
@@ -195,7 +210,7 @@ export const terms = mutation({
       campaignSlug,
       nonprofitId: campaign.nonprofitId,
       version: "synthetic-test-v1",
-      title: "SYNTHETIC TEST AGREEMENT — NOT LEGAL TERMS",
+      title: "SYNTHETIC TEST AGREEMENT â€” NOT LEGAL TERMS",
       body: "SYNTHETIC ISOLATED VERIFICATION ONLY. This text is not an applicable legal agreement and must never enable production signup.\nTest coverage: commission, prizes, score, cutoffs, refunds and creative use.\nTest permission model: creators retain ownership and confirm permission to authorize included content. Campaign submissions may be publicly displayed and used for campaign advertising without additional approval per submission or placement. New advertising use ends on withdrawal or campaign completion. Private records remain available to explain results and payments.\nActual legal matters require a supplied, approved pre-signup use agreement.",
       synthetic,
       approvedBy: "synthetic-fixture-operator",

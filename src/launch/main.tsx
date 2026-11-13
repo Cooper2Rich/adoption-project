@@ -21,6 +21,7 @@ import { LaunchReadiness } from "./LaunchReadiness.tsx";
 import { FundraisingLedger } from "./Fundraising.tsx";
 import { PaidMetrics } from "./PaidMetrics.tsx";
 import { Standings } from "./Standings.tsx";
+import { PrizeFunds } from "./PrizeFunds.tsx";
 
 function PublicFailure() {
   return (
@@ -140,6 +141,7 @@ function ManagerWorkspace({ local = false }: { local?: boolean }) {
         </button>
         <button onClick={() => setScreen("paid")}>Paid performance</button>
         <button onClick={() => setScreen("standings")}>Standings</button>
+        <button onClick={() => setScreen("prizes")}>Prize funds</button>
         <a href="?workspace=creator">My creator workspace</a>
       </nav>
       {local && screen !== "preview" ? (
@@ -150,6 +152,8 @@ function ManagerWorkspace({ local = false }: { local?: boolean }) {
       ) : null}
       {screen === "preview" && local ? (
         <PreviewWorkspace />
+      ) : screen === "prizes" ? (
+        <PrizeFunds />
       ) : screen === "standings" ? (
         <main className="preview-layout">
           <Standings manager />
