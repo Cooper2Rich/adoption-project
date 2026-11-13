@@ -84,6 +84,10 @@ select:focus-visible {
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
+.prize-funds {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 .rules-summary dt {
   font-weight: 600;
 }

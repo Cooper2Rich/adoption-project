@@ -168,9 +168,20 @@ export function LaunchReadiness() {
                             </p>
                             {component.evidence.values ? (
                               <p>
-                                Verified available / required cents:{" "}
+                                Reviewed proof available / required cents:{" "}
                                 {component.evidence.values.availableCents} /{" "}
                                 {component.evidence.values.requiredCents}
+                              </p>
+                            ) : null}
+                            {component.id === "prize-funding" ? (
+                              <p>
+                                Current settled prize / full promised cents:{" "}
+                                {data.prizeCoverage.balances.prizeCents ??
+                                  "unknown"}{" "}
+                                /{" "}
+                                {data.prizeCoverage.requiredCents ?? "unknown"}.{" "}
+                                {data.prizeCoverage.coverageReason ??
+                                  "Full schedule covered"}
                               </p>
                             ) : null}
                             {component.evidence.safety ? (

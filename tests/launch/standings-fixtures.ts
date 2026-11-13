@@ -48,6 +48,7 @@ export async function donate(
   entryId: string,
   amountCents: number,
   at = standingsDay.start,
+  fee: number | null = 32,
 ) {
   const r = await fetch(base + "/api/fundraising?action=checkout", {
     method: "POST",
@@ -61,7 +62,10 @@ export async function donate(
   });
   assert.equal(r.status, 200, await r.clone().text());
   const sid = new URL((await r.json()).url).pathname.split("/").at(-1)!,
-    event = backend.stripe.complete(sid, { at, fee: 32 });
+    event = backend.stripe.complete(sid, {
+      at,
+      ...(fee === null ? {} : { fee }),
+    });
   const delivered = await backend.stripe.deliver(
     event,
     base + "/api/fundraising?action=webhook",

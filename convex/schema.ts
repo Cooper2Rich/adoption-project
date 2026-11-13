@@ -13,8 +13,10 @@ import { readinessTables } from "./readinessSchema.ts";
 import { fundraisingTables } from "./fundraisingSchema.ts";
 import { paidMetricTables } from "./paidMetricSchema.ts";
 import { standingsTables } from "./standingsSchema.ts";
+import { prizeTables } from "./prizeSchema.ts";
 
 export default defineSchema({
+  ...prizeTables,
   ...standingsTables,
   ...paidMetricTables,
   ...fundraisingTables,

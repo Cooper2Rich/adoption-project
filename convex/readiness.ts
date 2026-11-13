@@ -12,6 +12,7 @@ import {
   type Doc,
 } from "./functions.ts";
 import { recordTrustedIncident } from "./operatorIncidents.ts";
+import { prizeCoverage } from "./prizeFunds.ts";
 import {
   readinessComponents,
   type ReadinessComponent,
@@ -162,6 +163,7 @@ function evidenceFacts(
 }
 async function currentReadiness(ctx: QueryCtx, campaign: Doc<"campaigns">) {
   const data = await scopeData(ctx, campaign);
+  const prizes = await prizeCoverage(ctx, campaign);
   const proofs = await ctx.db
     .query("readinessProofs")
     .withIndex("by_campaign", (q) => q.eq("campaignId", campaign.slug))
@@ -238,6 +240,13 @@ async function currentReadiness(ctx: QueryCtx, campaign: Doc<"campaigns">) {
       )
         reason =
           "Locked campaign rules and approved current participation terms are required";
+      if (
+        required &&
+        component.id === "prize-funding" &&
+        !reason &&
+        !prizes.covered
+      )
+        reason = prizes.coverageReason;
       const satisfied = !required || !reason;
       return {
         ...component,
@@ -308,6 +317,7 @@ async function currentReadiness(ctx: QueryCtx, campaign: Doc<"campaigns">) {
   const collection = components.filter((c) => collectionIds.includes(c.id));
   return {
     revision: data.revision,
+    prizeCoverage: prizes,
     releaseTarget: data.releaseTarget,
     configurationVersion: data.configuration?.version ?? 0,
     synthetic: !!campaign.fixtureRunId,
@@ -464,6 +474,23 @@ export const evaluate = mutation({
   handler: async (ctx, { campaignId }) => {
     const { campaign, subject } = await authorizedCampaign(ctx, campaignId);
     return await evaluateCurrent(ctx, campaign, subject, "readiness:evaluate");
+  },
+});
+// Trusted purpose producer/expiry refreshes the existing durable blocker stream.
+export const refreshPrize = internalMutation({
+  args: { campaignId: v.string() },
+  handler: async (ctx, { campaignId }) => {
+    const campaign = await ctx.db
+      .query("campaigns")
+      .withIndex("by_slug", (q) => q.eq("slug", campaignId))
+      .unique();
+    if (campaign)
+      await evaluateCurrent(
+        ctx,
+        campaign,
+        "prize-producer",
+        "prize-funding-current",
+      );
   },
 });
 export const checkPaidActivation = mutation({

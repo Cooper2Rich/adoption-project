@@ -10,6 +10,7 @@ import {
   validateRules,
 } from "./campaignRules.ts";
 import { mutation, query } from "./functions.ts";
+import { ensurePrizeSchedule } from "./prizeFunds.ts";
 
 export const workspace = query({
   args: { campaignId: v.string() },
@@ -87,6 +88,7 @@ export const create = mutation({
       operationId,
       action: "rules-created-and-locked",
     });
+    await ensurePrizeSchedule(ctx, campaign);
     return await ctx.db.get(settingsId);
   },
 });

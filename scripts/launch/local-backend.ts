@@ -26,6 +26,7 @@ import { localMuxProvider, localVideoStore } from "./video-store.ts";
 
 import { createEmailFixture } from "./email-fixture.ts";
 import { createStripeFixture } from "./stripe-fixture.ts";
+import { createPrizeFixture } from "./prize-fixture.ts";
 import { createPaidMetricFixture } from "./paid-metric-fixture.ts";
 import { createPaidMetricService } from "../../server/launch/paid-metrics.ts";
 import {
@@ -58,6 +59,7 @@ export async function createLocalBackend({
   const directory = await mkdtemp(join(tmpdir(), "slander-preview-"));
   const runId = randomUUID();
   const stripe = await createStripeFixture(runId);
+  const prize = await createPrizeFixture();
   const paidProvider = await createPaidMetricFixture(runId);
   const paidSecret = randomUUID() + randomUUID();
   const fundraisingSecret = randomUUID() + randomUUID();
@@ -293,6 +295,14 @@ export async function createLocalBackend({
         "fixtures:fundraisingControl",
         "fixtures:fundraisingEvidence",
         "fixtures:standingsZero",
+        "fixtures:prizeEvidence",
+        "fixtures:prizeControl",
+        "prizeFunds:wake",
+        "prizeFunds:claim",
+        "prizeFunds:settle",
+        "prizeFunds:watchdog",
+        "prizeFunds:expire",
+        "prizeJobs:run",
         "fixtures:paidEnrollment",
         "fixtures:paidControl",
         "fixtures:paidRequirements",
@@ -325,7 +335,11 @@ export async function createLocalBackend({
       setAdminAuth(key: string): void;
     };
     ownedClient.setAdminAuth(deployment.adminKey);
-    return ["archiveJobs:purge", "incidentEmailJobs:run"].includes(name)
+    return [
+      "archiveJobs:purge",
+      "incidentEmailJobs:run",
+      "prizeJobs:run",
+    ].includes(name)
       ? ownedClient.action(makeFunctionReference<"action">(name), args)
       : ownedClient.mutation(makeFunctionReference<"mutation">(name), args);
   }
@@ -343,6 +357,8 @@ export async function createLocalBackend({
     await command("env", "set", "PHOTO_RECEIPT_SECRET", photoSecret);
     await command("env", "set", "VIDEO_RECEIPT_SECRET", videoSecret);
     await command("env", "set", "PAID_METRIC_RECEIPT_SECRET", paidSecret);
+    await command("env", "set", "PRIZE_FIXTURE_ORIGIN", prize.origin);
+    await command("env", "set", "PRIZE_FIXTURE_SECRET", prize.secret);
     await command(
       "env",
       "set",
@@ -448,6 +464,7 @@ export async function createLocalBackend({
           applicationOrigin: overrides.applicationOrigin,
         }),
       videoStore,
+      prize,
       email,
       runOwnedInternal,
       // Run-owned test-only receipt issuer; never returned by any HTTP/browser route.
@@ -502,6 +519,7 @@ export async function createLocalBackend({
         await clerk.stop();
         await email.stop();
         await stripe.stop();
+        await prize.stop();
         await paidProvider.stop();
       },
       diagnostics: () => logs,
@@ -532,6 +550,7 @@ export async function createLocalBackend({
     await clerk.stop();
     await email.stop();
     await stripe.stop();
+    await prize.stop();
     await paidProvider.stop();
     throw err;
   }
