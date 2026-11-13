@@ -404,6 +404,7 @@ test(
             };
             p.latest_charge.amount_refunded = 10;
           });
+          backend.stripe.refund(sessionId, 10);
           await deliver(event);
           await deliver(event);
           const row = (await ledger())[0];

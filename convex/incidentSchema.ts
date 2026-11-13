@@ -16,6 +16,9 @@ export const incidentKinds = [
   "financial-safety-pause",
   "initial-trial-coverage",
   "launch-blocker",
+  "fundraising-discrepancy",
+  "commission-overpayment",
+  "fundraising-refund-held",
 ] as const;
 export const incidentKind = v.union(
   ...incidentKinds.map((kind) => v.literal(kind)),

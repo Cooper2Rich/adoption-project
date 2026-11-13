@@ -190,10 +190,10 @@ test("T10 account-free shared checkout pending/confirmed old links and private e
       name: "Private fundraising ledger",
     });
     await expect(
-      privateLedger.getByText("$0.55", { exact: true }),
+      privateLedger.getByText("$0.55", { exact: true }).first(),
     ).toBeVisible();
     await expect(
-      privateLedger.getByText("$0.06", { exact: true }),
+      privateLedger.getByText("$0.06", { exact: true }).first(),
     ).toBeVisible();
     await expect(
       privateLedger.getByText(/Unknown · awaiting provider fee evidence/),
@@ -212,7 +212,8 @@ test("T10 account-free shared checkout pending/confirmed old links and private e
     await expect(
       page
         .getByRole("region", { name: "Private fundraising ledger" })
-        .getByText("$0.06", { exact: true }),
+        .getByText("$0.06", { exact: true })
+        .first(),
     ).toBeVisible();
     await expect(
       page.getByText("No additional private updates yet.", { exact: true }),

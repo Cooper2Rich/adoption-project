@@ -8,10 +8,20 @@ import {
   type MutationCtx,
   type Doc,
 } from "./functions.ts";
-import { incidentKinds, observationValidator } from "./incidentSchema.ts";
+import { observationValidator } from "./incidentSchema.ts";
 import type { Infer } from "convex/values";
 
-export const bothOperatorKinds = new Set<string>(incidentKinds.slice(5));
+export const bothOperatorKinds = new Set<string>([
+  "capacity-waiting",
+  "stopping-failed",
+  "stopping-uncertain",
+  "delivery-unavailable",
+  "evaluation-interrupted",
+  "pause-reserved-slot",
+  "financial-safety-pause",
+  "initial-trial-coverage",
+  "launch-blocker",
+]);
 export const emailJob = makeFunctionReference<"action", { emailId: string }>(
   "incidentEmailJobs:run",
 );

@@ -206,12 +206,50 @@ type LedgerRow = {
   dailyPeriod: string | null;
   weeklyPeriod: string | null;
   amounts: { kind: string; cents: number | null }[];
+  current: {
+    refundedCents: number;
+    eligibleGrossCents: number;
+    recognizedCommissionCents: number;
+    reversedCommissionCents: number;
+  };
 };
 const ledgerRef = makeFunctionReference<
   "query",
   { campaignId: string; audience: "manager" | "creator" },
   LedgerRow[]
 >("fundraising:ledger");
+type Reconciliation = {
+  balances: {
+    creatorLabel?: string;
+    recognizedCents: number;
+    paidCents: number;
+    balanceCents: number;
+    carryforwardCents: number;
+    payableCents: number;
+    managerReview: boolean;
+  }[];
+  periods: {
+    entryId: string;
+    results: {
+      periodKind: string;
+      period: string;
+      eligibleGrossCents: number;
+      originalGrossCents: number;
+    }[];
+    finalized: {
+      period: string;
+      fixedPrizeCents: number;
+      originalGrossCents: number;
+      preserved: boolean;
+      discrepancies: { correctedGrossCents: number }[];
+    }[];
+  }[];
+};
+const reconciliationRef = makeFunctionReference<
+  "query",
+  { campaignId: string; audience: "manager" | "creator" },
+  Reconciliation
+>("fundraising:reconciliation");
 const money = (cents: number | null | undefined) =>
   cents === null || cents === undefined
     ? "Unknown · awaiting provider fee evidence"
@@ -225,6 +263,10 @@ export function FundraisingLedger({
   audience: "manager" | "creator";
 }) {
   const rows = useQuery(ledgerRef, { campaignId: "adoption", audience });
+  const reconciliation = useQuery(reconciliationRef, {
+    campaignId: "adoption",
+    audience,
+  });
   return (
     <section className="panel" aria-label="Private fundraising ledger">
       <h2>
@@ -234,13 +276,65 @@ export function FundraisingLedger({
       </h2>
       <p>
         Gross fundraising, confirmed refunds, actual provider fees and locked
-        gross-based commission are separate. Refund adjustments and payout
-        processing are handled separately.
+        gross-based commission are separate. Refund corrections use the original
+        donation period and locked rate.
       </p>
       <p role="note">
         Controlled records are unvalidated for production. Actual fundraising
         collection remains held.
       </p>
+      {reconciliation?.balances.map((balance, index) => (
+        <article className="panel" key={index} aria-label="Commission balance">
+          <h3>Commission balance</h3>
+          {audience === "manager" && <p>Creator: {balance.creatorLabel}</p>}
+          <dl>
+            {[
+              ["Recognized commission", balance.recognizedCents],
+              ["Confirmed paid commission", balance.paidCents],
+              ["Commission balance", balance.balanceCents],
+              ["Negative carryforward", balance.carryforwardCents],
+              ["Commission payable", balance.payableCents],
+            ].map(([label, value]) => (
+              <div key={String(label)}>
+                <dt>{label}</dt>
+                <dd>{money(Number(value))}</dd>
+              </div>
+            ))}
+          </dl>
+          {balance.managerReview && (
+            <p role="status">
+              Manager review required: future commissions offset this negative
+              balance. Fixed prizes are preserved.
+            </p>
+          )}
+        </article>
+      ))}
+      {reconciliation?.periods.flatMap((p) =>
+        p.finalized.map((snapshot, index) => (
+          <article
+            key={p.entryId + index}
+            className="panel"
+            aria-label="Preserved finalized prize"
+          >
+            <h3>Finalized prize preserved</h3>
+            <p>
+              {snapshot.period} · Fixed prize obligation:{" "}
+              {money(snapshot.fixedPrizeCents)}
+            </p>
+            <p>
+              Original finalized fundraising:{" "}
+              {money(snapshot.originalGrossCents)}
+            </p>
+            {snapshot.discrepancies.length > 0 && (
+              <p role="status">
+                Manager review required · Corrected fundraising:{" "}
+                {money(snapshot.discrepancies.at(-1)!.correctedGrossCents)}.
+                Winner and fixed prize remain unchanged.
+              </p>
+            )}
+          </article>
+        )),
+      )}
       {rows === undefined ? (
         <p role="status">Loading private ledger…</p>
       ) : rows.length === 0 ? (
@@ -268,7 +362,15 @@ export function FundraisingLedger({
                 : "Nonprofit support only · no creator commission or competition credit"}
             </p>
             <dl>
-              {["gross", "refunds", "fees", "commission"].map((kind) => (
+              {[
+                "gross",
+                "refunds",
+                "fees",
+                "commission",
+                "recognized",
+                "reversed",
+                "eligible",
+              ].map((kind) => (
                 <div key={kind}>
                   <dt>
                     {
@@ -277,14 +379,27 @@ export function FundraisingLedger({
                           gross: "Gross donation",
                           refunds: "Confirmed refunds",
                           fees: "Provider fees",
-                          commission: "Creator commission",
+                          commission: "Original creator commission",
+                          recognized: "Current recognized commission",
+                          reversed: "Cumulative commission reversal",
+                          eligible: "Corrected eligible fundraising",
                         } as Record<string, string>
                       )[kind]
                     }
                   </dt>
                   <dd>
                     {money(
-                      row.amounts.filter((a) => a.kind === kind).at(-1)?.cents,
+                      kind === "refunds"
+                        ? row.current.refundedCents
+                        : kind === "recognized"
+                          ? row.current.recognizedCommissionCents
+                          : kind === "reversed"
+                            ? row.current.reversedCommissionCents
+                            : kind === "eligible"
+                              ? row.current.eligibleGrossCents
+                              : row.amounts
+                                  .filter((a) => a.kind === kind)
+                                  .at(-1)?.cents,
                     )}
                   </dd>
                 </div>

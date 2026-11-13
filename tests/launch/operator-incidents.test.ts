@@ -124,7 +124,7 @@ test(
         },
       );
       await t.test(
-        "all fourteen policy categories route manager-only or manager/admin without a grace threshold",
+        "all fourteen existing and three fundraising categories preserve routing without a grace threshold",
         async () => {
           await control({ dualRole: true });
           for (let index = 0; index < incidentKinds.length; index++) {
@@ -134,12 +134,41 @@ test(
             const incident = await until(
               `route-${kind}`,
               (i) =>
-                emails(i).length === (index < 5 ? 1 : 2) &&
+                emails(i).length ===
+                  ([
+                    "capacity-waiting",
+                    "stopping-failed",
+                    "stopping-uncertain",
+                    "delivery-unavailable",
+                    "evaluation-interrupted",
+                    "pause-reserved-slot",
+                    "financial-safety-pause",
+                    "initial-trial-coverage",
+                    "launch-blocker",
+                  ].includes(kind)
+                    ? 2
+                    : 1) &&
                 emails(i).every(
                   (e: any) => e.attempts.length === 1 && e.state === "accepted",
                 ),
             );
-            assert.equal(emails(incident).length, index < 5 ? 1 : 2, kind);
+            assert.equal(
+              emails(incident).length,
+              [
+                "capacity-waiting",
+                "stopping-failed",
+                "stopping-uncertain",
+                "delivery-unavailable",
+                "evaluation-interrupted",
+                "pause-reserved-slot",
+                "financial-safety-pause",
+                "initial-trial-coverage",
+                "launch-blocker",
+              ].includes(kind)
+                ? 2
+                : 1,
+              kind,
+            );
             assert.equal(incident.notices.length, 1);
             assert(incident.detectedAt >= before);
             for (const email of emails(incident)) {

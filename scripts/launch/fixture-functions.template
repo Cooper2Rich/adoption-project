@@ -381,3 +381,18 @@ export const readinessZeroPrizeCampaign = mutation({ args: {}, handler: async (c
   const { _id, _creationTime, fixtureReadinessNow, ...record } = source;
   await ctx.db.insert("campaigns", { ...record, slug, name: "Owned zero prize verification", reservedSlots: 0, reservedCents: 0, reservationFundingCents: 0 });
 } });
+import { recordTrustedCommissionObligation,recordTrustedCommissionPayment,recordTrustedFinalizedFundraising,recordTrustedFundraisingPeriod } from "./fundraisingCorrections.ts";
+// Copied owned controls exercise nonregistered future-owner seams; never browser authority.
+export const fundraisingEvidence = mutation({
+  args: { donationId:v.id("fundraisingDonations"), action:v.union(v.literal("obligation"),v.literal("paid"),v.literal("finalized"),v.literal("period")), facts:v.any() },
+  handler: async(ctx,args)=>{
+    const d=await ctx.db.get(args.donationId),campaign=d && await ctx.db.query("campaigns").withIndex("by_slug",q=>q.eq("slug",d.campaignSlug)).unique();
+    if(!d || !campaign?.fixtureRunId || campaign.fixtureRunId!==process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID) throw new Error("Owned evidence required");
+    const provenance={ source:"owned-controlled-owner-facts",evidence:"Owned fixture only; not production authority",actor:"owned-integration-control",synthetic:true };
+    if(args.action==="finalized") return recordTrustedFinalizedFundraising(ctx,{entryId:d.originEntryId!,periodKind:"daily",period:d.dailyPeriod!,resultId:"owned-result-"+d._id,originalGrossCents:d.grossCents,winner:d.creator!,prizeObligationId:"owned-fixed-prize-"+d._id,fixedPrizeCents:5000,currency:"usd",...args.facts},provenance);
+    if(args.action==="period") return recordTrustedFundraisingPeriod(ctx,{entryId:d.originEntryId!,periodKind:"daily",period:d.dailyPeriod!,eligibleGrossCents:0,originalGrossCents:d.grossCents,donationIds:[d._id],...args.facts},provenance);
+    const binding={ campaignSlug:d.campaignSlug,nonprofitId:d.nonprofitId,creator:d.creator!,account:d.account,route:d.route,obligationId:"owned-obligation-"+d._id,amountCents:d.commissionCents,currency:"usd" as const,destinationBinding:"a".repeat(64),revision:1,source:"owned-confirmed-commission-payment",synthetic:true,...args.facts };
+    if(args.action==="obligation") return recordTrustedCommissionObligation(ctx,binding,{...provenance,source:binding.source,actor:"owned-payout-approval-owner"});
+    return recordTrustedCommissionPayment(ctx,binding,{...provenance,source:"owned-confirmed-payment-producer",actor:"owned-payment-reconciliation-owner",evidence:binding.evidence});
+  }
+});

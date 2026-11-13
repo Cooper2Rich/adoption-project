@@ -10,8 +10,23 @@ import {
 import { acceptedCreator } from "./creatorAccess.ts";
 import { mutation, query, type MutationCtx, type Doc } from "./functions.ts";
 import { attribution, cents, commission } from "./fundraisingPolicy.ts";
-import { confirmation, fundraisingScope } from "./fundraisingSchema.ts";
-import { fundraisingOrigin, publicCampaign } from "./publicViewer.ts";
+import {
+  confirmation,
+  fundraisingScope,
+  refundFact,
+} from "./fundraisingSchema.ts";
+import {
+  currentCommission,
+  commissionBalances,
+  reconcileRefunds,
+  managerNotice,
+} from "./fundraisingCorrections.ts";
+import { sumCents } from "./fundraisingPolicy.ts";
+import {
+  fundraisingOrigin,
+  publicCampaign,
+  unnamedCreator,
+} from "./publicViewer.ts";
 
 function signature(value: any, supplied: string) {
   const secret = process.env.FUNDRAISING_RECEIPT_SECRET;
@@ -222,7 +237,7 @@ export const confirm = mutation({
     cents(f.refundedCents);
     if (f.feeCents !== null) cents(f.feeCents);
     if (
-      f.refundedCents > f.grossCents ||
+      f.refundedCents !== 0 ||
       !Number.isSafeInteger(f.completedAt) ||
       f.completedAt <= 0 ||
       f.completedAt > Date.now() + 5000
@@ -268,8 +283,7 @@ export const confirm = mutation({
         .query("fundraisingLedger")
         .withIndex("by_donation", (q) => q.eq("donationId", donation!._id))
         .collect();
-      const fee = amounts.filter((a) => a.kind === "fees").at(-1),
-        refunds = amounts.filter((a) => a.kind === "refunds").at(-1);
+      const fee = amounts.filter((a) => a.kind === "fees").at(-1);
       if (
         fee?.cents !== null &&
         f.feeCents !== null &&
@@ -278,7 +292,6 @@ export const confirm = mutation({
         throw new Error("FUNDRAISING_CONFLICT: Confirmed fee changed");
       for (const [kind, amount, changed] of [
         ["fees", f.feeCents, fee?.cents === null && f.feeCents !== null],
-        ["refunds", f.refundedCents, f.refundedCents > (refunds?.cents ?? 0)],
       ] as const) {
         if (changed) {
           await ctx.db.insert("fundraisingLedger", {
@@ -389,6 +402,7 @@ export const confirm = mutation({
         source: "stripe:verified-webhook",
         version: 1,
       });
+    await reconcileRefunds(ctx, donation, f.eventId, f.factsDigest);
     await ctx.db.patch(row._id, { state: "confirmed" });
     return { confirmed: true, duplicate: !!priorEvent || !!checkoutDonation };
   },
@@ -435,7 +449,15 @@ export const ledger = query({
             .query("fundraisingLedger")
             .withIndex("by_donation", (q) => q.eq("donationId", row._id))
             .collect();
+          const current = await currentCommission(ctx, row);
           return {
+            current: {
+              refundedCents: current.refundedCents,
+              eligibleGrossCents: current.eligibleGrossCents,
+              recognizedCommissionCents: current.recognizedCommissionCents,
+              reversedCommissionCents:
+                row.commissionCents - current.recognizedCommissionCents,
+            },
             id: row._id,
             originEntryId: row.originEntryId ?? null,
             completedAt: row.completedAt,
@@ -493,5 +515,385 @@ export const history = query({
       .query("fundraisingAudit")
       .withIndex("by_checkout", (q) => q.eq("checkoutId", row.checkoutId))
       .collect();
+  },
+});
+// Signed service only; generation is journaled before any canonical refund reads.
+export const refundRead = mutation({
+  args: {
+    value: v.object({
+      checkoutId: v.id("fundraisingCheckouts"),
+      eventId: v.string(),
+      digest: v.string(),
+      scope: fundraisingScope,
+      at: v.number(),
+    }),
+    signature: v.string(),
+  },
+  handler: async (ctx, { value, signature: supplied }) => {
+    signature(value, supplied);
+    await gate(ctx, value.scope);
+    const row = await ctx.db.get(value.checkoutId);
+    if (!row || stableRequest(row.scope) !== stableRequest(value.scope))
+      throw new Error("FUNDRAISING_REFUND_SCOPE");
+    const generation = sumCents([row.refundGeneration ?? 0, 1]);
+    await ctx.db.patch(row._id, { refundGeneration: generation });
+    await ctx.db.insert("fundraisingRefundReads", {
+      actor: "fundraising-service",
+      source: "fundraising:canonical-read-journal",
+      version: 1,
+      checkoutId: row._id,
+      generation,
+      eventId: value.eventId,
+      digest: value.digest,
+      at: Date.now(),
+    });
+    return { row, generation };
+  },
+});
+export const observeRefunds = mutation({
+  args: {
+    value: v.object({
+      checkoutId: v.id("fundraisingCheckouts"),
+      generation: v.number(),
+      paymentId: v.string(),
+      chargeId: v.string(),
+      eventId: v.string(),
+      digest: v.string(),
+      refunds: v.array(refundFact),
+      scope: fundraisingScope,
+      at: v.number(),
+    }),
+    signature: v.string(),
+  },
+  handler: async (ctx, { value, signature: supplied }) => {
+    signature(value, supplied);
+    await gate(ctx, value.scope);
+    const row = await ctx.db.get(value.checkoutId);
+    if (!row || stableRequest(row.scope) !== stableRequest(value.scope))
+      throw new Error("FUNDRAISING_REFUND_SCOPE");
+    const reads = await ctx.db
+      .query("fundraisingRefundReads")
+      .withIndex("by_checkout", (q) => q.eq("checkoutId", row._id))
+      .collect();
+    const read = reads.find((r) => r.generation === value.generation);
+    if (!read || read.eventId !== value.eventId || read.digest !== value.digest)
+      throw new Error("FUNDRAISING_REFUND_BINDING");
+    const factsDigest = bytesToHex(
+      sha256(
+        new TextEncoder().encode(
+          stableRequest({
+            paymentId: value.paymentId,
+            chargeId: value.chargeId,
+            refunds: value.refunds,
+          }),
+        ),
+      ),
+    );
+    if (read.factsDigest) {
+      if (read.factsDigest !== factsDigest)
+        throw new Error("FUNDRAISING_REFUND_READ_CONFLICT");
+      return { status: read.outcome!, applied: read.applied! };
+    }
+    if (value.generation !== row.refundGeneration) {
+      await ctx.db.patch(read._id, {
+        factsDigest,
+        outcome: "stale-read-held",
+        applied: false,
+      });
+      return { status: "stale-read-held", applied: false };
+    }
+    const donation = await ctx.db
+      .query("fundraisingDonations")
+      .withIndex("by_checkout", (q) => q.eq("checkoutId", row._id))
+      .unique();
+    if (
+      donation &&
+      (donation.paymentId !== value.paymentId ||
+        donation.chargeId !== value.chargeId)
+    )
+      throw new Error("FUNDRAISING_REFUND_CONFLICT");
+    const previous = await ctx.db
+      .query("fundraisingRefundObservations")
+      .withIndex("by_checkout", (q) => q.eq("checkoutId", row._id))
+      .collect();
+    let held = false;
+    const ids = new Set<string>();
+    const additions: typeof value.refunds = [];
+    for (const r of value.refunds) {
+      cents(r.amountCents, true);
+      if (
+        !/^re_[A-Za-z0-9_-]+$/.test(r.refundId) ||
+        ids.has(r.refundId) ||
+        r.paymentId !== value.paymentId ||
+        r.chargeId !== value.chargeId ||
+        ![
+          "pending",
+          "requires_action",
+          "succeeded",
+          "failed",
+          "canceled",
+        ].includes(r.status) ||
+        !Number.isSafeInteger(r.createdAt) ||
+        r.createdAt < 0 ||
+        r.createdAt > Date.now() + 5000
+      )
+        throw new Error("FUNDRAISING_REFUND_FACTS");
+      ids.add(r.refundId);
+      const prior = await ctx.db
+        .query("fundraisingRefundObservations")
+        .withIndex("by_refund", (q) =>
+          q.eq("account", value.scope.account).eq("refundId", r.refundId),
+        )
+        .collect();
+      if (
+        prior.some(
+          (p) =>
+            p.checkoutId !== row._id ||
+            p.paymentId !== r.paymentId ||
+            p.chargeId !== r.chargeId ||
+            p.amountCents !== r.amountCents ||
+            p.createdAt !== r.createdAt,
+        )
+      )
+        throw new Error("FUNDRAISING_REFUND_CONFLICT");
+      if (
+        prior.some((p) => p.accepted && p.status === "succeeded") &&
+        r.status !== "succeeded"
+      )
+        held = true;
+      if (r.status === "succeeded" && r.failureBalanceTransactionId)
+        held = true;
+      const latest = prior.at(-1);
+      if (
+        !latest ||
+        !latest.accepted ||
+        latest.status !== r.status ||
+        latest.balanceTransactionId !== r.balanceTransactionId ||
+        latest.failureBalanceTransactionId !== r.failureBalanceTransactionId
+      )
+        additions.push(r);
+    }
+    if (previous.some((p) => !ids.has(p.refundId))) held = true;
+    for (const r of additions)
+      await ctx.db.insert("fundraisingRefundObservations", {
+        ...r,
+        accepted: !held,
+        checkoutId: row._id,
+        account: value.scope.account,
+        eventId: value.eventId,
+        digest: factsDigest,
+        generation: value.generation,
+        actor: "stripe-owned-transport",
+        source: "fundraising:canonical-refund-read",
+        at: Date.now(),
+        version: 1,
+      });
+    const confirmed = new Map<string, number>();
+    for (const r of [
+      ...previous.filter((p) => p.accepted),
+      ...(!held ? value.refunds : []),
+    ])
+      if (r.status === "succeeded" && !r.failureBalanceTransactionId)
+        confirmed.set(r.refundId, r.amountCents);
+    if (sumCents([...confirmed.values()]) > row.amountCents)
+      throw new Error("FUNDRAISING_REFUND_OVERFLOW");
+    await managerNotice(
+      ctx,
+      row.campaignSlug,
+      "refund-held:" + row._id,
+      "fundraising-refund-held",
+      held,
+      held
+        ? "Refund evidence conflicts with retained confirmed history. Correction held for manager review; no automatic earnings restoration."
+        : "Coherent complete refund evidence restored; retained observation history remains available.",
+      value.digest,
+    );
+    await audit(
+      ctx,
+      row._id,
+      donation
+        ? "refund-evidence-reconciled"
+        : "refund-awaiting-original-donation",
+      value.digest,
+    );
+    if (donation)
+      await reconcileRefunds(ctx, donation, value.eventId, value.digest);
+    const outcome = held
+      ? "correction-held"
+      : donation
+        ? "reconciled"
+        : "awaiting-original-donation";
+    await ctx.db.patch(read._id, {
+      factsDigest,
+      outcome,
+      applied: !!donation && !held,
+    });
+    return { status: outcome, applied: !!donation && !held };
+  },
+});
+export const reconciliation = query({
+  args: {
+    campaignId: v.string(),
+    audience: v.union(v.literal("manager"), v.literal("creator")),
+  },
+  handler: async (ctx, { campaignId, audience }) => {
+    const access =
+      audience === "manager"
+        ? await authorizedCampaign(ctx, campaignId)
+        : await acceptedCreator(ctx, campaignId);
+    const rows = (
+      await ctx.db
+        .query("fundraisingDonations")
+        .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignId))
+        .collect()
+    ).filter(
+      (r) =>
+        r.nonprofitId === access.campaign.nonprofitId &&
+        (audience === "manager" || r.creator === access.subject),
+    );
+    const balances = await Promise.all(
+      (await commissionBalances(ctx, rows)).map(async (g) => {
+        if (audience !== "manager")
+          return {
+            recognizedCents: g.recognizedCents,
+            paidCents: g.paidCents,
+            balanceCents: g.balanceCents,
+            carryforwardCents: g.carryforwardCents,
+            payableCents: g.payableCents,
+            managerReview: g.managerReview,
+          };
+        const row = rows.find(
+          (r) =>
+            r.creator === g.creator &&
+            r.account === g.account &&
+            r.route === g.route,
+        );
+        const origin = row?.originEntryId
+          ? await fundraisingOrigin(ctx, row.originEntryId)
+          : null;
+        return {
+          ...g,
+          creatorLabel:
+            origin?.publicEntry?.creator ??
+            unnamedCreator(access.campaign._id, g.creator),
+        };
+      }),
+    );
+    const entryIds = [
+      ...new Set(
+        rows.flatMap((r) => (r.originEntryId ? [r.originEntryId] : [])),
+      ),
+    ];
+    const periods = await Promise.all(
+      entryIds.map(async (entryId) => {
+        const results = await ctx.db
+          .query("fundraisingPeriodResults")
+          .withIndex("by_entry", (q) => q.eq("entryId", entryId))
+          .collect();
+        const snapshots = await ctx.db
+          .query("fundraisingFinalizedSnapshots")
+          .withIndex("by_entry", (q) => q.eq("entryId", entryId))
+          .collect();
+        return {
+          entryId,
+          results: results.map((r) => ({
+            periodKind: r.periodKind,
+            period: r.period,
+            metric: r.metric,
+            eligibleGrossCents: r.eligibleGrossCents,
+            originalGrossCents: r.originalGrossCents,
+            source: r.source,
+            at: r.at,
+            version: r.version,
+          })),
+          finalized: await Promise.all(
+            snapshots.map(async (s) => ({
+              period: s.period,
+              periodKind: s.periodKind,
+              originalGrossCents: s.originalGrossCents,
+              fixedPrizeCents: s.fixedPrizeCents,
+              preserved: true,
+              ...(audience === "manager"
+                ? {
+                    resultId: s.resultId,
+                    winner: s.winner,
+                    prizeObligationId: s.prizeObligationId,
+                    source: s.source,
+                    evidence: s.evidence,
+                  }
+                : {}),
+              discrepancies: (
+                await ctx.db
+                  .query("fundraisingPeriodDiscrepancies")
+                  .withIndex("by_snapshot", (q) => q.eq("snapshotId", s._id))
+                  .collect()
+              ).map((d) => ({
+                originalGrossCents: d.originalGrossCents,
+                correctedGrossCents: d.correctedGrossCents,
+                at: d.at,
+                version: d.version,
+              })),
+            })),
+          ),
+        };
+      }),
+    );
+    return {
+      balances,
+      periods,
+      synthetic: true,
+      validatedForProduction: false,
+    };
+  },
+});
+
+export const paymentHistory = query({
+  args: { campaignId: v.string() },
+  handler: async (ctx, { campaignId }) => {
+    const { campaign } = await authorizedCampaign(ctx, campaignId);
+    const obligations = (
+      await ctx.db
+        .query("fundraisingCommissionObligations")
+        .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignId))
+        .collect()
+    ).filter((r) => r.nonprofitId === campaign.nonprofitId);
+    const payments = (
+      await ctx.db
+        .query("fundraisingCommissionPayments")
+        .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignId))
+        .collect()
+    ).filter((r) => r.nonprofitId === campaign.nonprofitId);
+    return { obligations, payments };
+  },
+});
+export const refundHistory = query({
+  args: { campaignId: v.string(), donationId: v.id("fundraisingDonations") },
+  handler: async (ctx, { campaignId, donationId }) => {
+    const { campaign } = await authorizedCampaign(ctx, campaignId),
+      donation = await ctx.db.get(donationId);
+    if (
+      !donation ||
+      donation.campaignSlug !== campaignId ||
+      donation.nonprofitId !== campaign.nonprofitId
+    )
+      throw new Error("FORBIDDEN: Refund history unavailable");
+    return {
+      observations: await ctx.db
+        .query("fundraisingRefundObservations")
+        .withIndex("by_checkout", (q) =>
+          q.eq("checkoutId", donation.checkoutId),
+        )
+        .collect(),
+      corrections: await ctx.db
+        .query("fundraisingCorrections")
+        .withIndex("by_donation", (q) => q.eq("donationId", donation._id))
+        .collect(),
+      reads: await ctx.db
+        .query("fundraisingRefundReads")
+        .withIndex("by_checkout", (q) =>
+          q.eq("checkoutId", donation.checkoutId),
+        )
+        .collect(),
+    };
   },
 });
