@@ -3,6 +3,7 @@ import { makeFunctionReference, type RegisteredQuery } from "convex/server";
 import { useState } from "react";
 import type { read } from "../../convex/paidMetrics.ts";
 import { usePhotoToken } from "./photo-auth.tsx";
+import { PaidCorrections } from "./PaidCorrections.tsx";
 import { timestamp } from "./format.ts";
 
 type Result<T> =
@@ -152,6 +153,7 @@ export function PaidMetrics() {
         <p>Loading paid performance…</p>
       ) : (
         <>
+          <PaidCorrections data={data} />
           {data.sources.map((s) => (
             <section
               className="panel"
@@ -247,13 +249,27 @@ export function PaidMetrics() {
                       </strong>
                     </p>
                     <p>
-                      Accepted observations:{" "}
+                      {Object.values(e.metricAuthority).some(
+                        (m) => m.authorityIds.length > 0,
+                      )
+                        ? "Effective metrics:"
+                        : "Accepted observations:"}{" "}
                       {e.impressions?.toLocaleString() ?? "Missing"} paid
                       impressions ·{" "}
                       {e.linkClicks?.toLocaleString() ?? "Missing"} total link
                       clicks. Missing scopes are excluded from these observed
                       subtotals.
                     </p>
+                    {Object.values(e.metricAuthority).some(
+                      (m) => m.authorityIds.length > 0,
+                    ) ? (
+                      <p>
+                        Entry manager authority applied. {e.platformBreakdown}.{" "}
+                        {Object.values(e.metricAuthority)
+                          .map((m) => m.reason)
+                          .join(" · ")}
+                      </p>
+                    ) : null}
                     {Object.entries(e.platforms).map(([platform, v]) => (
                       <p key={platform}>
                         {platform}:{" "}

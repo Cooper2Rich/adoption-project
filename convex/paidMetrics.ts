@@ -16,6 +16,12 @@ import {
   type QueryCtx,
   type Doc,
 } from "./functions.ts";
+import { correctionState, resolveMetric } from "./paidMetricAuthority.ts";
+import {
+  paidManager,
+  metricScope,
+  reconcileCorrections,
+} from "./paidCorrections.ts";
 import { enrollmentInput, reportRow } from "./paidMetricSchema.ts";
 import { recordTrustedIncident, safeText } from "./operatorIncidents.ts";
 import { trackedPath } from "./publicViewer.ts";
@@ -37,20 +43,7 @@ const coverageExpiryRef = makeFunctionReference<
   { coverageId: string; operationId: string }
 >("paidMetrics:expireCoverage");
 const scope = { campaignId: v.string() };
-async function manager(ctx: QueryCtx, campaignId: string) {
-  const result = await authorizedCampaign(ctx, campaignId);
-  const membership = await ctx.db
-    .query("memberships")
-    .withIndex("by_subject_nonprofit", (q) =>
-      q
-        .eq("subject", result.subject)
-        .eq("nonprofitId", result.campaign.nonprofitId),
-    )
-    .unique();
-  if (!membership?.active || membership.role !== "manager")
-    throw new Error("FORBIDDEN: Current campaign manager required");
-  return result;
-}
+const manager = paidManager;
 async function clock(ctx: QueryCtx, campaignSlug: string) {
   const c = await ctx.db
     .query("campaigns")
@@ -1146,6 +1139,8 @@ export const complete = mutation({
             { coverageId, operationId: op._id },
           );
       }
+    if (value.outcome === "success")
+      await reconcileCorrections(ctx, op, period, value.rows);
     const retryAt = now + value.retryMs;
     await ctx.db.patch(op._id, {
       state: value.outcome,
@@ -1252,7 +1247,10 @@ export interface PaidMetricInputCoverage {
 
 // Typed projection for T13/T14/T16: exact canonical inputs, never scores or awards.
 // Coverage carries provenance; even complete controlled proof cannot finalize.
-export async function paidInputProjection(ctx: QueryCtx, campaignSlug: string) {
+export async function importedInputProjection(
+  ctx: QueryCtx,
+  campaignSlug: string,
+) {
   const periods = await ctx.db
     .query("paidPeriods")
     .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaignSlug))
@@ -1396,6 +1394,66 @@ export async function paidInputProjection(ctx: QueryCtx, campaignSlug: string) {
   }
   return result;
 }
+export async function paidInputProjection(ctx: QueryCtx, campaignSlug: string) {
+  const raw = await importedInputProjection(ctx, campaignSlug),
+    state = await correctionState(ctx, campaignSlug);
+  return raw.map((p) => {
+    const entries = [...p.entries];
+    for (const c of state.corrections.filter(
+      (c) => c.active && c.start < p.period.end && c.end > p.period.start,
+    ))
+      if (!entries.some((e) => e.entryId === c.entryId))
+        entries.push({
+          entryId: c.entryId,
+          impressions: null,
+          linkClicks: null,
+          platforms: {},
+          coverage: [],
+          complete: false,
+          productionEligible: false,
+          finalizationHold:
+            "Actual provider measurement validation required (#12)",
+        });
+    return {
+      ...p,
+      entries: entries.map((e) => {
+        const metricAuthority = Object.fromEntries(
+          metrics.map((metric) => [
+            metric,
+            resolveMetric(
+              [
+                {
+                  start: p.period.start,
+                  end: p.period.end,
+                  value: e[metric],
+                  complete:
+                    e.coverage.some((c) => c.metric === metric) &&
+                    e.coverage
+                      .filter((c) => c.metric === metric)
+                      .every((c) => c.complete),
+                },
+              ],
+              state.corrections,
+              e.entryId,
+              metric,
+              p.period.start,
+              p.period.end,
+            ),
+          ]),
+        );
+        return {
+          ...e,
+          impressions: metricAuthority.impressions.value,
+          linkClicks: metricAuthority.linkClicks.value,
+          complete: metrics.every((m) => metricAuthority[m].complete),
+          metricAuthority,
+          platformBreakdown:
+            "Imported provenance only; entry corrections are not allocated to platforms",
+        };
+      }),
+    };
+  });
+}
 // A consumer supplies an exact contiguous competition window, never completeness.
 // Days are enumerated in Chicago (including DST); absence of a required day is a
 // hold, not an empty zero. Each daily placement snapshot contributes exactly once.
@@ -1422,67 +1480,113 @@ export async function paidWindowProjection(
     );
   const all = await paidInputProjection(ctx, campaignSlug),
     days = canonicalDays(start, end, settings.rules);
+  const correctionHeads = await correctionState(ctx, campaignSlug);
   const entryIds = [
-    ...new Set(
-      all
+    ...new Set([
+      ...all
         .filter((p) => p.period.start >= start && p.period.end <= end)
         .flatMap((p) => p.entries.map((e) => e.entryId)),
-    ),
+      ...correctionHeads.corrections
+        .filter((c) => c.active && c.start < end && c.end > start)
+        .map((c) => c.entryId),
+    ]),
   ];
-  const entries = entryIds.map((entryId) => {
-    const coverage = days.map((day) => {
-      const input = all
-        .find((p) => p.period.start === day.start && p.period.end === day.end)
-        ?.entries.find((e) => e.entryId === entryId);
-      return {
-        day,
-        input: input ?? null,
-        complete: input?.complete ?? false,
-        reason: input
-          ? input.complete
-            ? "Exact controlled daily coverage"
-            : "Required daily metric coverage incomplete"
-          : "No trusted required-placement evidence for this competition day",
-      };
-    });
-    function sum(metric: "impressions" | "linkClicks", platform?: string) {
-      let total: number | null = null;
-      for (const c of coverage) {
-        const value = platform
-          ? c.input?.platforms[platform]?.[metric]
-          : c.input?.[metric];
-        if (value !== null && value !== undefined) {
-          const next: number = (total ?? 0) + value;
-          if (!Number.isSafeInteger(next))
-            throw new Error(
-              "PAID_OVERFLOW: Window aggregate exceeds safe integer range",
-            );
-          total = next;
+  const entries = await Promise.all(
+    entryIds.map(async (entryId) => {
+      const coverage = days.map((day) => {
+        const input = all
+          .find((p) => p.period.start === day.start && p.period.end === day.end)
+          ?.entries.find((e) => e.entryId === entryId);
+        return {
+          day,
+          input: input ?? null,
+          complete: input?.complete ?? false,
+          reason: input
+            ? input.complete
+              ? "Exact controlled daily coverage"
+              : "Required daily metric coverage incomplete"
+            : "No trusted required-placement evidence for this competition day",
+        };
+      });
+      function sum(metric: "impressions" | "linkClicks", platform?: string) {
+        let total: number | null = null;
+        for (const c of coverage) {
+          const value = platform
+            ? c.input?.platforms[platform]?.[metric]
+            : c.input?.[metric];
+          if (value !== null && value !== undefined) {
+            const next: number = (total ?? 0) + value;
+            if (!Number.isSafeInteger(next))
+              throw new Error(
+                "PAID_OVERFLOW: Window aggregate exceeds safe integer range",
+              );
+            total = next;
+          }
         }
+        return total;
       }
-      return total;
-    }
-    const platforms = Object.fromEntries(
-      ["facebook", "instagram", "tiktok"].map((p) => [
-        p,
-        {
-          impressions: sum("impressions", p),
-          linkClicks: sum("linkClicks", p),
-        },
-      ]),
-    );
-    return {
-      entryId,
-      impressions: sum("impressions"),
-      linkClicks: sum("linkClicks"),
-      platforms,
-      coverage,
-      complete: coverage.every((c) => c.complete),
-      productionEligible: false as const,
-      finalizationHold:
-        "Actual provider validation (#12); every required canonical day must be complete",
-    };
-  });
+      const platforms = Object.fromEntries(
+        ["facebook", "instagram", "tiktok"].map((p) => [
+          p,
+          {
+            impressions: sum("impressions", p),
+            linkClicks: sum("linkClicks", p),
+          },
+        ]),
+      );
+      return {
+        entryId,
+        platformBreakdown:
+          "Imported provenance only; entry corrections are not allocated to platforms",
+        impressions: (
+          await metricScope(
+            ctx,
+            campaignSlug,
+            entryId,
+            "impressions",
+            start,
+            end,
+          )
+        ).value,
+        linkClicks: (
+          await metricScope(
+            ctx,
+            campaignSlug,
+            entryId,
+            "linkClicks",
+            start,
+            end,
+          )
+        ).value,
+        platforms,
+        coverage,
+        complete:
+          (
+            await metricScope(
+              ctx,
+              campaignSlug,
+              entryId,
+              "impressions",
+              start,
+              end,
+            )
+          ).complete &&
+          (
+            await metricScope(
+              ctx,
+              campaignSlug,
+              entryId,
+              "linkClicks",
+              start,
+              end,
+            )
+          ).complete,
+        productionEligible: false as const,
+        finalizationHold:
+          "Actual provider validation (#12); every required canonical day must be complete",
+      };
+    }),
+  );
   return {
     start,
     end,
@@ -1519,6 +1623,37 @@ export const read = query({
         .withIndex("by_campaign", (q) => q.eq("campaignSlug", campaign.slug))
         .collect(),
       inputs: await paidInputProjection(ctx, campaign.slug),
+      correctionState: await correctionState(ctx, campaign.slug),
+      correctionEntries: await Promise.all(
+        (
+          await ctx.db
+            .query("photoEntries")
+            .withIndex("by_campaign", (q) =>
+              q.eq("campaignSlug", campaign.slug),
+            )
+            .collect()
+        ).map(async (entry) => ({
+          _id: entry._id,
+          title:
+            (
+              await ctx.db
+                .query("photoVersions")
+                .withIndex("by_entry_version", (q) =>
+                  q.eq("entryId", entry._id).eq("version", entry.version),
+                )
+                .unique()
+            )?.title ?? "Untitled entry",
+        })),
+      ),
+      correctionBounds:
+        (
+          await ctx.db
+            .query("campaignSettings")
+            .withIndex("by_campaign", (q) =>
+              q.eq("campaignSlug", campaign.slug),
+            )
+            .unique()
+        )?.rules ?? null,
       operations: (await ctx.db.query("paidOperations").collect()).filter(
         (o) => o.campaignSlug === campaign.slug,
       ),
