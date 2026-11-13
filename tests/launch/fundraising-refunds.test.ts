@@ -4,7 +4,7 @@ import test from "node:test";
 import { createServer } from "node:http";
 import { once } from "node:events";
 import { randomBytes, randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { createLocalBackend } from "../../scripts/launch/local-backend.ts";
 import { servePhotoRequest } from "../../api/photos.ts";
 import { fundraisingEntry } from "./fundraising-fixtures.ts";
@@ -730,6 +730,7 @@ test(
           );
         },
       );
+      await mkdir(".codex/ralph", { recursive: true });
       await writeFile(
         ".codex/ralph/t11-backend-evidence.json",
         JSON.stringify(
