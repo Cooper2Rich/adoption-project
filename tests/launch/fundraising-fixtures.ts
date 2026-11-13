@@ -15,27 +15,37 @@ export async function fundraisingEntry(
   base: string,
   prefix = "fundraising",
   campaignId = "adoption",
+  creatorSubject = "public-creator",
+  publicCreatorName = "River Studio",
 ) {
   const manager = backend.client(
       campaignId === "adoption" ? "manager-a" : "manager-b",
     ),
-    creator = backend.client("public-creator"),
+    creator = backend.client(creatorSubject),
     scope = { campaignId };
-  await mutation(manager, "campaignSetup:create", {
-    ...scope,
-    operationId: `${prefix}-rules`,
-    rules: donationRules,
-  });
-  await backend.command(
-    "run",
-    "fixtures:terms",
-    JSON.stringify({ campaignSlug: campaignId, synthetic: true }),
-  );
+  let existingCampaign = false;
+  try {
+    await mutation(manager, "campaignSetup:create", {
+      ...scope,
+      operationId: `${prefix}-rules`,
+      rules: donationRules,
+    });
+  } catch (error) {
+    if (!String(error).includes("RULES_LOCKED")) throw error;
+    existingCampaign = true;
+  }
+  if (!existingCampaign)
+    await backend.command(
+      "run",
+      "fixtures:terms",
+      JSON.stringify({ campaignSlug: campaignId, synthetic: true }),
+    );
   await preparePublicCreator(
     manager,
     creator,
     `${prefix}-participant`,
     campaignId,
+    creatorSubject,
   );
   const bytes = await pngBytes(),
     upload = await mutation(creator, "photos:reserve", {
@@ -46,7 +56,7 @@ export async function fundraisingEntry(
       type: "image/png",
     });
   const headers = {
-    Authorization: `Bearer ${backend.token("public-creator")}`,
+    Authorization: `Bearer ${backend.token(creatorSubject)}`,
   };
   for (const [action, init] of [
     ["local-upload", { method: "PUT", body: bytes, headers }],
@@ -63,7 +73,7 @@ export async function fundraisingEntry(
     operationId: `${prefix}-submit`,
     title: "Families together",
     description: "Approved fundraising creative.",
-    publicCreatorName: "River Studio",
+    publicCreatorName,
     photos: [upload._id],
   });
   await mutation(manager, "photos:review", {

@@ -56,3 +56,22 @@ export function attribution(
     weekEnd,
   };
 }
+
+// Check signed adjustments and aggregates as well as individual principal facts.
+export function signedCents(value: number) {
+  if (!Number.isSafeInteger(value))
+    throw new Error("FUNDRAISING_AMOUNT: Unsafe signed USD cents");
+  return value;
+}
+export function sumCents(values: number[]) {
+  const total = values.reduce(
+    (sum, value) => sum + BigInt(signedCents(value)),
+    0n,
+  );
+  if (
+    total > BigInt(Number.MAX_SAFE_INTEGER) ||
+    total < BigInt(Number.MIN_SAFE_INTEGER)
+  )
+    throw new Error("FUNDRAISING_AMOUNT: Aggregate exceeds safe USD cents");
+  return Number(total);
+}

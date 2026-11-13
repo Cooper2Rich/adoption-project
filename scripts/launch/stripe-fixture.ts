@@ -11,9 +11,11 @@ export async function createStripeFixture(runId: string) {
     account = `acct_owned_${runId}`;
   const sessions = new Map<string, any>(),
     payments = new Map<string, any>(),
+    refunds = new Map<string, any>(),
     events = new Map<string, any>(),
     keys = new Map<string, { fingerprint: string; session: any }>();
   const operations: any[] = [];
+  let refundListHold: { arrived: () => void; wait: Promise<void> } | undefined;
   let mode = "normal",
     origin = "",
     browserAt: number | undefined;
@@ -104,6 +106,40 @@ export async function createStripeFixture(runId: string) {
           ? "checkout.session.completed"
           : "checkout.session.async_payment_failed",
     );
+  }
+  function refund(
+    sessionId: string,
+    amount: number,
+    status = "succeeded",
+    options: any = {},
+  ) {
+    const session = sessions.get(sessionId),
+      payment = payments.get(session.payment_intent),
+      charge = payment.latest_charge;
+    const r = {
+      id: id("re"),
+      object: "refund",
+      charge: charge.id,
+      payment_intent: payment.id,
+      currency: "usd",
+      amount,
+      status,
+      created: Math.floor(Date.now() / 1000),
+      balance_transaction: status === "succeeded" ? id("txn") : null,
+      failure_balance_transaction: null,
+      ...options,
+    };
+    refunds.set(r.id, r);
+    charge.amount_refunded = [...refunds.values()]
+      .filter(
+        (v) =>
+          v.charge === charge.id && ["pending", "succeeded"].includes(v.status),
+      )
+      .reduce((sum, v) => sum + v.amount, 0);
+    const e = event(sessionId, "refund.updated");
+    e.data.object = structuredClone(r);
+    events.set(e.id, e);
+    return e;
   }
   async function deliver(value: any, webhook: string, options: any = {}) {
     const raw = options.raw ?? JSON.stringify(value),
@@ -225,6 +261,24 @@ export async function createStripeFixture(runId: string) {
         }
         return json(session);
       }
+      if (target.pathname === "/v1/refunds" && req.method === "GET") {
+        const data = structuredClone(
+          [...refunds.values()].filter(
+            (r) => r.charge === target.searchParams.get("charge"),
+          ),
+        );
+        const hold = refundListHold;
+        refundListHold = undefined;
+        if (hold) {
+          hold.arrived();
+          await hold.wait;
+        }
+        return json({
+          object: "list",
+          has_more: mode === "incomplete-refunds",
+          data,
+        });
+      }
       if (target.pathname === "/v1/events")
         return json({
           object: "list",
@@ -235,13 +289,19 @@ export async function createStripeFixture(runId: string) {
         });
       const [kind, resourceId] = target.pathname.slice(4).split("/");
       const value =
-        kind === "events"
-          ? events.get(resourceId)
-          : kind === "payment_intents"
-            ? payments.get(resourceId)
-            : kind === "checkout" && resourceId === "sessions"
-              ? sessions.get(target.pathname.split("/").at(-1)!)
-              : null;
+        kind === "refunds"
+          ? refunds.get(resourceId)
+          : kind === "charges"
+            ? [...payments.values()]
+                .map((p) => p.latest_charge)
+                .find((c) => c.id === resourceId)
+            : kind === "events"
+              ? events.get(resourceId)
+              : kind === "payment_intents"
+                ? payments.get(resourceId)
+                : kind === "checkout" && resourceId === "sessions"
+                  ? sessions.get(target.pathname.split("/").at(-1)!)
+                  : null;
       return value
         ? json(value)
         : json({ error: "Owned resource unavailable" }, 404);
@@ -259,6 +319,30 @@ export async function createStripeFixture(runId: string) {
     webhookSecret: secret,
     account,
     complete,
+    refund,
+    holdNextRefundList: () => {
+      let release!: () => void, arrived!: () => void;
+      const arrival = new Promise<void>((resolve) => {
+        arrived = resolve;
+      });
+      const wait = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      refundListHold = { arrived, wait };
+      return { arrived: arrival, release };
+    },
+    mutateRefund: (refundId: string, changes: any) =>
+      Object.assign(refunds.get(refundId), changes),
+    refundEvent: (
+      sessionId: string,
+      refundId: string,
+      type = "refund.updated",
+    ) => {
+      const e = event(sessionId, type);
+      e.data.object = structuredClone(refunds.get(refundId));
+      events.set(e.id, e);
+      return e;
+    },
     event,
     deliver,
     browserClock: (value: number) => {

@@ -1,7 +1,7 @@
 import { ConvexHttpClient } from "convex/browser";
 import { makeFunctionReference } from "convex/server";
 import { spawn } from "node:child_process";
-import { generateKeyPairSync, randomUUID, sign } from "node:crypto";
+import { generateKeyPairSync, randomUUID, sign, createHmac } from "node:crypto";
 import { once } from "node:events";
 import {
   copyFile,
@@ -25,7 +25,12 @@ import { localMuxProvider, localVideoStore } from "./video-store.ts";
 
 import { createEmailFixture } from "./email-fixture.ts";
 import { createStripeFixture } from "./stripe-fixture.ts";
-import { createFundraisingService } from "../../server/launch/fundraising.ts";
+import {
+  createFundraisingService,
+  digest,
+  stable,
+  stripeVersion,
+} from "../../server/launch/fundraising.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const cli = join(root, "node_modules/convex/bin/main.js");
@@ -255,6 +260,7 @@ export async function createLocalBackend({
         "fixtures:readinessReleaseTarget",
         "fixtures:readinessZeroPrizeCampaign",
         "fixtures:fundraisingControl",
+        "fixtures:fundraisingEvidence",
         "incidentEmail:watchdog",
         "incidentEmail:claim",
         "incidentEmail:settle",
@@ -384,6 +390,33 @@ export async function createLocalBackend({
       videoStore,
       email,
       runOwnedInternal,
+      // Run-owned test-only receipt issuer; never returned by any HTTP/browser route.
+      ownedFundraisingOperation: async (name: string, input: any) => {
+        if (!["resolve", "refundRead", "observeRefunds"].includes(name))
+          throw new Error("Unsupported owned receipt operation");
+        const value = {
+          ...input,
+          scope: {
+            account: stripe.account,
+            route: "owned-fundraising-v1",
+            apiVersion: stripeVersion,
+            transportBinding: digest(
+              stable({ origin: stripe.origin, credential: stripe.key }),
+            ),
+            fixtureRunId: runId,
+          },
+          at: Date.now(),
+        };
+        return new ConvexHttpClient(url).mutation(
+          makeFunctionReference<"mutation">("fundraising:" + name),
+          {
+            value,
+            signature: createHmac("sha256", fundraisingSecret)
+              .update(stable(value))
+              .digest("hex"),
+          },
+        );
+      },
       videoService: createVideoService({
         url,
         secret: videoSecret,

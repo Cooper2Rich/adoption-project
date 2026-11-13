@@ -277,26 +277,86 @@ export function createFundraisingService(config: Configuration) {
         );
         const event = JSON.parse(raw);
         eventScope(event);
-        if (
-          ![
-            "checkout.session.completed",
-            "checkout.session.async_payment_succeeded",
-            "checkout.session.async_payment_failed",
-          ].includes(event.type) ||
-          event.data?.object?.object !== "checkout.session" ||
-          !/^cs_[A-Za-z0-9_-]+$/.test(event.data.object.id)
-        )
-          invalid();
+        const refundEvent = [
+          "refund.created",
+          "refund.updated",
+          "refund.failed",
+          "charge.refunded",
+        ].includes(event.type);
+        const checkoutEvent = [
+          "checkout.session.completed",
+          "checkout.session.async_payment_succeeded",
+          "checkout.session.async_payment_failed",
+        ].includes(event.type);
+        if (!refundEvent && !checkoutEvent) invalid();
         const authoritativeEvent = await stripe(
           `/v1/events/${encodeURIComponent(event.id)}`,
         );
         if (stable(authoritativeEvent) !== stable(event)) invalid();
-        const session = await stripe(
-          `/v1/checkout/sessions/${encodeURIComponent(event.data.object.id)}`,
-        );
-        const row = await operation("resolve", { sessionId: session.id });
+        let session: any, row: any, generation: number;
+        if (refundEvent) {
+          const object = event.data?.object;
+          let paymentId: string;
+          if (event.type === "charge.refunded") {
+            if (
+              object?.object !== "charge" ||
+              !/^ch_[A-Za-z0-9_-]+$/.test(object.id)
+            )
+              invalid();
+            const charge = await stripe(
+              `/v1/charges/${encodeURIComponent(object.id)}`,
+            );
+            if (charge.id !== object.id || charge.object !== "charge")
+              invalid();
+            paymentId = charge.payment_intent;
+          } else {
+            if (
+              object?.object !== "refund" ||
+              !/^re_[A-Za-z0-9_-]+$/.test(object.id)
+            )
+              invalid();
+            const refund = await stripe(
+              `/v1/refunds/${encodeURIComponent(object.id)}`,
+            );
+            if (refund.id !== object.id || refund.object !== "refund")
+              invalid();
+            paymentId = refund.payment_intent;
+          }
+          if (!/^pi_[A-Za-z0-9_-]+$/.test(paymentId)) invalid();
+          const preliminary = await stripe(
+            `/v1/payment_intents/${encodeURIComponent(paymentId)}`,
+          );
+          const read = await operation("refundRead", {
+            checkoutId: preliminary.metadata?.checkout,
+            eventId: event.id,
+            digest: digest(raw),
+          });
+          row = read.row;
+          generation = read.generation;
+          if (!row.sessionId) invalid();
+          session = await stripe(
+            `/v1/checkout/sessions/${encodeURIComponent(row.sessionId)}`,
+          );
+          if (session.payment_intent !== paymentId) invalid();
+        } else {
+          if (
+            event.data?.object?.object !== "checkout.session" ||
+            !/^cs_[A-Za-z0-9_-]+$/.test(event.data.object.id)
+          )
+            invalid();
+          session = await stripe(
+            `/v1/checkout/sessions/${encodeURIComponent(event.data.object.id)}`,
+          );
+          row = await operation("resolve", { sessionId: session.id });
+          const read = await operation("refundRead", {
+            checkoutId: row._id,
+            eventId: event.id,
+            digest: digest(raw),
+          });
+          generation = read.generation;
+        }
         if (
-          session.id !== event.data.object.id ||
+          session.id !== row.sessionId ||
           session.object !== "checkout.session" ||
           session.mode !== "payment" ||
           session.livemode !== false ||
@@ -343,6 +403,101 @@ export function createFundraisingService(config: Configuration) {
           charge.amount_captured !== row.amountCents
         )
           invalid();
+        if (
+          !Number.isSafeInteger(charge.amount_refunded) ||
+          charge.amount_refunded < 0 ||
+          charge.amount_refunded > row.amountCents
+        )
+          invalid();
+        // Complete bounded refund history plus independent object reads. Partial history
+        // is held rather than treated as zero; charge.amount_refunded is not proof.
+        const list = await stripe(
+          `/v1/refunds?charge=${encodeURIComponent(charge.id)}&limit=100`,
+        );
+        if (
+          list.object !== "list" ||
+          list.has_more !== false ||
+          !Array.isArray(list.data) ||
+          list.data.length > 100
+        )
+          throw new Error(
+            "FUNDRAISING_REFUND_HELD: Complete refund history required",
+          );
+        const refunds: any[] = [],
+          seen = new Set<string>();
+        for (const listed of list.data) {
+          if (!/^re_[A-Za-z0-9_-]+$/.test(listed.id) || seen.has(listed.id))
+            invalid();
+          seen.add(listed.id);
+          const r = await stripe(
+            `/v1/refunds/${encodeURIComponent(listed.id)}`,
+          );
+          if (
+            r.id !== listed.id ||
+            r.object !== "refund" ||
+            r.charge !== charge.id ||
+            r.payment_intent !== payment.id ||
+            r.currency !== "usd" ||
+            !Number.isSafeInteger(r.amount) ||
+            r.amount < 1 ||
+            r.amount > row.amountCents ||
+            ![
+              "pending",
+              "requires_action",
+              "succeeded",
+              "failed",
+              "canceled",
+            ].includes(r.status) ||
+            !Number.isSafeInteger(r.created) ||
+            r.created < 0 ||
+            r.created * 1000 > Date.now() + 5000 ||
+            (r.balance_transaction != null &&
+              !/^txn_[A-Za-z0-9_-]+$/.test(r.balance_transaction)) ||
+            (r.failure_balance_transaction != null &&
+              !/^txn_[A-Za-z0-9_-]+$/.test(r.failure_balance_transaction))
+          )
+            invalid();
+          refunds.push({
+            refundId: r.id,
+            paymentId: r.payment_intent,
+            chargeId: r.charge,
+            amountCents: r.amount,
+            status: r.status,
+            createdAt: r.created * 1000,
+            balanceTransactionId: r.balance_transaction ?? null,
+            failureBalanceTransactionId: r.failure_balance_transaction ?? null,
+          });
+        }
+        if (
+          refundEvent &&
+          event.type !== "charge.refunded" &&
+          !seen.has(event.data.object.id)
+        )
+          throw new Error(
+            "FUNDRAISING_REFUND_HELD: Event refund missing from complete history",
+          );
+        if (
+          refundEvent &&
+          event.type === "charge.refunded" &&
+          event.data.object.id !== charge.id
+        )
+          invalid();
+        const reconcile = () =>
+          operation("observeRefunds", {
+            checkoutId: row._id,
+            generation,
+            paymentId: payment.id,
+            chargeId: charge.id,
+            eventId: event.id,
+            digest: digest(raw),
+            refunds,
+          });
+        if (refundEvent)
+          return json({
+            ...(await reconcile()),
+            synthetic: true,
+            validatedForProduction: false,
+          });
         // Explicitly controlled mapping, NOT validated real successful-payment time.
         // Use the original success-transition event, never checkout/PI/charge
         // creation, callback/event delivery order, receipt time or fee availability.
@@ -390,12 +545,6 @@ export function createFundraisingService(config: Configuration) {
             balance.fee < 0)
         )
           invalid();
-        if (
-          !Number.isSafeInteger(charge.amount_refunded) ||
-          charge.amount_refunded < 0 ||
-          charge.amount_refunded > row.amountCents
-        )
-          invalid();
         const normalized = {
           sessionId: session.id,
           paymentId: payment.id,
@@ -406,7 +555,7 @@ export function createFundraisingService(config: Configuration) {
           currency: "usd",
           feeCents: balance ? balance.fee : null,
           balanceTransactionId: balance?.id ?? null,
-          refundedCents: charge.amount_refunded,
+          refundedCents: 0,
           timeBasis: "controlled-success-transition-v1",
         };
         const facts = {
@@ -418,6 +567,7 @@ export function createFundraisingService(config: Configuration) {
         };
         return json({
           ...(await operation("confirm", { facts })),
+          refunds: await reconcile(),
           synthetic: true,
           validatedForProduction: false,
         });
