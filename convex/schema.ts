@@ -10,8 +10,10 @@ import { videoTables } from "./videoSchema.ts";
 
 import { incidentTables } from "./incidentSchema.ts";
 import { readinessTables } from "./readinessSchema.ts";
+import { fundraisingTables } from "./fundraisingSchema.ts";
 
 export default defineSchema({
+  ...fundraisingTables,
   ...readinessTables,
   ...incidentTables,
   ...videoTables,

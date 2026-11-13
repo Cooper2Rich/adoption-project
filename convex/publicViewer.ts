@@ -32,6 +32,11 @@ export async function approvedEntry(
     entry.status !== "approved"
   )
     return null;
+  const cutoffs = await ctx.db
+    .query("fundraisingCutoffs")
+    .withIndex("by_entry", (q) => q.eq("entryId", id))
+    .collect();
+  if (cutoffs.some((c) => c.effectiveAt <= Date.now())) return null;
   const version = await ctx.db
     .query("photoVersions")
     .withIndex("by_entry_version", (q) =>
@@ -42,6 +47,64 @@ export async function approvedEntry(
   return { campaign, entry, version };
 }
 export const trackedPath = (id: string) => `/fundraise/${id}`;
+// A once-approved link survives later participation changes. Only an actually
+// approved historical version may supply public copy; pending revisions stay private.
+export async function fundraisingOrigin(
+  ctx: QueryCtx,
+  id: Doc<"photoEntries">["_id"],
+) {
+  const campaign = await publicCampaign(ctx),
+    entry = await ctx.db.get(id);
+  if (
+    !campaign ||
+    !entry ||
+    entry.campaignSlug !== campaign.slug ||
+    entry.nonprofitId !== campaign.nonprofitId ||
+    !entry.firstApprovedAt
+  )
+    return null;
+  const approvals = (
+    await ctx.db
+      .query("photoEvents")
+      .withIndex("by_entry", (q) => q.eq("entryId", id))
+      .collect()
+  ).filter((e) => e.action === "approved");
+  const approval = approvals.sort(
+    (a, b) => b.at - a.at || b.version - a.version,
+  )[0];
+  const version = approval
+    ? await ctx.db
+        .query("photoVersions")
+        .withIndex("by_entry_version", (q) =>
+          q.eq("entryId", id).eq("version", approval.version),
+        )
+        .unique()
+    : null;
+  if (!version) return null;
+  const cutoffs = await ctx.db
+    .query("fundraisingCutoffs")
+    .withIndex("by_entry", (q) => q.eq("entryId", id))
+    .collect();
+  const hidden = cutoffs.some((c) => c.effectiveAt <= Date.now());
+  return {
+    campaign,
+    entry,
+    publicEntry: hidden
+      ? null
+      : {
+          id: entry._id,
+          version: version.version,
+          title: version.title,
+          description: version.description,
+          creator:
+            version.publicCreatorName ||
+            unnamedCreator(campaign._id, entry.subject),
+          photoCount: version.photos.length,
+          video: !!version.video,
+          trackedPath: trackedPath(id),
+        },
+  };
+}
 // Stable, opaque attribution for an unnamed campaign participant. The digest
 // binds the campaign's persistent identity and the creator's Clerk subject,
 // never an email or a terms acceptance that can change on re-invitation.
@@ -103,13 +166,13 @@ export const entry = query({
 export const fundraising = query({
   args: { entryId: v.id("photoEntries") },
   handler: async (ctx, args) => {
-    const entry = await projection(ctx, args.entryId);
-    return entry
+    const origin = await fundraisingOrigin(ctx, args.entryId);
+    return origin
       ? {
           campaignSlug: "adoption",
-          originEntryId: entry.id,
-          trackedPath: entry.trackedPath,
-          entry,
+          originEntryId: origin.entry._id,
+          trackedPath: trackedPath(origin.entry._id),
+          entry: origin.publicEntry,
           checkout: "unavailable" as const,
         }
       : null;

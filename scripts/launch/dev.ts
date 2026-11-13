@@ -41,7 +41,7 @@ const server = await createServer({
           if (
             request.url === "/" ||
             request.url.startsWith("/?") ||
-            /^\/(entries|fundraise)\//.test(request.url)
+            /^\/(entries\/|fundraise(?:\/|\?|$))/.test(request.url)
           )
             request.url =
               "/launch-preview.html" +
@@ -57,6 +57,14 @@ const server = await createServer({
           }
           if (requestUrl.pathname === "/api/photos") {
             void servePhotoRequest(backend.photoService, request, response);
+            return;
+          }
+          if (requestUrl.pathname === "/api/fundraising") {
+            void servePhotoRequest(
+              backend.fundraisingService,
+              request,
+              response,
+            );
             return;
           }
           if (requestUrl.pathname === "/api/videos") {
