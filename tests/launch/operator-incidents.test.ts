@@ -567,6 +567,51 @@ test(
         },
       );
       await t.test(
+        "repair leaves accepted recipients independent of concurrent email watchdog writes",
+        async () => {
+          await observe("resume-watchdog", { kind: "prize-loss" });
+          const incident = await until(
+            "resume-watchdog",
+            (i) => emails(i).length === 1 && emails(i)[0].state === "accepted",
+          );
+          const email = emails(incident)[0];
+          await control({ now: email.nextAt - 1 });
+          let running = true,
+            pulses = 0;
+          const writer = (async () => {
+            while (running) {
+              await backend.runOwnedInternal("fixtures:incidentWatchdog", {
+                emailId: email.id,
+                skipAction: true,
+              });
+              pulses++;
+            }
+          })();
+          try {
+            // These are the real authenticated repair and production watchdog
+            // generation writes. An accepted recipient cannot be resumed.
+            for (let n = 0; n < 5; n++) await mutate(manager, "resume");
+          } finally {
+            running = false;
+            try {
+              await writer;
+            } finally {
+              await control({ now: null });
+            }
+          }
+          assert.ok(pulses > 0);
+          const after = emails(await find("resume-watchdog"))[0];
+          assert.equal(after.attempts.length, 1);
+          assert.equal(after.attempts[0].id, email.attempts[0].id);
+          assert.equal(
+            [...backend.email.messages.keys()].filter((key) =>
+              key.startsWith(`operator/${email.id}/`),
+            ).length,
+            1,
+          );
+        },
+      );
+      await t.test(
         "actual backend provider gate visibly holds and explicit repair resumes only unsent requests",
         async () => {
           await backend.command("env", "remove", "OPERATOR_EMAIL_FIXTURE_URL");

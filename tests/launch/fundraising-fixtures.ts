@@ -17,6 +17,7 @@ export async function fundraisingEntry(
   campaignId = "adoption",
   creatorSubject = "public-creator",
   publicCreatorName = "River Studio",
+  onStage: (stage: string) => void = () => {},
 ) {
   const manager = backend.client(
       campaignId === "adoption" ? "manager-a" : "manager-b",
@@ -24,6 +25,7 @@ export async function fundraisingEntry(
     creator = backend.client(creatorSubject),
     scope = { campaignId };
   let existingCampaign = false;
+  onStage("before-campaign-rules");
   try {
     await mutation(manager, "campaignSetup:create", {
       ...scope,
@@ -34,19 +36,22 @@ export async function fundraisingEntry(
     if (!String(error).includes("RULES_LOCKED")) throw error;
     existingCampaign = true;
   }
+  onStage("after-campaign-rules");
   if (!existingCampaign)
-    await backend.command(
-      "run",
-      "fixtures:terms",
-      JSON.stringify({ campaignSlug: campaignId, synthetic: true }),
-    );
+    await backend.runOwnedInternal("fixtures:terms", {
+      campaignSlug: campaignId,
+      synthetic: true,
+    });
+  onStage("after-owned-terms");
   await preparePublicCreator(
     manager,
     creator,
     `${prefix}-participant`,
     campaignId,
     creatorSubject,
+    onStage,
   );
+  onStage("after-authenticated-creator-participation");
   const bytes = await pngBytes(),
     upload = await mutation(creator, "photos:reserve", {
       ...scope,
@@ -55,6 +60,7 @@ export async function fundraisingEntry(
       size: bytes.length,
       type: "image/png",
     });
+  onStage("after-photo-reserve");
   const headers = {
     Authorization: `Bearer ${backend.token(creatorSubject)}`,
   };
@@ -62,11 +68,13 @@ export async function fundraisingEntry(
     ["local-upload", { method: "PUT", body: bytes, headers }],
     ["verify", { method: "POST", headers }],
   ] as const) {
+    onStage(`before-photo-${action}`);
     const response = await fetch(
       `${base}/api/photos?action=${action}&uploadId=${upload._id}&campaignId=${campaignId}`,
       init,
     );
     assert.equal(response.status, 200, await response.clone().text());
+    onStage(`after-photo-${action}`);
   }
   const entry = await mutation(creator, "photos:submit", {
     ...scope,
@@ -76,6 +84,7 @@ export async function fundraisingEntry(
     publicCreatorName,
     photos: [upload._id],
   });
+  onStage("after-photo-submit");
   await mutation(manager, "photos:review", {
     ...scope,
     entryId: entry._id,
@@ -84,9 +93,11 @@ export async function fundraisingEntry(
     decision: "approved",
     reason: "",
   });
+  onStage("after-manager-approval");
   await backend.runOwnedInternal("fixtures:fundraisingControl", {
     entryId: entry._id,
     approvedAt: Date.parse(donationRules.earningStart),
   });
+  onStage("after-owned-approval-time-control");
   return entry;
 }

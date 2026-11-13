@@ -223,6 +223,17 @@ test("T11 confirmed refunds preserve finalized prizes and show commission-only n
     const own = page.getByRole("region", {
       name: "Private fundraising ledger",
     });
+    // Navigation can finish before the creator's private queries subscribe.
+    // Confirm both the donation and balance projections before their amounts.
+    await expect(
+      own.getByRole("article", {
+        name: "Confirmed fundraising donation",
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      own.getByRole("article", { name: "Commission balance", exact: true }),
+    ).toBeVisible();
     await expect(
       own
         .getByText("Negative carryforward", { exact: true })

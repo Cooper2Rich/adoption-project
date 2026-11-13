@@ -11,8 +11,10 @@ import { videoTables } from "./videoSchema.ts";
 import { incidentTables } from "./incidentSchema.ts";
 import { readinessTables } from "./readinessSchema.ts";
 import { fundraisingTables } from "./fundraisingSchema.ts";
+import { paidMetricTables } from "./paidMetricSchema.ts";
 
 export default defineSchema({
+  ...paidMetricTables,
   ...fundraisingTables,
   ...readinessTables,
   ...incidentTables,
@@ -179,6 +181,7 @@ export default defineSchema({
     fixtureArchiveNow: v.optional(v.number()),
     fixtureIncidentNow: v.optional(v.number()),
     fixtureReadinessNow: v.optional(v.number()),
+    fixturePaidNow: v.optional(v.number()),
     authority: authorityValidator,
     reservationFundingCents: v.number(),
     reservedSlots: v.number(),

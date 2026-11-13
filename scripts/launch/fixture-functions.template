@@ -1,5 +1,30 @@
 import { internalMutation as mutation } from "./functions.ts";
 import { v } from "convex/values";
+import { recordTrustedPaidEnrollment, creativeBinding, appendTrustedPaidPeriods } from "./paidMetrics.ts";
+import { paidProvider, paidPlatform } from "./paidMetricSchema.ts";
+
+export const paidEnrollment = mutation({
+  args: {campaignId:v.string(),entryId:v.id("photoEntries"),provider:paidProvider,platform:paidPlatform,account:v.string(),adId:v.string(),requiredPeriods:v.array(v.object({start:v.number(),end:v.number()})),overrides:v.optional(v.any())},
+  handler:async(ctx,args)=>{
+    const entry=await ctx.db.get(args.entryId);
+    if(!entry)throw new Error("Owned approved entry required");
+    const version=await ctx.db.query("photoVersions").withIndex("by_entry_version",q=>q.eq("entryId",entry._id).eq("version",entry.version)).unique();
+    if(!version)throw new Error("Owned version required");
+    const {overrides,...input}=args;
+    return recordTrustedPaidEnrollment(ctx,{...input,providerCampaign:`owned-${args.campaignId}-${args.provider}`,creativeVersion:entry.version,creativeDigest:creativeBinding(version),destination:`/fundraise/${entry._id}`,grantRevision:"owned-grant-v1",evidence:"Owned explicit external-ad enrollment approval and unchanged-creative proof",...overrides},{synthetic:true,actor:"owned-enrollment-producer",source:"owned-explicit-enrollment-v1"});
+  },
+});
+export const paidRequirements=mutation({args:{mappingId:v.id("paidMappings"),periods:v.array(v.object({start:v.number(),end:v.number()})),evidence:v.string()},handler:(ctx,input)=>appendTrustedPaidPeriods(ctx,input,{synthetic:true,actor:"owned-enrollment-producer",source:"owned-ongoing-paid-requirements-v1"})});
+export const paidControl = mutation({
+  args:{campaignId:v.string(),now:v.optional(v.union(v.number(),v.null())),subject:v.optional(v.string()),active:v.optional(v.boolean()),coverageId:v.optional(v.id("paidCoverage"))},
+  handler:async(ctx,args)=>{
+    const campaign=await ctx.db.query("campaigns").withIndex("by_slug",q=>q.eq("slug",args.campaignId)).unique();
+    if(!campaign?.fixtureRunId||campaign.fixtureRunId!==process.env.ALLOCATION_PREVIEW_FIXTURE_RUN_ID)throw new Error("Owned fixture required");
+    if(args.now!==undefined){if(args.now!==null&&(!Number.isSafeInteger(args.now)||args.now>Date.now()+30_000))throw new Error("Owned clock out of range");await ctx.db.patch(campaign._id,{fixturePaidNow:args.now??undefined});}
+    if(args.subject&&args.active!==undefined){const m=await ctx.db.query("memberships").withIndex("by_subject_nonprofit",q=>q.eq("subject",args.subject!).eq("nonprofitId",campaign.nonprofitId)).unique();if(!m)throw new Error("Owned membership required");await ctx.db.patch(m._id,{active:args.active});}
+    if(args.coverageId){const coverage=await ctx.db.get(args.coverageId);if(!coverage||coverage.campaignSlug!==campaign.slug||coverage.nonprofitId!==campaign.nonprofitId)throw new Error("Owned coverage scope required");return coverage;}
+  },
+});
 
 // Test time/lifecycle controls only; never inserts or confirms a donation.
 export const fundraisingControl = mutation({

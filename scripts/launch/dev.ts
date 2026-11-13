@@ -59,6 +59,10 @@ const server = await createServer({
             void servePhotoRequest(backend.photoService, request, response);
             return;
           }
+          if (requestUrl.pathname === "/api/paid-metrics") {
+            void servePhotoRequest(backend.paidService, request, response);
+            return;
+          }
           if (requestUrl.pathname === "/api/fundraising") {
             void servePhotoRequest(
               backend.fundraisingService,
