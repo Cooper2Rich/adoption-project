@@ -292,6 +292,7 @@ export async function createLocalBackend({
         "fixtures:readinessZeroPrizeCampaign",
         "fixtures:fundraisingControl",
         "fixtures:fundraisingEvidence",
+        "fixtures:standingsZero",
         "fixtures:paidEnrollment",
         "fixtures:paidControl",
         "fixtures:paidRequirements",

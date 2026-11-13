@@ -12,8 +12,10 @@ import { incidentTables } from "./incidentSchema.ts";
 import { readinessTables } from "./readinessSchema.ts";
 import { fundraisingTables } from "./fundraisingSchema.ts";
 import { paidMetricTables } from "./paidMetricSchema.ts";
+import { standingsTables } from "./standingsSchema.ts";
 
 export default defineSchema({
+  ...standingsTables,
   ...paidMetricTables,
   ...fundraisingTables,
   ...readinessTables,
